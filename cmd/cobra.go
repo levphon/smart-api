@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg"
 	"go-admin/cmd/api"
-	"go-admin/cmd/config"
 	"go-admin/cmd/migrate"
-	"go-admin/cmd/version"
 	"go-admin/common/global"
 	"os"
 
@@ -43,8 +41,8 @@ func tip() {
 func init() {
 	rootCmd.AddCommand(api.StartCmd)
 	rootCmd.AddCommand(migrate.StartCmd)
-	rootCmd.AddCommand(version.StartCmd)
-	rootCmd.AddCommand(config.StartCmd)
+	//rootCmd.AddCommand(version.StartCmd)
+	//rootCmd.AddCommand(config.StartCmd)
 }
 
 // Execute : apply commands

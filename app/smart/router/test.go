@@ -15,7 +15,7 @@ func init() {
 // registerSysApiRouter 需要JWT认证
 func registerTestAuthRouter(v1 *gin.RouterGroup) {
 	api := apis.Test{}
-	r := v1.Group("/aaa")
+	r := v1.Group("/hello")
 	{
 		r.GET("/", api.Get)
 	}

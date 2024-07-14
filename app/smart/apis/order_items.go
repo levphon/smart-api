@@ -11,6 +11,7 @@ import (
 	"go-admin/app/smart/models"
 	"go-admin/app/smart/service"
 	"go-admin/app/smart/service/dto"
+	"strconv"
 )
 
 type OrderItems struct {
@@ -18,12 +19,29 @@ type OrderItems struct {
 }
 
 func (e OrderItems) GetPage(c *gin.Context) {
+	// 从请求中获取分页参数
+	page := c.Query("page")
+	pageSize := c.Query("pageSize")
+
+	// 默认分页参数，你也可以根据需求自定义默认值
+	defaultPage := 1
+	defaultPageSize := 999
+
+	// 将字符串参数转换为整数，处理可能的错误
+	pageNum, err := strconv.Atoi(page)
+	if err != nil || pageNum < 1 {
+		pageNum = defaultPage
+	}
+	limit, err := strconv.Atoi(pageSize)
+	if err != nil || limit < 1 {
+		limit = defaultPageSize
+	}
 
 	s := service.OrderItems{}
-	req := dto.OrderItemsGetPageReq{}
-	err := e.MakeContext(c).
+	// 创建数据库连接和绑定请求
+	err = e.MakeContext(c).
 		MakeOrm().
-		Bind(&req).
+		Bind(binding.JSON, nil).
 		MakeService(&s.Service).
 		Errors
 	if err != nil {
@@ -31,16 +49,17 @@ func (e OrderItems) GetPage(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-	list := make([]models.OrderItems, 0)
-	fmt.Println("list1=", list)
 
-	list, err = s.SetOrderItems(&req)
-	fmt.Println("list2=", list)
+	// 定义一个存储所有订单项数据的切片
+	var objects []models.OrderItems
+
+	err = s.GetOrderItemsPage(pageNum, limit, &objects)
 	if err != nil {
 		e.Error(500, err, "查询失败")
 		return
 	}
-	e.OK(list, "查询成功")
+
+	e.OK(objects, "查询成功")
 }
 
 func (e OrderItems) Get(c *gin.Context) {
@@ -69,6 +88,7 @@ func (e OrderItems) Get(c *gin.Context) {
 
 func (e OrderItems) Insert(c *gin.Context) {
 	s := service.OrderItems{}
+
 	req := dto.OrderItemsInsertReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -80,15 +100,14 @@ func (e OrderItems) Insert(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-
 	// 设置创建人
 	req.SetCreateBy(user.GetUserId(c))
 	err = s.Insert(&req)
 	if err != nil {
-		e.Error(500, err, "创建失败")
+		e.Error(500, err, fmt.Sprintf("创建失败 err:%v", err))
 		return
 	}
-	e.OK(req.GetId(), "创建成功")
+	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Title))
 }
 
 func (e OrderItems) Update(c *gin.Context) {
@@ -101,7 +120,7 @@ func (e OrderItems) Update(c *gin.Context) {
 		Errors
 	if err != nil {
 		e.Logger.Error(err)
-		e.Error(500, err, err.Error())
+		e.Error(500, err, fmt.Sprintf("更新失败 err:%v", err))
 		return
 	}
 	req.SetUpdateBy(user.GetUserId(c))
@@ -128,8 +147,9 @@ func (e OrderItems) Delete(c *gin.Context) {
 	}
 
 	err = s.Remove(&req)
+	fmt.Println(err)
 	if err != nil {
-		e.Error(500, err, "删除失败")
+		e.Error(500, err, fmt.Sprintf("删除失败 err:%v", err))
 		return
 	}
 	e.OK(req.GetId(), "删除成功")

@@ -39,7 +39,7 @@ var (
 func init() {
 	StartCmd.PersistentFlags().StringVarP(&configYml, "config", "c", "config/settings.yml", "Start server with provided configuration file")
 	StartCmd.PersistentFlags().BoolVarP(&generate, "generate", "g", false, "generate migration file")
-	StartCmd.PersistentFlags().BoolVarP(&smartApi, "martApi", "a", false, "generate smart migration file")
+	StartCmd.PersistentFlags().BoolVarP(&smartApi, "smartApi", "a", false, "generate smart migration file")
 	StartCmd.PersistentFlags().StringVarP(&host, "domain", "d", "*", "select tenant host")
 }
 
