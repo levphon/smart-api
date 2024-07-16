@@ -6,16 +6,15 @@ import (
 )
 
 type OrderItemsInsertReq struct {
-	ID           uint   `gorm:"primaryKey" json:"id"`
-	Title        string `gorm:"column:title;type:varchar(50)" json:"title"`               // 订单项标题
-	BindTempLate string `gorm:"column:bindTempLate;type:varchar(50)" json:"bindTempLate"` // 绑定模板
-	Description  string `gorm:"column:description;type:varchar(256)" json:"description"`  // 订单项描述
-	Favorite     bool   `gorm:"default:false" json:"favorite"`                            // 是否为收藏项
-	Icon         string `gorm:"column:icon;type:varchar(50)" json:"icon"`                 // 订单项图标
-	CategoryID   uint   `gorm:"column:categoryId" json:"categoryId"`
-	Link         string `gorm:"column:link;type:varchar(256)" json:"link"` // 连接到网页
+	ID           uint   `uri:"id" comment:"编码"`              // 编码
+	Title        string `json:"title" comment:"标题"`          // 标题
+	BindTempLate string `json:"bindTempLate" comment:"绑定模板"` // 绑定模板
+	Description  string `json:"description" comment:"描述信息"`  // 订单项描述
+	Favorite     bool   `json:"favorite" comment:"是否收藏"`     // 是否为收藏项
+	Icon         string `json:"icon" comment:"图标"`           // 订单项图标
+	CategoryID   uint   `json:"categoryId" comment:"类别ID"`   //类别ID
+	Link         string `json:"link" comment:"链接"`           // 连接到网页
 	common.ControlBy
-	common.ModelTime
 }
 
 func (s *OrderItemsInsertReq) Generate(model *models.OrderItems) {
@@ -29,6 +28,7 @@ func (s *OrderItemsInsertReq) Generate(model *models.OrderItems) {
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
 	model.Link = s.Link
+	model.ControlBy = s.ControlBy
 }
 
 // GetId 获取数据对应的ID
@@ -37,16 +37,15 @@ func (s *OrderItemsInsertReq) GetId() interface{} {
 }
 
 type OrderItemsUpdateReq struct {
-	ID           uint   `gorm:"primaryKey" json:"id"`
-	Title        string `gorm:"column:title;type:varchar(50)" json:"title"`               // 订单项标题
-	BindTempLate string `gorm:"column:bindTempLate;type:varchar(50)" json:"bindTempLate"` // 绑定模板
-	Description  string `gorm:"column:description;type:varchar(256)" json:"description"`  // 订单项描述
-	Favorite     bool   `gorm:"default:false" json:"favorite"`                            // 是否为收藏项
-	Icon         string `gorm:"column:icon;type:varchar(50)" json:"icon"`                 // 订单项图标
-	CategoryID   uint   `gorm:"column:categoryId" json:"categoryId"`
-	Link         string `gorm:"column:link;type:varchar(256)" json:"link"` // 连接到网页
+	ID           uint   `uri:"id" comment:"编码"`              // 编码
+	Title        string `json:"title" comment:"标题"`          // 标题
+	BindTempLate string `json:"bindTempLate" comment:"绑定模板"` // 绑定模板
+	Description  string `json:"description" comment:"描述信息"`  // 订单项描述
+	Favorite     bool   `json:"favorite" comment:"是否收藏"`     // 是否为收藏项
+	Icon         string `json:"icon" comment:"图标"`           // 订单项图标
+	CategoryID   uint   `json:"categoryId" comment:"类别ID"`   //类别ID
+	Link         string `json:"link" comment:"链接"`           // 连接到网页
 	common.ControlBy
-	common.ModelTime
 }
 
 // Generate 结构体数据转化 从 SysDeptControl 至 SysDept 对应的模型
@@ -61,6 +60,7 @@ func (s *OrderItemsUpdateReq) Generate(model *models.OrderItems) {
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
 	model.Link = s.Link
+	model.ControlBy = s.ControlBy
 }
 
 // GetId 获取数据对应的ID
@@ -68,11 +68,11 @@ func (s *OrderItemsUpdateReq) GetId() interface{} {
 	return s.ID
 }
 
-type OrderitemsGetReq struct {
+type OrderItemsGetReq struct {
 	Id uint `uri:"id"`
 }
 
-func (s *OrderitemsGetReq) GetId() interface{} {
+func (s *OrderItemsGetReq) GetId() interface{} {
 	return s.Id
 }
 
@@ -82,10 +82,4 @@ type OrderItemsDeleteReq struct {
 
 func (s *OrderItemsDeleteReq) GetId() interface{} {
 	return s.Id
-}
-
-type OrderitemsLabel struct {
-	Id       uint              `gorm:"-" json:"id"`
-	Label    string            `gorm:"-" json:"label"`
-	Children []OrderitemsLabel `gorm:"-" json:"children"`
 }

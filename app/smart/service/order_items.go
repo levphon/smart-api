@@ -33,7 +33,7 @@ func (e *OrderItems) GetOrderItemsPage(pageNum, limit int, objects *[]models.Ord
 }
 
 // Get 获取OrderItems对象
-func (e *OrderItems) Get(d *dto.OrderitemsGetReq, model *models.OrderItems) error {
+func (e *OrderItems) Get(d *dto.OrderItemsGetReq, model *models.OrderItems) error {
 	var err error
 	var data models.OrderItems
 

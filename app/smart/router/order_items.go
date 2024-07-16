@@ -10,12 +10,12 @@ import (
 )
 
 func init() {
-	routerCheckRole = append(routerCheckRole, registerOrderAuthRouter)
+	routerCheckRole = append(routerCheckRole, registerOrderItemsAuthRouter)
 	//routerNoCheckRole = append(routerNoCheckRole, registerOrderRouter)
 }
 
 // registerSysApiRouter 需要JWT认证
-func registerOrderAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
+func registerOrderItemsAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.OrderItems{}
 	r := v1.Group("/order/items").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
