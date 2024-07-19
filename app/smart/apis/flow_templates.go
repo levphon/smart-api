@@ -48,9 +48,9 @@ func (e FlowTemplates) GetPage(c *gin.Context) {
 }
 
 func (e FlowTemplates) Get(c *gin.Context) {
-	s := service.OrderCategory{}
+	s := service.FlowTemplates{}
 	// 请求结构体 id
-	req := dto.OrderCategoryGetReq{}
+	req := dto.FlowTemplatesGetReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON, nil).
@@ -61,7 +61,7 @@ func (e FlowTemplates) Get(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-	var object models.OrderCategory
+	var object models.FlowTemplates
 
 	// &object 因为是传递的地址，object 地址对应的内存值会被修改，所以就不需要接收返回值了
 	err = s.Get(&req, &object)
@@ -74,9 +74,9 @@ func (e FlowTemplates) Get(c *gin.Context) {
 }
 
 func (e FlowTemplates) Insert(c *gin.Context) {
-	s := service.OrderCategory{}
+	s := service.FlowTemplates{}
 
-	req := dto.OrderCategoryInsertReq{}
+	req := dto.FlowTemplatesInsertReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON).
@@ -98,10 +98,10 @@ func (e FlowTemplates) Insert(c *gin.Context) {
 	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Name))
 }
 
-// 更新orderCategory
+// FlowTemplates
 func (e FlowTemplates) Update(c *gin.Context) {
-	s := service.OrderCategory{}
-	req := dto.OrderCategoryUpdateReq{}
+	s := service.FlowTemplates{}
+	req := dto.FlowTemplatesUpdateReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req).
@@ -122,8 +122,8 @@ func (e FlowTemplates) Update(c *gin.Context) {
 }
 
 func (e FlowTemplates) Delete(c *gin.Context) {
-	s := service.OrderCategory{}
-	req := dto.OrderCategoryDeleteReq{}
+	s := service.FlowTemplates{}
+	req := dto.FlowTemplatesDeleteReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON, nil).

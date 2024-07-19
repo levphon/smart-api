@@ -6,8 +6,8 @@ import (
 )
 
 type OrderCategoryInsertReq struct {
-	ID          int    `uri:"id" comment:"编码"`             // 编码
-	Name        string `json:"name" comment:"标题"`          // 标题
+	ID          int    `uri:"id" comment:"编码"`               // 编码
+	Name        string `json:"name" comment:"标题"`            // 标题
 	ChineseName string `json:"chineseName" comment:"中文名称"` //中文名称
 	common.ControlBy
 }
@@ -27,8 +27,8 @@ func (s *OrderCategoryInsertReq) GetId() interface{} {
 }
 
 type OrderCategoryUpdateReq struct {
-	ID          int    `uri:"id" comment:"编码"`             // 编码
-	Name        string `json:"name" comment:"标题"`          // 标题
+	ID          int    `uri:"id" comment:"编码"`               // 编码
+	Name        string `json:"name" comment:"标题"`            // 标题
 	ChineseName string `json:"chineseName" comment:"中文名称"` //中文名称
 	common.ControlBy
 }

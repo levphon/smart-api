@@ -1,0 +1,106 @@
+package dto
+
+import (
+	"go-admin/app/smart/models"
+	common "go-admin/common/models"
+)
+
+type OrderWorksInsertReq struct {
+	ID             int             `uri:"id" comment:"编码"`                 // 编码
+	Title          string          `json:"title" comment:"标题"`             // 工单标题
+	CurrentNode    string          `json:"currentNode" comment:"当前节点"`     // 当前节点
+	CurrentHandler int             `json:"currentHandler" comment:"当前处理人"` // 当前处理人
+	Process        string          `json:"process" comment:"流程"`           // 流程
+	Priority       string          `json:"priority" comment:"优先级"`         // 优先级
+	Status         string          `json:"status" comment:"状态"`            // 状态
+	Creator        string          `json:"creator" comment:"创建人"`          // 创建人
+	Department     string          `json:"department" comment:"部门"`        // 部门
+	Description    string          `json:"description" comment:"描述"`       // 描述
+	FormData       models.FormData `json:"formData" comment:"工单表单数据"`      // 工单表单数据
+	common.ControlBy
+}
+
+func (s *OrderWorksInsertReq) Generate(model *models.OrderWorks) {
+	if s.ID != 0 {
+		model.ID = s.ID
+	}
+	model.Title = s.Title
+	model.CurrentNode = s.CurrentNode
+	model.CurrentHandler = s.CurrentHandler
+	model.Process = s.Process
+	model.Priority = s.Priority
+	model.Status = s.Status
+	model.Creator = s.Creator
+	model.Department = s.Department
+	model.Description = s.Description
+	model.FormData = s.FormData
+	model.ControlBy = s.ControlBy
+}
+
+// GetId 获取数据对应的ID
+func (s *OrderWorksInsertReq) GetId() interface{} {
+	return s.ID
+}
+
+type OrderWorksUpdateReq struct {
+	ID             int             `uri:"id" comment:"编码"`                 // 编码
+	Title          string          `json:"title" comment:"标题"`             // 工单标题
+	CurrentNode    string          `json:"currentNode" comment:"当前节点"`     // 当前节点
+	CurrentHandler int             `json:"currentHandler" comment:"当前处理人"` // 当前处理人
+	Process        string          `json:"process" comment:"流程"`           // 流程
+	Priority       string          `json:"priority" comment:"优先级"`         // 优先级
+	Status         string          `json:"status" comment:"状态"`            // 状态
+	Creator        string          `json:"creator" comment:"创建人"`          // 创建人
+	Department     string          `json:"department" comment:"部门"`        // 部门
+	Description    string          `json:"description" comment:"描述"`       // 描述
+	FormData       models.FormData `json:"formData" comment:"工单表单数据"`      // 工单表单数据
+	common.ControlBy
+	common.ModelTime
+}
+
+// Generate 结构体数据转化 从 SysDeptControl 至 SysDept 对应的模型
+func (s *OrderWorksUpdateReq) Generate(model *models.OrderWorks) {
+	if s.ID != 0 {
+		model.ID = s.ID
+	}
+	model.Title = s.Title
+	model.CurrentNode = s.CurrentNode
+	model.CurrentHandler = s.CurrentHandler
+	model.Process = s.Process
+	model.Priority = s.Priority
+	model.Status = s.Status
+	model.Creator = s.Creator
+	model.Department = s.Department
+	model.Description = s.Description
+	model.FormData = s.FormData
+	model.ControlBy = s.ControlBy
+}
+
+// GetId 获取数据对应的ID
+func (s *OrderWorksUpdateReq) GetId() interface{} {
+	return s.ID
+}
+
+type OrderWorksGetReq struct {
+	Id int `uri:"id"`
+}
+
+func (s *OrderWorksGetReq) GetId() interface{} {
+	return s.Id
+}
+
+type OrderWorksDeleteReq struct {
+	Id int `json:"id"`
+}
+
+func (s *OrderWorksDeleteReq) GetId() interface{} {
+	return s.Id
+}
+
+type OperationHistoryGetReq struct {
+	Id int `uri:"id"`
+}
+
+func (h *OperationHistoryGetReq) GetId() interface{} {
+	return h.Id
+}

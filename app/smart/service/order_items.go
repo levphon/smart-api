@@ -27,7 +27,7 @@ func (e *OrderItems) GetOrderItemsPage(pageNum, limit int, objects *[]models.Ord
 	db := e.Orm.Limit(limit).Offset(offset).Find(objects)
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询订单项失败: %s", err)
-		return err
+		return fmt.Errorf("分页查询订单项失败: %s", err)
 	}
 	return nil
 }
@@ -41,9 +41,8 @@ func (e *OrderItems) Get(d *dto.OrderItemsGetReq, model *models.OrderItems) erro
 		First(model, d.GetId())
 	err = db.Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-		err = errors.New("查看对象不存在或无权查看")
 		e.Log.Errorf("db error:%s", err)
-		return err
+		return fmt.Errorf("查看对象不存在或无权查看")
 	}
 	if err = db.Error; err != nil {
 		e.Log.Errorf("db error:%s", err)
@@ -80,13 +79,12 @@ func (e *OrderItems) Insert(c *dto.OrderItemsInsertReq) error {
 	// 检查绑定模板字段是否有改变
 	if existingOrderItems.BindTempLate != data.BindTempLate {
 		// 如果绑定模板字段发生了变化，则更新 FlowTemplate 数据库中的 bindCount 字段
-		// todo:缺少flow相关的表，后续补上
 		// 这里假设你有一个名为 updateBindCount 的函数来更新 bindCount
-		//if err := updateBindCount(existingOrderItems.BindTempLate, data.BindTempLate, tx); err != nil {
-		//	// 处理更新 bindCount 错误
-		//	e.Log.Errorf("db error:%s", err)
-		//	return err
-		//}
+		if err = updateBindCount(existingOrderItems.BindTempLate, data.BindTempLate, tx); err != nil {
+			// 处理更新 bindCount 错误
+			e.Log.Errorf("db error:%s", err)
+			return fmt.Errorf("db error:%s", err)
+		}
 		data.Link = fmt.Sprintf("/order/classify/%s", data.BindTempLate)
 	}
 
@@ -121,17 +119,16 @@ func (e *OrderItems) Update(c *dto.OrderItemsUpdateReq) error {
 			return fmt.Errorf("order with ID '%v' not exists", c.GetId())
 		}
 		e.Log.Errorf("Error querying order with ID '%v': %s", c.GetId(), err)
-		return err
+		return fmt.Errorf("error querying order with ID '%v': %s", c.GetId(), err)
 	}
 
 	// 检查绑定模板字段是否有改变
 	if model.BindTempLate != c.BindTempLate {
 		// 更新 FlowTemplate 数据库中的 bindCount 字段
-		// todo: 缺少表
-		// if err := updateBindCount(model.BindTempLate, c.BindTempLate, tx); err != nil {
-		//     e.Log.Errorf("Failed to update bindCount: %v", err)
-		//     return err
-		// }
+		if err = updateBindCount(model.BindTempLate, c.BindTempLate, tx); err != nil {
+			e.Log.Errorf("Failed to update bindCount: %v", err)
+			return fmt.Errorf("failed to update bindCount: %v", err)
+		}
 		model.Link = fmt.Sprintf("/order/classify/%s", c.BindTempLate)
 	}
 
@@ -182,17 +179,16 @@ func (e *OrderItems) Remove(d *dto.OrderItemsDeleteReq) error {
 	return nil
 }
 
-//func updateBindCount(oldBind, newBind string, db *gorm.DB) error {
-//	// 更新 oldBind 对应的 FlowTemplate 的 bindCount 字段减 1
-//
-//	if err := db.Model(&flowManage.FlowTemplate{}).Where("name = ?", oldBind).Update("bindCount", gorm.Expr("bindCount - ?", 1)).Error; err != nil {
-//		return err
-//	}
-//
-//	// 更新 newBind 对应的 FlowTemplate 的 bindCount 字段加 1
-//	if err := db.Model(&flowManage.FlowTemplate{}).Where("name = ?", newBind).Update("bindCount", gorm.Expr("bindCount + ?", 1)).Error; err != nil {
-//		return err
-//	}
-//
-//	return nil
-//}
+func updateBindCount(oldBind, newBind string, db *gorm.DB) error {
+	// 更新 oldBind 对应的 FlowTemplate 的 bindCount 字段减 1
+	if err := db.Model(models.FlowTemplates{}).Where("name = ?", oldBind).Update("bindCount", gorm.Expr("bindCount - ?", 1)).Error; err != nil {
+		return err
+	}
+
+	// 更新 newBind 对应的 FlowTemplate 的 bindCount 字段加 1
+	if err := db.Model(models.FlowTemplates{}).Where("name = ?", newBind).Update("bindCount", gorm.Expr("bindCount + ?", 1)).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

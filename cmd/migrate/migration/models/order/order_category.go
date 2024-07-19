@@ -8,8 +8,8 @@ import (
 
 type OrderCategory struct {
 	ID            int             `gorm:"primaryKey;autoIncrement" json:"id"`
-	Name          string          `gorm:"column:name;type:varchar(50);unique" json:"name"`
-	ChineseName   string          `gorm:"column:chineseName;type:varchar(50);unique" json:"chineseName"`
+	Name          string          `gorm:"column:name;type:varchar(50)" json:"name"`
+	ChineseName   string          `gorm:"column:chineseName;type:varchar(50)" json:"chineseName"`
 	FlowTemplates []FlowTemplates `gorm:"foreignKey:CategoryID" json:"flowTemplates"`
 	models2.ControlBy
 	models2.ModelTime

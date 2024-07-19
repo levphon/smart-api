@@ -123,7 +123,9 @@ func (e OrderCategory) Update(c *gin.Context) {
 
 func (e OrderCategory) Delete(c *gin.Context) {
 	s := service.OrderCategory{}
+
 	req := dto.OrderCategoryDeleteReq{}
+	fmt.Println("req", req)
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON, nil).
@@ -134,7 +136,6 @@ func (e OrderCategory) Delete(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-
 	err = s.Remove(&req)
 	if err != nil {
 		e.Error(500, err, fmt.Sprintf("删除失败 err:%v", err))

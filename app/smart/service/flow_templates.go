@@ -27,7 +27,7 @@ func (e *FlowTemplates) GetFlowTemplatesPage(pageNum, limit int, objects *[]mode
 	db := e.Orm.Limit(limit).Offset(offset).Find(objects)
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询工单类别失败: %s", err)
-		return err
+		return fmt.Errorf("分页查询工单类别失败: %s", err)
 	}
 	return nil
 }
@@ -37,8 +37,7 @@ func (e *FlowTemplates) Get(d *dto.FlowTemplatesGetReq, model *models.FlowTempla
 	var err error
 	var data models.FlowTemplates
 
-	db := e.Orm.Model(&data).
-		First(model, d.GetId())
+	db := e.Orm.Model(&data).First(model, d.GetId())
 	err = db.Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		err = errors.New("查看对象不存在或无权查看")
@@ -47,7 +46,7 @@ func (e *FlowTemplates) Get(d *dto.FlowTemplatesGetReq, model *models.FlowTempla
 	}
 	if err = db.Error; err != nil {
 		e.Log.Errorf("db error:%s", err)
-		return err
+		return fmt.Errorf("db error:%s", err)
 	}
 	return nil
 }
@@ -67,19 +66,18 @@ func (e *FlowTemplates) Insert(c *dto.FlowTemplatesInsertReq) error {
 	}()
 	data.CreatedAt = time.Now()
 	data.UpdatedAt = time.Now()
-	var existingCategory models.FlowTemplates
-	if err = tx.Where("name = ?", data.Name).First(&existingCategory).Error; err == nil {
+	var existingFlowTemplates models.FlowTemplates
+	if err = tx.Where("name = ?", data.Name).First(&existingFlowTemplates).Error; err == nil {
 		// 如果存在相同标题的订单项，返回相应的错误消息
-		return fmt.Errorf(fmt.Sprintf("order category with name '%v' already exists", existingCategory.Name))
+		return fmt.Errorf(fmt.Sprintf("flow templates with name '%v' already exists", existingFlowTemplates.Name))
 	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 		// 如果查询发生其他错误，返回错误
 		return err
 	}
-
 	err = tx.Create(&data).Error
 	if err != nil {
 		e.Log.Errorf("db error:%s", err)
-		return err
+		return fmt.Errorf("db error:%s", err)
 	}
 	return nil
 }
@@ -100,11 +98,11 @@ func (e *FlowTemplates) Update(c *dto.FlowTemplatesUpdateReq) error {
 	// 根据 ID 查找要更新的记录
 	if err = tx.First(&model, c.GetId()).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			e.Log.Errorf("order category with ID '%v' not exists", c.GetId())
-			return fmt.Errorf("order category with ID '%v' not exists", c.GetId())
+			e.Log.Errorf("flow templates with ID '%v' not exists", c.GetId())
+			return fmt.Errorf("flow templates with ID '%v' not exists", c.GetId())
 		}
-		e.Log.Errorf("Error querying order category with ID '%v': %s", c.GetId(), err)
-		return err
+		e.Log.Errorf("Error querying flow templates with ID '%v': %s", c.GetId(), err)
+		return fmt.Errorf("error querying flow templates with ID '%v': %s", c.GetId(), err)
 	}
 
 	c.Generate(&model)
@@ -113,7 +111,8 @@ func (e *FlowTemplates) Update(c *dto.FlowTemplatesUpdateReq) error {
 	db := tx.Save(&model)
 	if err = db.Error; err != nil {
 		e.Log.Errorf("UpdateFlowTemplates error: %s", err)
-		return err
+		return fmt.Errorf("UpdateFlowTemplates error: %s", err)
+
 	}
 
 	if db.RowsAffected == 0 {
@@ -122,27 +121,20 @@ func (e *FlowTemplates) Update(c *dto.FlowTemplatesUpdateReq) error {
 	return nil
 }
 
-// Remove 删除SysFlowTemplates
+// Remove 删除FlowTemplates
 func (e *FlowTemplates) Remove(d *dto.FlowTemplatesDeleteReq) error {
 	var err error
 	var data models.FlowTemplates
-	// 查询要删除的订单项
+	// 查询要删除的模板是否存在
 	if err = e.Orm.Model(&data).First(&data, d.GetId()).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return fmt.Errorf("order with ID '%v' not found", d.GetId())
+			return fmt.Errorf("templates with ID '%v' not found", d.GetId())
 		}
-		e.Log.Errorf("Error querying order with ID '%v': %s", d.GetId(), err)
-		return err
+		e.Log.Errorf("Error querying templates with ID '%v': %s", d.GetId(), err)
+		return fmt.Errorf("Error querying templates with ID '%v': %s", d.GetId(), err)
 	}
 
-	// 检查是否有工单在使用该类别
-	var orderCount int64
-	if err = e.Orm.Model(&models.FlowTemplates{}).Where("categoryId = ?", d.GetId()).Count(&orderCount).Error; err != nil {
-		e.Log.Errorf("Error checking order items: %v", err)
-		return fmt.Errorf("error checking order items: %v", err)
-	}
-
-	if orderCount > 0 {
+	if data.BindCount != 0 {
 		return fmt.Errorf("工单类别 %s 已经有工单在使用，请先删除相关工单", data.Name)
 	}
 
@@ -151,7 +143,7 @@ func (e *FlowTemplates) Remove(d *dto.FlowTemplatesDeleteReq) error {
 	if err = db.Error; err != nil {
 		err = db.Error
 		e.Log.Errorf("Delete error: %s", err)
-		return err
+		return fmt.Errorf("Delete error: %s", err)
 	}
 	if db.RowsAffected == 0 {
 		err = errors.New("无权删除该数据")

@@ -5,15 +5,13 @@ import (
 	common "go-admin/common/models"
 )
 
-type FormData map[string]interface{}
-
 type FlowTemplatesInsertReq struct {
-	ID          uint     `uri:"id" comment:"编码"`    // 编码
-	Name        string   `json:"name" comment:"标题"` // 标题
-	Description string   `json:"description" comment:"描述信息"`
-	BindCount   int      `json:"bindCount" comment:"绑定次数"`
-	FormData    FormData `json:"formData" comment:"表单数据"`
-	CategoryID  uint     `json:"categoryId" comment:"类别ID"`
+	ID          uint            `uri:"id" comment:"编码"`
+	Name        string          `json:"name" comment:"标题"`
+	Description string          `json:"description" comment:"描述信息"`
+	BindCount   int             `json:"bindCount" comment:"绑定次数"`
+	FormData    models.FormData `json:"formData" comment:"表单数据"`
+	CategoryID  uint            `json:"categoryId" comment:"类别ID"`
 	common.ControlBy
 }
 
@@ -24,8 +22,9 @@ func (s *FlowTemplatesInsertReq) Generate(model *models.FlowTemplates) {
 	model.Name = s.Name
 	model.Description = s.Description
 	model.BindCount = s.BindCount
-	model.FormData = models.FormData(s.FormData)
+	model.FormData = s.FormData // 直接赋值
 	model.CategoryID = s.CategoryID
+	model.ControlBy = s.ControlBy
 }
 
 // GetId 获取数据对应的ID
@@ -34,12 +33,12 @@ func (s *FlowTemplatesInsertReq) GetId() interface{} {
 }
 
 type FlowTemplatesUpdateReq struct {
-	ID          uint     `uri:"id" comment:"编码"`    // 编码
-	Name        string   `json:"name" comment:"标题"` // 标题
-	Description string   `json:"description" comment:"描述信息"`
-	BindCount   int      `json:"bindCount" comment:"绑定次数"`
-	FormData    FormData `json:"formData" comment:"表单数据"`
-	CategoryID  uint     `json:"categoryId" comment:"类别ID"`
+	ID          uint            `uri:"id" comment:"编码"`
+	Name        string          `json:"name" comment:"标题"`
+	Description string          `json:"description" comment:"描述信息"`
+	BindCount   int             `json:"bindCount" comment:"绑定次数"`
+	FormData    models.FormData `json:"formData" comment:"表单数据"`
+	CategoryID  uint            `json:"categoryId" comment:"类别ID"`
 	common.ControlBy
 }
 
@@ -51,8 +50,9 @@ func (s *FlowTemplatesUpdateReq) Generate(model *models.FlowTemplates) {
 	model.Name = s.Name
 	model.Description = s.Description
 	model.BindCount = s.BindCount
-	model.FormData = models.FormData(s.FormData)
+	model.FormData = s.FormData // 直接赋值
 	model.CategoryID = s.CategoryID
+	model.ControlBy = s.ControlBy
 }
 
 // GetId 获取数据对应的ID
@@ -61,7 +61,7 @@ func (s *FlowTemplatesUpdateReq) GetId() interface{} {
 }
 
 type FlowTemplatesGetReq struct {
-	Id int `uri:"id"`
+	Id uint `uri:"id"`
 }
 
 func (s *FlowTemplatesGetReq) GetId() interface{} {
@@ -69,7 +69,7 @@ func (s *FlowTemplatesGetReq) GetId() interface{} {
 }
 
 type FlowTemplatesDeleteReq struct {
-	Id int `json:"id"`
+	Id uint `json:"id"`
 }
 
 func (s *FlowTemplatesDeleteReq) GetId() interface{} {

@@ -27,7 +27,7 @@ func (e *OrderCategory) GetOrderCategoryPage(pageNum, limit int, objects *[]mode
 	db := e.Orm.Limit(limit).Offset(offset).Find(objects)
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询工单类别失败: %s", err)
-		return err
+		return fmt.Errorf("分页查询工单类别失败: %s", err)
 	}
 	return nil
 }
@@ -41,13 +41,12 @@ func (e *OrderCategory) Get(d *dto.OrderCategoryGetReq, model *models.OrderCateg
 		First(model, d.GetId())
 	err = db.Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-		err = errors.New("查看对象不存在或无权查看")
 		e.Log.Errorf("db error:%s", err)
-		return err
+		return fmt.Errorf("查看对象不存在或无权查看")
 	}
 	if err = db.Error; err != nil {
 		e.Log.Errorf("db error:%s", err)
-		return err
+		return fmt.Errorf("db error:%s", err)
 	}
 	return nil
 }
@@ -104,12 +103,12 @@ func (e *OrderCategory) Update(c *dto.OrderCategoryUpdateReq) error {
 			return fmt.Errorf("order category with ID '%v' not exists", c.GetId())
 		}
 		e.Log.Errorf("Error querying order category with ID '%v': %s", c.GetId(), err)
-		return err
+		return fmt.Errorf(fmt.Sprintf("Error querying order category with ID '%v': %s", c.GetId(), err))
 	}
 	// 检查 ChineseName 是否变化
 	if model.ChineseName == c.ChineseName {
 		e.Log.Infof("order category with ID '%v' has no changes in ChineseName", c.GetId())
-		return nil
+		return errors.New(fmt.Sprintf("order category with ID '%v' has no changes in ChineseName", c.GetId()))
 	}
 
 	c.Generate(&model)
@@ -130,6 +129,7 @@ func (e *OrderCategory) Update(c *dto.OrderCategoryUpdateReq) error {
 // Remove 删除SysOrderCategory
 func (e *OrderCategory) Remove(d *dto.OrderCategoryDeleteReq) error {
 	var err error
+
 	var data models.OrderCategory
 	// 查询要删除的订单项
 	if err = e.Orm.Model(&data).First(&data, d.GetId()).Error; err != nil {
@@ -137,7 +137,7 @@ func (e *OrderCategory) Remove(d *dto.OrderCategoryDeleteReq) error {
 			return fmt.Errorf("order with ID '%v' not found", d.GetId())
 		}
 		e.Log.Errorf("Error querying order with ID '%v': %s", d.GetId(), err)
-		return err
+		return fmt.Errorf("error querying order with ID '%v': %s", d.GetId(), err)
 	}
 
 	// 检查是否有工单在使用该类别
@@ -156,7 +156,7 @@ func (e *OrderCategory) Remove(d *dto.OrderCategoryDeleteReq) error {
 	if err = db.Error; err != nil {
 		err = db.Error
 		e.Log.Errorf("Delete error: %s", err)
-		return err
+		return fmt.Errorf("delete error: %s", err)
 	}
 	if db.RowsAffected == 0 {
 		err = errors.New("无权删除该数据")
