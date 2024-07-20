@@ -14,7 +14,6 @@ type OrderWorks struct {
 	Process        string   `gorm:"column:process;type:varchar(50)" json:"process"`         // 流程
 	Priority       string   `gorm:"column:priority;type:varchar(20)" json:"priority"`       // 优先级
 	Status         string   `gorm:"column:status;type:varchar(20)" json:"status"`           // 状态
-	Creator        string   `gorm:"column:creator;type:varchar(50)" json:"creator"`         // 创建人
 	Department     string   `gorm:"column:department;type:varchar(50)" json:"department"`   // 部门
 	Description    string   `gorm:"description:des;type:varchar(512)" json:"description"`
 	FormData       FormData `gorm:"type:json" json:"formData"`

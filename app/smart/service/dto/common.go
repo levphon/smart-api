@@ -12,7 +12,6 @@ type WorksNotifyReq struct {
 	Department     string `json:"department" comment:"部门"`
 	Priority       string `json:"priority" comment:"优先级"`
 	Status         string `json:"status" comment:"状态"`
-	Handler        int    `json:"handler" comment:"创建人"`
 	CurrentHandler int    `json:"currentHandler" comment:"当前处理人"`
 	Message        string `json:"message" comment:"消息内容"`    // 通知的详细消息内容。
 	ReadStatus     int    `json:"readStatus" comment:"是否已读"` // 通知的阅读状态，例如是否已读。
@@ -29,7 +28,6 @@ func (n *WorksNotifyReq) Generate(model *models.WorksNotify) {
 	model.Department = n.Department
 	model.Priority = n.Priority
 	model.Status = n.Status
-	model.Handler = n.Handler
 	model.CurrentHandler = n.CurrentHandler
 	model.Message = n.Message
 	model.ReadStatus = n.ReadStatus

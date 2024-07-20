@@ -40,7 +40,6 @@ type WorksNotify struct {
 	Department     string `gorm:"column:department;type:varchar(50)" json:"department"`
 	Priority       string `gorm:"column:priority;type:varchar(20)" json:"priority"`
 	Status         string `gorm:"column:status;type:varchar(20)" json:"status"`
-	Handler        int    `gorm:"column:handler" json:"handler"`
 	CurrentHandler int    `gorm:"column:currentHandler" json:"currentHandler"`
 	Message        string `gorm:"column:message;type:text" json:"message"` // 通知的详细消息内容。
 	ReadStatus     int    `gorm:"column:read_status" json:"readStatus"`    // 通知的阅读状态，例如是否已读。 0为未读 1为已读

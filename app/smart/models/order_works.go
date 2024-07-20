@@ -13,7 +13,6 @@ type OrderWorks struct {
 	CurrentHandler int      `gorm:"column:currentHandler" json:"currentHandler"`            // 当前处理人
 	Process        string   `gorm:"column:process;type:varchar(50)" json:"process"`         // 流程
 	Priority       string   `gorm:"column:priority;type:varchar(20)" json:"priority"`       // 优先级
-	Creator        string   `gorm:"column:creator;type:varchar(50)" json:"creator"`         // 创建人
 	Status         string   `gorm:"column:status;type:varchar(20)" json:"status"`           // 状态
 	Department     string   `gorm:"column:department;type:varchar(50)" json:"department"`   // 部门
 	Description    string   `gorm:"description:des;type:varchar(512)" json:"description"`

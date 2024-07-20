@@ -48,7 +48,7 @@ type OrderItemsUpdateReq struct {
 	common.ControlBy
 }
 
-// Generate 结构体数据转化 从 SysDeptControl 至 SysDept 对应的模型
+// 修改 Generate 方法以接受指针接收器
 func (s *OrderItemsUpdateReq) Generate(model *models.OrderItems) {
 	if s.ID != 0 {
 		model.ID = s.ID
@@ -60,6 +60,9 @@ func (s *OrderItemsUpdateReq) Generate(model *models.OrderItems) {
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
 	model.Link = s.Link
+	if s.Link != "" {
+		model.Link = s.Link
+	}
 	model.ControlBy = s.ControlBy
 }
 

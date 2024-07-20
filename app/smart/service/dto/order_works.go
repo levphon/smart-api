@@ -13,7 +13,6 @@ type OrderWorksInsertReq struct {
 	Process        string          `json:"process" comment:"流程"`           // 流程
 	Priority       string          `json:"priority" comment:"优先级"`         // 优先级
 	Status         string          `json:"status" comment:"状态"`            // 状态
-	Creator        string          `json:"creator" comment:"创建人"`          // 创建人
 	Department     string          `json:"department" comment:"部门"`        // 部门
 	Description    string          `json:"description" comment:"描述"`       // 描述
 	FormData       models.FormData `json:"formData" comment:"工单表单数据"`      // 工单表单数据
@@ -30,7 +29,6 @@ func (s *OrderWorksInsertReq) Generate(model *models.OrderWorks) {
 	model.Process = s.Process
 	model.Priority = s.Priority
 	model.Status = s.Status
-	model.Creator = s.Creator
 	model.Department = s.Department
 	model.Description = s.Description
 	model.FormData = s.FormData
@@ -43,18 +41,17 @@ func (s *OrderWorksInsertReq) GetId() interface{} {
 }
 
 type OrderWorksUpdateReq struct {
-	ID             int             `uri:"id" comment:"编码"`                 // 编码
-	Title          string          `json:"title" comment:"标题"`             // 工单标题
-	CurrentNode    string          `json:"currentNode" comment:"当前节点"`     // 当前节点
-	CurrentHandler int             `json:"currentHandler" comment:"当前处理人"` // 当前处理人
-	Process        string          `json:"process" comment:"流程"`           // 流程
-	Priority       string          `json:"priority" comment:"优先级"`         // 优先级
-	Status         string          `json:"status" comment:"状态"`            // 状态
-	Creator        string          `json:"creator" comment:"创建人"`          // 创建人
-	Department     string          `json:"department" comment:"部门"`        // 部门
-	Description    string          `json:"description" comment:"描述"`       // 描述
-	FormData       models.FormData `json:"formData" comment:"工单表单数据"`      // 工单表单数据
-	common.ControlBy
+	ID               int             `uri:"id" comment:"编码"`                 // 编码
+	Title            string          `json:"title" comment:"标题"`             // 工单标题
+	CurrentNode      string          `json:"currentNode" comment:"当前节点"`     // 当前节点
+	CurrentHandler   int             `json:"currentHandler" comment:"当前处理人"` // 当前处理人
+	Process          string          `json:"process" comment:"流程"`           // 流程
+	Priority         string          `json:"priority" comment:"优先级"`         // 优先级
+	Status           string          `json:"status" comment:"状态"`            // 状态
+	Department       string          `json:"department" comment:"部门"`        // 部门
+	Description      string          `json:"description" comment:"描述"`       // 描述
+	FormData         models.FormData `json:"formData" comment:"工单表单数据"`      // 工单表单数据
+	common.ControlBy                 // 包含创建人和更新人
 	common.ModelTime
 }
 
@@ -69,7 +66,6 @@ func (s *OrderWorksUpdateReq) Generate(model *models.OrderWorks) {
 	model.Process = s.Process
 	model.Priority = s.Priority
 	model.Status = s.Status
-	model.Creator = s.Creator
 	model.Department = s.Department
 	model.Description = s.Description
 	model.FormData = s.FormData
