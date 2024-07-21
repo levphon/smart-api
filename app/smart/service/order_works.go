@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"go-admin/app/smart/models"
+	models2 "go-admin/common/models"
 	"strings"
 	"time"
 
@@ -128,8 +129,8 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 			tx.Commit()
 		}
 	}()
-	data.CreatedAt = time.Now()
-	data.UpdatedAt = time.Now()
+	data.CreatedAt = models2.JSONTime(time.Now())
+	data.UpdatedAt = models2.JSONTime(time.Now())
 	var existingOrderWorks models.OrderWorks
 	if err = tx.Where("title = ?", data.Title).First(&existingOrderWorks).Error; err == nil {
 		// 如果存在相同标题的订单项，返回相应的错误消息
@@ -273,10 +274,13 @@ func recordOperationHistory(tx *gorm.DB, c *dto.OrderWorksUpdateReq, updateDescr
 }
 
 // 计算处理时长
-func calculateHandleDuration(updatedAt time.Time) int64 {
+func calculateHandleDuration(updatedAt models2.JSONTime) int64 {
+	// Convert JSONTime to time.Time
+	updatedTime := updatedAt.ToTime()
+
 	currentTime := time.Now()
-	duration := currentTime.Sub(updatedAt)
-	return int64(duration.Seconds())
+	duration := currentTime.Sub(updatedTime)
+	return int64(duration.Minutes())
 }
 
 // 根据ID获取工单

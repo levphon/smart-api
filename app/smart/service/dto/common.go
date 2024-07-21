@@ -53,7 +53,7 @@ func (n *WorksNotifyUpdateReq) Generate(model *models.WorksNotify) {
 		model.ID = n.ID
 	}
 	model.ReadStatus = n.ReadStatus
-	model.UpdatedAt = time.Now()
+	model.UpdatedAt = common.JSONTime(time.Now())
 	model.ControlBy = n.ControlBy
 }
 

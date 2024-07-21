@@ -9,6 +9,7 @@ import (
 	"go-admin/app/smart/models"
 	"go-admin/app/smart/service/dto"
 	"gorm.io/gorm"
+	"time"
 )
 
 type WorksNotify struct {
@@ -101,7 +102,7 @@ func (e *WorksNotify) UpdateNotify(c *dto.WorksNotifyUpdateReq) error {
 	// 显式地更新字段
 	updates := map[string]interface{}{
 		"read_status": c.ReadStatus,
-		"updated_at":  model.UpdatedAt, // 更新更新时间
+		"updated_at":  time.Now(), // 更新更新时间
 	}
 
 	// 更新通知消息字段

@@ -13,6 +13,7 @@ type FlowTemplatesInsertReq struct {
 	FormData    models.FormData `json:"formData" comment:"表单数据"`
 	CategoryID  uint            `json:"categoryId" comment:"类别ID"`
 	common.ControlBy
+	common.ModelTime
 }
 
 func (s *FlowTemplatesInsertReq) Generate(model *models.FlowTemplates) {
@@ -25,6 +26,7 @@ func (s *FlowTemplatesInsertReq) Generate(model *models.FlowTemplates) {
 	model.FormData = s.FormData // 直接赋值
 	model.CategoryID = s.CategoryID
 	model.ControlBy = s.ControlBy
+	model.ModelTime = s.ModelTime
 }
 
 // GetId 获取数据对应的ID
@@ -40,6 +42,7 @@ type FlowTemplatesUpdateReq struct {
 	FormData    models.FormData `json:"formData" comment:"表单数据"`
 	CategoryID  uint            `json:"categoryId" comment:"类别ID"`
 	common.ControlBy
+	common.ModelTime
 }
 
 // Generate 结构体数据转化 从 SysDeptControl 至 SysDept 对应的模型
@@ -53,6 +56,7 @@ func (s *FlowTemplatesUpdateReq) Generate(model *models.FlowTemplates) {
 	model.FormData = s.FormData // 直接赋值
 	model.CategoryID = s.CategoryID
 	model.ControlBy = s.ControlBy
+	model.ModelTime = s.ModelTime
 }
 
 // GetId 获取数据对应的ID

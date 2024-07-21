@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"go-admin/app/smart/models"
+	models2 "go-admin/common/models"
 	"time"
 
 	"gorm.io/gorm"
@@ -64,8 +65,8 @@ func (e *OrderItems) Insert(c *dto.OrderItemsInsertReq) error {
 			tx.Commit()
 		}
 	}()
-	data.CreatedAt = time.Now()
-	data.UpdatedAt = time.Now()
+	data.CreatedAt = models2.JSONTime(time.Now())
+	data.UpdatedAt = models2.JSONTime(time.Now())
 	var existingOrderItems models.OrderItems
 
 	if err = tx.Where("title = ?", data.Title).First(&existingOrderItems).Error; err == nil {

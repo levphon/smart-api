@@ -98,7 +98,7 @@ func (e OrderCategory) Insert(c *gin.Context) {
 	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Name))
 }
 
-// 更新orderCategory
+// Update orderCategory
 func (e OrderCategory) Update(c *gin.Context) {
 	s := service.OrderCategory{}
 	req := dto.OrderCategoryUpdateReq{}

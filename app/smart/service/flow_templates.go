@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"go-admin/app/smart/models"
-	"time"
-
+	models2 "go-admin/common/models"
 	"gorm.io/gorm"
+	"time"
 
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 	"go-admin/app/smart/service/dto"
@@ -64,8 +64,10 @@ func (e *FlowTemplates) Insert(c *dto.FlowTemplatesInsertReq) error {
 			tx.Commit()
 		}
 	}()
-	data.CreatedAt = time.Now()
-	data.UpdatedAt = time.Now()
+
+	data.CreatedAt = models2.JSONTime(time.Now())
+	data.UpdatedAt = models2.JSONTime(time.Now())
+
 	var existingFlowTemplates models.FlowTemplates
 	if err = tx.Where("name = ?", data.Name).First(&existingFlowTemplates).Error; err == nil {
 		// 如果存在相同标题的订单项，返回相应的错误消息
@@ -131,7 +133,7 @@ func (e *FlowTemplates) Remove(d *dto.FlowTemplatesDeleteReq) error {
 			return fmt.Errorf("templates with ID '%v' not found", d.GetId())
 		}
 		e.Log.Errorf("Error querying templates with ID '%v': %s", d.GetId(), err)
-		return fmt.Errorf("Error querying templates with ID '%v': %s", d.GetId(), err)
+		return fmt.Errorf("error querying templates with ID '%v': %s", d.GetId(), err)
 	}
 
 	if data.BindCount != 0 {

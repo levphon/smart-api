@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"go-admin/app/smart/models"
+	models2 "go-admin/common/models"
 	"time"
 
 	"gorm.io/gorm"
@@ -64,8 +65,8 @@ func (e *OrderCategory) Insert(c *dto.OrderCategoryInsertReq) error {
 			tx.Commit()
 		}
 	}()
-	data.CreatedAt = time.Now()
-	data.UpdatedAt = time.Now()
+	data.CreatedAt = models2.JSONTime(time.Now())
+	data.UpdatedAt = models2.JSONTime(time.Now())
 	var existingCategory models.OrderCategory
 	if err = tx.Where("name = ?", data.Name).First(&existingCategory).Error; err == nil {
 		// 如果存在相同标题的订单项，返回相应的错误消息
