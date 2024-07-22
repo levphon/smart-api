@@ -33,8 +33,10 @@ const (
 	timeFormat = "2006-01-02 15:04:05"
 )
 
+// MarshalJSON formats JSONTime to JSON string
 func (jt JSONTime) MarshalJSON() ([]byte, error) {
-	formatted := fmt.Sprintf("\"%s\"", time.Time(jt).UTC().Format(timeFormat))
+	localTime := time.Time(jt).In(time.FixedZone("CST", 8*3600)) // 转换为中国标准时间
+	formatted := fmt.Sprintf("\"%s\"", localTime.Format(timeFormat))
 	return []byte(formatted), nil
 }
 
@@ -44,11 +46,11 @@ func (jt *JSONTime) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
-	t, err := time.Parse(timeFormat, s)
+	localTime, err := time.ParseInLocation(timeFormat, s, time.FixedZone("CST", 8*3600)) // 按照中国标准时间解析
 	if err != nil {
 		return err
 	}
-	*jt = JSONTime(t)
+	*jt = JSONTime(localTime)
 	return nil
 }
 
@@ -62,13 +64,14 @@ func (jt *JSONTime) Scan(value interface{}) error {
 	if !ok {
 		return fmt.Errorf("cannot scan %T into JSONTime", value)
 	}
-	*jt = JSONTime(t)
+	*jt = JSONTime(t.In(time.FixedZone("CST", 8*3600))) // 转换为中国标准时间
 	return nil
 }
 
 // Value implements the driver.Valuer interface
 func (jt JSONTime) Value() (driver.Value, error) {
-	return time.Time(jt).Format(timeFormat), nil
+	localTime := time.Time(jt).In(time.FixedZone("CST", 8*3600)) // 转换为中国标准时间
+	return localTime.Format(timeFormat), nil
 }
 
 type ModelTime struct {
@@ -79,5 +82,5 @@ type ModelTime struct {
 
 // Convert JSONTime to time.Time
 func (jt JSONTime) ToTime() time.Time {
-	return time.Time(jt)
+	return time.Time(jt).In(time.FixedZone("CST", 8*3600)) // 转换为中国标准时间
 }

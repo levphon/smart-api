@@ -15,6 +15,8 @@ type OrderItems struct {
 	Icon         string `gorm:"column:icon;type:varchar(50)" json:"icon"`                 // 订单项图标
 	CategoryID   uint   `gorm:"column:categoryId" json:"categoryId"`
 	Link         string `gorm:"column:link;type:varchar(256)" json:"link"` // 连接到网页
+	Creator      string `json:"creator" comment:"创建人"`
+	Regenerator  string `json:"regenerator" comment:"更新人"` // 更新人
 	models2.ControlBy
 	models2.ModelTime
 }

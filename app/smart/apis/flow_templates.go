@@ -89,7 +89,7 @@ func (e FlowTemplates) Insert(c *gin.Context) {
 	}
 	// 设置创建人
 	req.SetCreateBy(user.GetUserId(c))
-
+	req.Creator = user.GetUserName(c)
 	err = s.Insert(&req)
 	if err != nil {
 		e.Error(500, err, fmt.Sprintf("创建失败 err:%v", err))
@@ -113,6 +113,7 @@ func (e FlowTemplates) Update(c *gin.Context) {
 		return
 	}
 	req.SetUpdateBy(user.GetUserId(c))
+	req.Regenerator = user.GetUserName(c)
 	err = s.Update(&req)
 	if err != nil {
 		e.Error(500, err, err.Error())

@@ -9,6 +9,8 @@ import (
 type OrderCategory struct {
 	ID            int             `gorm:"primaryKey;autoIncrement" json:"id"`
 	Name          string          `gorm:"column:name;type:varchar(50)" json:"name"`
+	Creator       string          `gorm:"creator:des;type:varchar(20)" json:"creator"`         // 创建人
+	Regenerator   string          `gorm:"regenerator:des;type:varchar(20)" json:"regenerator"` // 更新人
 	ChineseName   string          `gorm:"column:chineseName;type:varchar(50)" json:"chineseName"`
 	FlowTemplates []FlowTemplates `gorm:"foreignKey:CategoryID" json:"flowTemplates"`
 	models.ControlBy

@@ -50,11 +50,11 @@ func (e *WorksNotify) Insert(c *dto.WorksNotifyReq) error {
 	return nil
 }
 
-func (e *WorksNotify) GetNotify(pageNum, limit int, objects *[]models.WorksNotify, userid int) error {
+func (e *WorksNotify) GetNotify(pageNum, limit int, objects *[]models.WorksNotify, userName string) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 	// 查询并分页获取订单项数据
-	db := e.Orm.Where("currentHandler = ?", userid).Limit(limit).Offset(offset).Find(objects)
+	db := e.Orm.Where("currentHandler = ?", userName).Limit(limit).Offset(offset).Find(objects)
 
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询通知信息失败: %s", err)

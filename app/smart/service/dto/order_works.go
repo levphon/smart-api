@@ -6,10 +6,12 @@ import (
 )
 
 type OrderWorksInsertReq struct {
-	ID             int             `uri:"id" comment:"编码"`                 // 编码
-	Title          string          `json:"title" comment:"标题"`             // 工单标题
+	ID             int             `uri:"id" comment:"编码"`     // 编码
+	Title          string          `json:"title" comment:"标题"` // 工单标题
+	Creator        string          `json:"creator" comment:"创建人"`
+	Regenerator    string          `json:"regenerator" comment:"更新人"`      // 更新人
 	CurrentNode    string          `json:"currentNode" comment:"当前节点"`     // 当前节点
-	CurrentHandler int             `json:"currentHandler" comment:"当前处理人"` // 当前处理人
+	CurrentHandler string          `json:"currentHandler" comment:"当前处理人"` // 当前处理人
 	Process        string          `json:"process" comment:"流程"`           // 流程
 	Priority       string          `json:"priority" comment:"优先级"`         // 优先级
 	Status         string          `json:"status" comment:"状态"`            // 状态
@@ -24,6 +26,8 @@ func (s *OrderWorksInsertReq) Generate(model *models.OrderWorks) {
 		model.ID = s.ID
 	}
 	model.Title = s.Title
+	model.Creator = s.Creator
+	model.Regenerator = s.Regenerator
 	model.CurrentNode = s.CurrentNode
 	model.CurrentHandler = s.CurrentHandler
 	model.Process = s.Process
@@ -41,10 +45,12 @@ func (s *OrderWorksInsertReq) GetId() interface{} {
 }
 
 type OrderWorksUpdateReq struct {
-	ID               int             `uri:"id" comment:"编码"`                 // 编码
-	Title            string          `json:"title" comment:"标题"`             // 工单标题
+	ID               int             `uri:"id" comment:"编码"`     // 编码
+	Title            string          `json:"title" comment:"标题"` // 工单标题
+	Creator          string          `json:"creator" comment:"创建人"`
+	Regenerator      string          `json:"regenerator" comment:"更新人"`      // 更新人
 	CurrentNode      string          `json:"currentNode" comment:"当前节点"`     // 当前节点
-	CurrentHandler   int             `json:"currentHandler" comment:"当前处理人"` // 当前处理人
+	CurrentHandler   string          `json:"currentHandler" comment:"当前处理人"` // 当前处理人
 	Process          string          `json:"process" comment:"流程"`           // 流程
 	Priority         string          `json:"priority" comment:"优先级"`         // 优先级
 	Status           string          `json:"status" comment:"状态"`            // 状态
@@ -61,6 +67,8 @@ func (s *OrderWorksUpdateReq) Generate(model *models.OrderWorks) {
 		model.ID = s.ID
 	}
 	model.Title = s.Title
+	model.Creator = s.Creator
+	model.Regenerator = s.Regenerator
 	model.CurrentNode = s.CurrentNode
 	model.CurrentHandler = s.CurrentHandler
 	model.Process = s.Process

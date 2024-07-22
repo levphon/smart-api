@@ -186,16 +186,7 @@ func (e *OrderItems) Remove(d *dto.OrderItemsDeleteReq) error {
 }
 
 func updateBindCount(oldBind, newBind string, db *gorm.DB) error {
-	//// 更新 oldBind 对应的 FlowTemplate 的 bindCount 字段减 1，确保 bindCount 不会变成负数
-	//if err := db.Model(&models.FlowTemplates{}).Where("name = ?", oldBind).
-	//	Update("bindCount", gorm.Expr("CASE WHEN bindCount > 0 THEN bindCount - 1 ELSE 0 END")).Error; err != nil {
-	//	return err
-	//}
-	//
-	//// 更新 newBind 对应的 FlowTemplate 的 bindCount 字段加 1
-	//if err := db.Model(models.FlowTemplates{}).Where("name = ?", newBind).Update("bindCount", gorm.Expr("bindCount + ?", 1)).Error; err != nil {
-	//	return err
-	//}
+
 	// 如果 oldBind 不为空，更新对应的 FlowTemplate 的 bindCount 字段减 1
 	if oldBind != "" {
 		if err := db.Model(&models.FlowTemplates{}).Where("name = ?", oldBind).

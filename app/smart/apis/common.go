@@ -62,9 +62,9 @@ func (n WorksNotify) GetNotify(c *gin.Context) {
 	// 定义一个存储所有工单类别数据的切片
 	var objects []models.WorksNotify
 
-	userId := user.GetUserId(c)
+	userName := user.GetUserName(c)
 
-	err = s.GetNotify(pageNum, limit, &objects, userId)
+	err = s.GetNotify(pageNum, limit, &objects, userName)
 	if err != nil {
 		n.Error(500, err, "查询失败")
 		return

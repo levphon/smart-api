@@ -14,7 +14,9 @@ type OrderItems struct {
 	Favorite     bool   `gorm:"default:false" json:"favorite"`                            // 是否为收藏项
 	Icon         string `gorm:"column:icon;type:varchar(50)" json:"icon"`                 // 订单项图标
 	CategoryID   uint   `gorm:"column:categoryId" json:"categoryId"`
-	Link         string `gorm:"column:link;type:varchar(256)" json:"link"` // 连接到网页
+	Link         string `gorm:"column:link;type:varchar(256)" json:"link"`           // 连接到网页
+	Creator      string `gorm:"creator:des;type:varchar(20)" json:"creator"`         // 创建人
+	Regenerator  string `gorm:"regenerator:des;type:varchar(20)" json:"regenerator"` // 更新人
 	models.ControlBy
 	models.ModelTime
 }
