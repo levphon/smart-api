@@ -139,7 +139,7 @@ func (e *OrderItems) Update(c *dto.OrderItemsUpdateReq) error {
 	}
 
 	c.Generate(&model)
-
+	fmt.Println("model", model)
 	// 执行更新操作
 	db := tx.Save(&model)
 	if err = db.Error; err != nil {

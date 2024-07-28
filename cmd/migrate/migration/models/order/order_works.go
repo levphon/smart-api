@@ -3,7 +3,7 @@
 package models
 
 import (
-	models2 "go-admin/cmd/migrate/migration/models"
+	"go-admin/common/models"
 )
 
 type OrderWorks struct {
@@ -19,8 +19,8 @@ type OrderWorks struct {
 	Department     string   `gorm:"column:department;type:varchar(50)" json:"department"`         // 部门
 	Description    string   `gorm:"description:des;type:varchar(512)" json:"description"`
 	FormData       FormData `gorm:"type:json" json:"formData"`
-	models2.ControlBy
-	models2.ModelTime
+	models.ControlBy
+	models.ModelTime
 }
 
 func (OrderWorks) TableName() string {

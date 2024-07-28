@@ -46,6 +46,10 @@ func (jt *JSONTime) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
+	if s == "0000-00-00" {
+		*jt = JSONTime{}
+		return nil
+	}
 	localTime, err := time.ParseInLocation(timeFormat, s, time.FixedZone("CST", 8*3600)) // 按照中国标准时间解析
 	if err != nil {
 		return err
@@ -71,7 +75,7 @@ func (jt *JSONTime) Scan(value interface{}) error {
 // Value implements the driver.Valuer interface
 func (jt JSONTime) Value() (driver.Value, error) {
 	localTime := time.Time(jt).In(time.FixedZone("CST", 8*3600)) // 转换为中国标准时间
-	return localTime.Format(timeFormat), nil
+	return localTime, nil
 }
 
 type ModelTime struct {

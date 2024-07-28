@@ -68,14 +68,12 @@ func (s *OrderItemsUpdateReq) Generate(model *models.OrderItems) {
 	model.Favorite = s.Favorite
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
-	model.Link = s.Link
 	model.Creator = s.Creator
 	model.Regenerator = s.Regenerator
 	if s.Link != "" {
 		model.Link = s.Link
 	}
 	model.ControlBy = s.ControlBy
-	model.ModelTime = s.ModelTime
 }
 
 // GetId 获取数据对应的ID

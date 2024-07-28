@@ -61,7 +61,7 @@ type OrderWorksUpdateReq struct {
 	common.ModelTime
 }
 
-// Generate 结构体数据转化 从 SysDeptControl 至 SysDept 对应的模型
+// Generate 结构体数据转化
 func (s *OrderWorksUpdateReq) Generate(model *models.OrderWorks) {
 	if s.ID != 0 {
 		model.ID = s.ID

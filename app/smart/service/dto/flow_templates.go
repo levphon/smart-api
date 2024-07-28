@@ -64,7 +64,6 @@ func (s *FlowTemplatesUpdateReq) Generate(model *models.FlowTemplates) {
 	model.Creator = s.Creator
 	model.Regenerator = s.Regenerator
 	model.ControlBy = s.ControlBy
-	model.ModelTime = s.ModelTime
 }
 
 // GetId 获取数据对应的ID

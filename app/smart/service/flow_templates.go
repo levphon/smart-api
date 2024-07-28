@@ -114,7 +114,6 @@ func (e *FlowTemplates) Update(c *dto.FlowTemplatesUpdateReq) error {
 	if err = db.Error; err != nil {
 		e.Log.Errorf("UpdateFlowTemplates error: %s", err)
 		return fmt.Errorf("UpdateFlowTemplates error: %s", err)
-
 	}
 
 	if db.RowsAffected == 0 {
