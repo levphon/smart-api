@@ -105,6 +105,7 @@ func (e *FlowManage) Clone(id string, c *gin.Context) error {
 	newFlow := data
 	newFlow.ID = 0                                   // 清除ID，以便创建新记录
 	newFlow.Name = fmt.Sprintf("%s-copy", data.Name) // 添加 "-copy" 后缀
+	newFlow.Template = []string{}                    // 绑定的模板要清空
 	newFlow.SetCreateBy(user.GetUserId(c))
 	newFlow.Creator = user.GetUserName(c)
 	// 创建新的流程记录
@@ -138,9 +139,11 @@ func (e *FlowManage) Update(c *dto.FlowManageUpdateReq) error {
 		e.Log.Errorf("Error querying order works with ID '%v': %s", c.GetId(), err)
 		return fmt.Errorf("error querying order works with ID '%v': %s", c.GetId(), err)
 	}
-
-	if err = tx.Model(&model).Updates(c).Error; err != nil {
-		// 处理更新错误
+	// 使用 Generate 方法生成数据
+	c.Generate(&model)
+	fmt.Println(&model)
+	// 更新字段
+	if err = tx.Save(&model).Error; err != nil {
 		e.Log.Errorf("Failed to update order with title '%v': %s", c.Name, err)
 		return fmt.Errorf("failed to update order with title '%v': %s", c.Name, err)
 	}

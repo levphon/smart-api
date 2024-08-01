@@ -9,7 +9,6 @@ type OrderCategoryInsertReq struct {
 	ID          int    `uri:"id" comment:"编码"`             // 编码
 	Name        string `json:"name" comment:"标题"`          // 标题
 	Creator     string `json:"creator" comment:"创建人"`      // 创建人
-	Regenerator string `json:"regenerator" comment:"更新人"`  // 更新人
 	ChineseName string `json:"chineseName" comment:"中文名称"` //中文名称
 	common.ControlBy
 }
@@ -20,7 +19,6 @@ func (s *OrderCategoryInsertReq) Generate(model *models.OrderCategory) {
 	}
 	model.Name = s.Name
 	model.Creator = s.Creator
-	model.Regenerator = s.Regenerator
 	model.ChineseName = s.ChineseName
 	model.ControlBy = s.ControlBy
 }
@@ -33,7 +31,6 @@ func (s *OrderCategoryInsertReq) GetId() interface{} {
 type OrderCategoryUpdateReq struct {
 	ID          int    `uri:"id" comment:"编码"`             // 编码
 	Name        string `json:"name" comment:"标题"`          // 标题
-	Creator     string `json:"creator" comment:"创建人"`      // 创建人
 	Regenerator string `json:"regenerator" comment:"更新人"`  // 更新人
 	ChineseName string `json:"chineseName" comment:"中文名称"` //中文名称
 	common.ControlBy
@@ -45,7 +42,6 @@ func (s *OrderCategoryUpdateReq) Generate(model *models.OrderCategory) {
 		model.ID = s.ID
 	}
 	model.Name = s.Name
-	model.Creator = s.Creator
 	model.Regenerator = s.Regenerator
 	model.ChineseName = s.ChineseName
 	model.ControlBy = s.ControlBy

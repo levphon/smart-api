@@ -16,8 +16,7 @@ type FlowManageInsertReq struct {
 	Comments    bool                   `json:"comments" comment:"是否开启留言"`
 	Ratings     bool                   `json:"ratings" comment:"是否开启评分"`
 	Description string                 `json:"description" comment:"流程描述"`
-	Creator     string                 `json:"creator" comment:"创建人"`     // 创建人
-	Regenerator string                 `json:"regenerator" comment:"更新人"` // 更新人
+	Creator     string                 `json:"creator" comment:"创建人"` // 创建人
 	StrucTure   models.StrucTure       `json:"structure" comment:"流程数据"`
 	common.ControlBy
 	common.ModelTime
@@ -35,9 +34,8 @@ func (s *FlowManageInsertReq) Generate(model *models.FlowManage) {
 	model.Ratings = s.Ratings
 	model.Task = s.Task
 	model.Notice = s.Notice
-	model.Description = s.Description
 	model.Creator = s.Creator
-	model.Regenerator = s.Regenerator
+	model.Description = s.Description
 	model.StrucTure = s.StrucTure
 	model.ControlBy = s.ControlBy
 }
@@ -58,7 +56,6 @@ type FlowManageUpdateReq struct {
 	Comments    bool                   `json:"comments" comment:"是否开启留言"`
 	Ratings     bool                   `json:"ratings" comment:"是否开启评分"`
 	Description string                 `json:"description" comment:"流程描述"`
-	Creator     string                 `json:"creator" comment:"创建人"`     // 创建人
 	Regenerator string                 `json:"regenerator" comment:"更新人"` // 更新人
 	StrucTure   models.StrucTure       `json:"structure" comment:"流程数据"`
 	common.ControlBy
@@ -79,7 +76,6 @@ func (s *FlowManageUpdateReq) Generate(model *models.FlowManage) {
 	model.Task = s.Task
 	model.Notice = s.Notice
 	model.Description = s.Description
-	model.Creator = s.Creator
 	model.Regenerator = s.Regenerator
 	model.StrucTure = s.StrucTure
 	model.ControlBy = s.ControlBy

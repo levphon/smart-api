@@ -6,7 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"go-admin/app/smart/models"
+	models3 "go-admin/app/system/models"
 	models2 "go-admin/common/models"
+	"strconv"
 	"strings"
 	"time"
 
@@ -60,7 +62,7 @@ func (e *OrderWorks) MyBackGet(pageNum, limit int, objects *[]models.OrderWorks,
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 	// 查询并分页获取订单项数据
-	db := e.Orm.Where("currentHandler = ?", userid).Limit(limit).Offset(offset).Find(objects)
+	db := e.Orm.Where("currentHandlerId = ?", userid).Limit(limit).Offset(offset).Find(objects)
 
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询工单失败: %s", err)
@@ -88,7 +90,7 @@ func (e *OrderWorks) RelatedToMe(pageNum, limit int, objects *[]models.OrderWork
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 	// 查询并分页获取订单项数据
-	db := e.Orm.Where("create_by = ? OR currentHandler = ?", userid, userid).Limit(limit).Offset(offset).Find(objects)
+	db := e.Orm.Where("create_by = ? OR currentHandlerId = ?", userid, userid).Limit(limit).Offset(offset).Find(objects)
 
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询工单失败: %s", err)
@@ -131,6 +133,7 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 	}()
 	data.CreatedAt = models2.JSONTime(time.Now())
 	data.UpdatedAt = models2.JSONTime(time.Now())
+
 	var existingOrderWorks models.OrderWorks
 	if err = tx.Where("title = ?", data.Title).First(&existingOrderWorks).Error; err == nil {
 		// 如果存在相同标题的订单项，返回相应的错误消息
@@ -140,12 +143,93 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 		return err
 	}
 
+	// Step 1: 查询模板表，获取绑定的流程 ID
+	var template models.FlowTemplates
+	if err = tx.Where("name = ?", c.Template).First(&template).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("template with name '%v' not found", c.Template)
+		}
+		return err
+	}
+
+	// 获取绑定的流程 ID
+	flowID := template.BindFlow
+
+	// Step 2: 根据流程 ID 查询流程管理表，获取流程数据
+	var flowManage models.FlowManage
+	if err = tx.Where("id = ?", flowID).First(&flowManage).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("flow with ID '%v' not found", flowID)
+		}
+		return err
+	}
+
+	// 待优化
+	data.Process = flowManage.Name
+
+	nodes, ok := flowManage.StrucTure["nodes"].([]interface{})
+
+	if !ok {
+		return fmt.Errorf("failed to parse nodes from structure")
+	}
+	for _, nodeInterface := range nodes {
+		node, ok := nodeInterface.(map[string]interface{})
+		if !ok {
+			continue
+		}
+
+		if node["clazz"] == "start" {
+			data.CurrentNode, _ = node["label"].(string)
+		}
+		if node["clazz"] == "userTask" {
+			assignValue, _ := node["assignValue"].([]interface{})
+			if len(assignValue) > 0 {
+				// 这里选择取第一个值作为 CurrentHandler，如果有多个值需要特殊处理，请根据实际需求调整
+				handlerID, err := strconv.Atoi(fmt.Sprint(assignValue[0]))
+				if err != nil {
+					return fmt.Errorf("failed to convert handler ID to int: %v", err)
+				}
+				// 获取姓名并设置到 CurrentHandler
+				handlerName, err := e.getHandlerNameByID(handlerID)
+				fmt.Println("handlerName=", handlerName)
+				if err != nil {
+					return fmt.Errorf("failed to get handler name by ID: %v", err)
+				}
+				data.CurrentHandlerID = handlerID
+				data.CurrentHandler = handlerName
+			}
+		}
+	}
 	err = tx.Create(&data).Error
 	if err != nil {
 		e.Log.Errorf("db error:%s", err)
 		return err
 	}
 	return nil
+}
+
+// 假设这是获取姓名的示例函数
+func (e *OrderWorks) getHandlerNameByID(handlerID int) (string, error) {
+	var err error
+
+	var users models3.SysUser
+	tx := e.Orm.Debug().Begin()
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	if err = tx.Where("user_id = ?", handlerID).First(&users).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return "", fmt.Errorf("handler ID %d not found", handlerID)
+		}
+		return "", err
+	}
+
+	return users.Username, nil
 }
 
 // Update OrderWorksry
@@ -181,9 +265,10 @@ func (e *OrderWorks) Update(c *dto.OrderWorksUpdateReq) error {
 
 	// 显式地指定要更新的字段
 	updates := map[string]interface{}{
-		"priority":       c.Priority,
-		"status":         c.Status,
-		"currentHandler": c.CurrentHandler,
+		"priority":         c.Priority,
+		"status":           c.Status,
+		"currentHandler":   c.CurrentHandler,
+		"currentHandlerId": c.CurrentHandlerId,
 	}
 
 	// 更新订单项字段

@@ -12,8 +12,8 @@ type FlowTemplatesInsertReq struct {
 	BindCount   int             `json:"bindCount" comment:"绑定次数"`
 	FormData    models.FormData `json:"formData" comment:"表单数据"`
 	CategoryID  uint            `json:"categoryId" comment:"类别ID"`
-	Creator     string          `json:"creator" comment:"创建人"`     // 创建人
-	Regenerator string          `json:"regenerator" comment:"更新人"` // 更新人
+	BindFlow    uint            `json:"bindFlow" comment:"绑定的流程"`
+	Creator     string          `json:"creator" comment:"创建人"` // 创建人
 	common.ControlBy
 	common.ModelTime
 }
@@ -27,10 +27,9 @@ func (s *FlowTemplatesInsertReq) Generate(model *models.FlowTemplates) {
 	model.BindCount = s.BindCount
 	model.FormData = s.FormData // 直接赋值
 	model.CategoryID = s.CategoryID
+	model.BindFlow = s.BindFlow
 	model.Creator = s.Creator
-	model.Regenerator = s.Regenerator
 	model.ControlBy = s.ControlBy
-	model.ModelTime = s.ModelTime
 }
 
 // GetId 获取数据对应的ID
@@ -45,7 +44,7 @@ type FlowTemplatesUpdateReq struct {
 	BindCount   int             `json:"bindCount" comment:"绑定次数"`
 	FormData    models.FormData `json:"formData" comment:"表单数据"`
 	CategoryID  uint            `json:"categoryId" comment:"类别ID"`
-	Creator     string          `json:"creator" comment:"创建人"`     // 创建人
+	BindFlow    uint            `json:"bindFlow" comment:"绑定的流程"`
 	Regenerator string          `json:"regenerator" comment:"更新人"` // 更新人
 	common.ControlBy
 	common.ModelTime
@@ -61,7 +60,7 @@ func (s *FlowTemplatesUpdateReq) Generate(model *models.FlowTemplates) {
 	model.BindCount = s.BindCount
 	model.FormData = s.FormData // 直接赋值
 	model.CategoryID = s.CategoryID
-	model.Creator = s.Creator
+	model.BindFlow = s.BindFlow
 	model.Regenerator = s.Regenerator
 	model.ControlBy = s.ControlBy
 }
