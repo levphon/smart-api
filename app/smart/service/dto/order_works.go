@@ -6,19 +6,20 @@ import (
 )
 
 type OrderWorksInsertReq struct {
-	ID               int             `uri:"id" comment:"编码"`     // 编码
-	Title            string          `json:"title" comment:"标题"` // 工单标题
-	Creator          string          `json:"creator" comment:"创建人"`
-	CurrentNode      string          `json:"currentNode" comment:"当前节点"`         // 当前节点
-	CurrentHandler   string          `json:"currentHandler" comment:"当前处理人"`     // 当前处理人
-	CurrentHandlerId int             `json:"currentHandlerId" comment:"当前处理人ID"` // 当前处理人
-	Process          string          `json:"process" comment:"流程"`               // 流程
-	Priority         string          `json:"priority" comment:"优先级"`             // 优先级
-	Template         string          `json:"template" comment:"模板"`              // 模板
-	Status           string          `json:"status" comment:"状态"`                // 状态
-	Department       string          `json:"department" comment:"部门"`            // 部门
-	Description      string          `json:"description" comment:"描述"`           // 描述
-	FormData         models.FormData `json:"formData" comment:"工单表单数据"`          // 工单表单数据
+	ID               int               `uri:"id" comment:"编码"`     // 编码
+	Title            string            `json:"title" comment:"标题"` // 工单标题
+	Creator          string            `json:"creator" comment:"创建人"`
+	CurrentNode      string            `json:"currentNode" comment:"当前节点"`         // 当前节点
+	CurrentHandler   string            `json:"currentHandler" comment:"当前处理人"`     // 当前处理人
+	CurrentHandlerId int               `json:"currentHandlerId" comment:"当前处理人ID"` // 当前处理人
+	Process          string            `json:"process" comment:"流程"`               // 流程
+	Priority         string            `json:"priority" comment:"优先级"`             // 优先级
+	Template         string            `json:"template" comment:"模板"`              // 模板
+	Status           string            `json:"status" comment:"状态"`                // 状态
+	Department       string            `json:"department" comment:"部门"`            // 部门
+	Description      string            `json:"description" comment:"描述"`           // 描述
+	FormData         models.FormData   `json:"formData" comment:"工单表单数据"`          // 工单表单数据
+	BindFlowData     models.FlowManage `json:"bindFlowData" comment:"工单流程数据"`      // 工单流程数据
 	common.ControlBy
 }
 
@@ -37,6 +38,7 @@ func (s *OrderWorksInsertReq) Generate(model *models.OrderWorks) {
 	model.Template = s.Template
 	model.Department = s.Department
 	model.Description = s.Description
+	model.BindFlowData = s.BindFlowData
 	model.FormData = s.FormData
 	model.ControlBy = s.ControlBy
 }
@@ -47,20 +49,21 @@ func (s *OrderWorksInsertReq) GetId() interface{} {
 }
 
 type OrderWorksUpdateReq struct {
-	ID               int             `uri:"id" comment:"编码"`                     // 编码
-	Title            string          `json:"title" comment:"标题"`                 // 工单标题
-	Regenerator      string          `json:"regenerator" comment:"更新人"`          // 更新人
-	CurrentNode      string          `json:"currentNode" comment:"当前节点"`         // 当前节点
-	CurrentHandler   string          `json:"currentHandler" comment:"当前处理人"`     // 当前处理人
-	CurrentHandlerId int             `json:"currentHandlerId" comment:"当前处理人ID"` // 当前处理人
-	Process          string          `json:"process" comment:"流程"`               // 流程
-	Priority         string          `json:"priority" comment:"优先级"`             // 优先级
-	Template         string          `json:"template" comment:"模板"`              // 模板
-	Status           string          `json:"status" comment:"状态"`                // 状态
-	Department       string          `json:"department" comment:"部门"`            // 部门
-	Description      string          `json:"description" comment:"描述"`           // 描述
-	FormData         models.FormData `json:"formData" comment:"工单表单数据"`          // 工单表单数据
-	common.ControlBy                 // 包含创建人和更新人
+	ID               int               `uri:"id" comment:"编码"`                     // 编码
+	Title            string            `json:"title" comment:"标题"`                 // 工单标题
+	Regenerator      string            `json:"regenerator" comment:"更新人"`          // 更新人
+	CurrentNode      string            `json:"currentNode" comment:"当前节点"`         // 当前节点
+	CurrentHandler   string            `json:"currentHandler" comment:"当前处理人"`     // 当前处理人
+	CurrentHandlerId int               `json:"currentHandlerId" comment:"当前处理人ID"` // 当前处理人
+	Process          string            `json:"process" comment:"流程"`               // 流程
+	Priority         string            `json:"priority" comment:"优先级"`             // 优先级
+	Template         string            `json:"template" comment:"模板"`              // 模板
+	Status           string            `json:"status" comment:"状态"`                // 状态
+	Department       string            `json:"department" comment:"部门"`            // 部门
+	Description      string            `json:"description" comment:"描述"`           // 描述
+	FormData         models.FormData   `json:"formData" comment:"工单表单数据"`          // 工单表单数据
+	BindFlowData     models.FlowManage `json:"bindFlowData" comment:"工单流程数据"`      // 工单流程数据
+	common.ControlBy                   // 包含创建人和更新人
 	common.ModelTime
 }
 
@@ -80,6 +83,7 @@ func (s *OrderWorksUpdateReq) Generate(model *models.OrderWorks) {
 	model.Status = s.Status
 	model.Department = s.Department
 	model.Description = s.Description
+	model.BindFlowData = s.BindFlowData
 	model.FormData = s.FormData
 	model.ControlBy = s.ControlBy
 }

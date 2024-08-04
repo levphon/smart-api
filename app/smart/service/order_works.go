@@ -104,8 +104,7 @@ func (e *OrderWorks) Get(d *dto.OrderWorksGetReq, model *models.OrderWorks) erro
 	var err error
 	var data models.OrderWorks
 
-	db := e.Orm.Model(&data).
-		First(model, d.GetId())
+	db := e.Orm.Model(&data).First(model, d.GetId())
 	err = db.Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		e.Log.Errorf("db error:%s", err)
@@ -156,18 +155,18 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 	flowID := template.BindFlow
 
 	// Step 2: 根据流程 ID 查询流程管理表，获取流程数据
-	var flowManage models.FlowManage
-	if err = tx.Where("id = ?", flowID).First(&flowManage).Error; err != nil {
+	var flowManageData models.FlowManage
+	if err = tx.Where("id = ?", flowID).First(&flowManageData).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return fmt.Errorf("flow with ID '%v' not found", flowID)
 		}
 		return err
 	}
-
+	data.BindFlowData = flowManageData
+	fmt.Println(data)
 	// 待优化
-	data.Process = flowManage.Name
-
-	nodes, ok := flowManage.StrucTure["nodes"].([]interface{})
+	data.Process = flowManageData.Name
+	nodes, ok := flowManageData.StrucTure["nodes"].([]interface{})
 
 	if !ok {
 		return fmt.Errorf("failed to parse nodes from structure")
