@@ -105,7 +105,6 @@ func (e *FlowManage) Clone(id string, c *gin.Context) error {
 	newFlow := data
 	newFlow.ID = 0                                   // 清除ID，以便创建新记录
 	newFlow.Name = fmt.Sprintf("%s-copy", data.Name) // 添加 "-copy" 后缀
-	newFlow.Template = []string{}                    // 绑定的模板要清空
 	newFlow.SetCreateBy(user.GetUserId(c))
 	newFlow.Creator = user.GetUserName(c)
 	// 创建新的流程记录
@@ -154,10 +153,17 @@ func (e *FlowManage) Update(c *dto.FlowManageUpdateReq) error {
 // Remove 删除Flow
 func (e *FlowManage) Remove(d *dto.FlowManageDeleteReq) error {
 	var err error
-
+	tx := e.Orm.Debug().Begin()
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
 	var data models.FlowManage
 	// 查询要删除的流程
-	if err = e.Orm.First(&data, d.GetId()).Error; err != nil {
+	if err = tx.First(&data, d.GetId()).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return fmt.Errorf("flow with ID '%v' not found", d.GetId())
 		}
@@ -165,11 +171,17 @@ func (e *FlowManage) Remove(d *dto.FlowManageDeleteReq) error {
 		return fmt.Errorf("error querying flow with ID '%v': %s", d.GetId(), err)
 	}
 
-	// 检查当前流程，如果已经绑定了模板则返回报错，提示不能删除，请先解绑模板
-	if len(data.Template) > 0 {
-		fmt.Println("data.Template=", data.Template)
+	var tempData models.FlowTemplates
 
-		return fmt.Errorf("当前流程 '%v' 已经绑定了模板: %v, 请先解绑然后再删除流程", data.Name, data.Template)
+	// 查询 flowtemplates 表，检查是否存在 bindflow 等于当前流程的 ID
+	if err = tx.Where("bindFlow = ?", data.ID).First(&tempData).Error; err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			// 查询出错
+			return fmt.Errorf("未能找到绑定的流程记录，err: '%v'", err)
+		}
+	} else {
+		// 找到绑定记录，返回错误提示
+		return fmt.Errorf("当前流程 '%v' 已经绑定了模板: '%v', 请先解绑然后再删除流程", data.Name, tempData.Name)
 	}
 
 	// 执行删除操作

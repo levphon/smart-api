@@ -215,6 +215,36 @@ func (e OrderWorks) Update(c *gin.Context) {
 	e.OK(req.GetId(), "更新成功")
 }
 
+// 工单处理
+func (e OrderWorks) Handle(c *gin.Context) {
+	s := service.OrderWorks{}
+	req := dto.OrderWorksHandleReq{}
+	err := e.MakeContext(c).
+		MakeOrm().
+		Bind(&req).
+		MakeService(&s.Service).
+		Errors
+
+	if err != nil {
+		e.Logger.Error(err)
+		e.Error(500, err, fmt.Sprintf("更新失败 err:%v", err))
+		return
+	}
+
+	go func() {
+		err := s.Handle(&req)
+		if err != nil {
+
+		}
+	}()
+
+	if err != nil {
+		e.Error(500, err, err.Error())
+		return
+	}
+	e.OK(req.GetId(), "更新成功")
+}
+
 // 删除OrderWorks
 func (e OrderWorks) Delete(c *gin.Context) {
 	s := service.OrderWorks{}

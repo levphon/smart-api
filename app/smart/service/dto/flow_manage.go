@@ -10,8 +10,7 @@ type FlowManageInsertReq struct {
 	Name        string                 `json:"name" comment:"流程名称"` // 流程名称
 	Icon        string                 `json:"icon" comment:"图标"`   // 订单项图标
 	CategoryID  uint                   `json:"categoryId" comment:"类别"`
-	Template    models.FlowSliceString `json:"template" comment:"关联模板"`
-	Task        models.FlowSliceString `json:"task" comment:"任务"`
+	Task        models.TaskSliceString `json:"task" comment:"任务"`
 	Notice      models.FlowSliceInt    `json:"notice" comment:"通知方式"`
 	Comments    bool                   `json:"comments" comment:"是否开启留言"`
 	Ratings     bool                   `json:"ratings" comment:"是否开启评分"`
@@ -29,7 +28,6 @@ func (s *FlowManageInsertReq) Generate(model *models.FlowManage) {
 	model.Name = s.Name
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
-	model.Template = s.Template
 	model.Comments = s.Comments
 	model.Ratings = s.Ratings
 	model.Task = s.Task
@@ -50,8 +48,7 @@ type FlowManageUpdateReq struct {
 	Name        string                 `json:"name" comment:"流程名称"` // 流程名称
 	Icon        string                 `json:"icon" comment:"图标"`   // 订单项图标
 	CategoryID  uint                   `json:"categoryId" comment:"类别"`
-	Template    models.FlowSliceString `json:"template" comment:"关联模板"`
-	Task        models.FlowSliceString `json:"task" comment:"任务"`
+	Task        models.TaskSliceString `json:"task" comment:"任务"`
 	Notice      models.FlowSliceInt    `json:"notice" comment:"通知方式"`
 	Comments    bool                   `json:"comments" comment:"是否开启留言"`
 	Ratings     bool                   `json:"ratings" comment:"是否开启评分"`
@@ -70,7 +67,6 @@ func (s *FlowManageUpdateReq) Generate(model *models.FlowManage) {
 	model.Name = s.Name
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
-	model.Template = s.Template
 	model.Comments = s.Comments
 	model.Ratings = s.Ratings
 	model.Task = s.Task

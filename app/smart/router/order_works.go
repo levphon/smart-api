@@ -35,6 +35,8 @@ func registerOrderWorksAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJW
 		r.POST("/create", api.Insert)
 		// 更新工单信息、生成更新记录
 		r.PUT("/update", api.Update)
+		// 工单处理,更新工单当前节点、当前处理人
+		r.PUT("/handle", api.Handle)
 		// 删除工单
 		r.DELETE("/delete", api.Delete)
 	}

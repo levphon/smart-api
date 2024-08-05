@@ -130,8 +130,6 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 			tx.Commit()
 		}
 	}()
-	data.CreatedAt = models2.JSONTime(time.Now())
-	data.UpdatedAt = models2.JSONTime(time.Now())
 
 	var existingOrderWorks models.OrderWorks
 	if err = tx.Where("title = ?", data.Title).First(&existingOrderWorks).Error; err == nil {
@@ -142,7 +140,7 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 		return err
 	}
 
-	// Step 1: 查询模板表，获取绑定的流程 ID
+	// Step 1: 查询模板表，获取绑定的流程ID
 	var template models.FlowTemplates
 	if err = tx.Where("name = ?", c.Template).First(&template).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -162,43 +160,56 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 		}
 		return err
 	}
-	data.BindFlowData = flowManageData
-	fmt.Println(data)
-	// 待优化
-	data.Process = flowManageData.Name
-	nodes, ok := flowManageData.StrucTure["nodes"].([]interface{})
 
+	// 将默认流程数据给当前工单流程
+	data.BindFlowData = flowManageData
+	// 获取当前流程的名称，
+	data.Process = flowManageData.Name
+	// 获取所有的nodes数据
+	nodes, ok := flowManageData.StrucTure["nodes"].([]interface{})
+	fmt.Println("nodes=", nodes)
 	if !ok {
 		return fmt.Errorf("failed to parse nodes from structure")
 	}
+
+	// 遍历 nodes 获取第一个 userTask 的当前节点和处理人
 	for _, nodeInterface := range nodes {
 		node, ok := nodeInterface.(map[string]interface{})
 		if !ok {
 			continue
 		}
-
-		if node["clazz"] == "start" {
-			data.CurrentNode, _ = node["label"].(string)
-		}
 		if node["clazz"] == "userTask" {
-			assignValue, _ := node["assignValue"].([]interface{})
-			if len(assignValue) > 0 {
-				// 这里选择取第一个值作为 CurrentHandler，如果有多个值需要特殊处理，请根据实际需求调整
-				handlerID, err := strconv.Atoi(fmt.Sprint(assignValue[0]))
-				if err != nil {
-					return fmt.Errorf("failed to convert handler ID to int: %v", err)
-				}
-				// 获取姓名并设置到 CurrentHandler
-				handlerName, err := e.getHandlerNameByID(handlerID)
-				fmt.Println("handlerName=", handlerName)
-				if err != nil {
-					return fmt.Errorf("failed to get handler name by ID: %v", err)
-				}
-				data.CurrentHandlerID = handlerID
-				data.CurrentHandler = handlerName
+			// 设置当前节点
+			data.CurrentNode = node["label"].(string)
+
+			assignValues, ok := node["assignValue"].([]interface{})
+			if !ok || len(assignValues) == 0 {
+				return fmt.Errorf("userTask node has no assignValue")
 			}
+
+			handlerID, err := strconv.Atoi(fmt.Sprint(assignValues[0]))
+			if err != nil {
+				return fmt.Errorf("failed to convert handler ID to int: %v", err)
+			}
+
+			// 获取姓名并设置到 CurrentHandler
+			handlerName, err := e.getHandlerNameByID(handlerID)
+			if err != nil {
+				return fmt.Errorf("failed to get handler name by ID: %v", err)
+			}
+
+			data.CurrentHandlerID = handlerID
+			data.CurrentHandler = handlerName
+			break
 		}
 	}
+	if data.CurrentHandlerID == 0 {
+		return fmt.Errorf("userTask node not found in flow structure")
+	}
+
+	data.CreatedAt = models2.JSONTime(time.Now())
+	data.UpdatedAt = models2.JSONTime(time.Now())
+
 	err = tx.Create(&data).Error
 	if err != nil {
 		e.Log.Errorf("db error:%s", err)
@@ -228,7 +239,7 @@ func (e *OrderWorks) getHandlerNameByID(handlerID int) (string, error) {
 		return "", err
 	}
 
-	return users.Username, nil
+	return users.NickName, nil
 }
 
 // Update OrderWorksry

@@ -18,7 +18,7 @@ type OrderWorks struct {
 	Regenerator      string     `gorm:"regenerator:des;type:varchar(20)" json:"regenerator"`          // 更新人
 	CurrentNode      string     `gorm:"column:currentNode;type:varchar(50)" json:"currentNode"`       // 当前节点
 	CurrentHandler   string     `gorm:"column:currentHandler;type:varchar(50)" json:"currentHandler"` // 当前处理人
-	CurrentHandlerID int        `gorm:"column:currentHandlerId" json:"currentHandlerID"`              // 当前处理人
+	CurrentHandlerID int        `gorm:"column:currentHandlerId" json:"currentHandlerID"`              // 当前处理人ID
 	Process          string     `gorm:"column:process;type:varchar(50)" json:"process"`               // 流程
 	Template         string     `gorm:"column:template;type:varchar(50)" json:"template"`             // 模板
 	Priority         string     `gorm:"column:priority;type:varchar(20)" json:"priority"`             // 优先级

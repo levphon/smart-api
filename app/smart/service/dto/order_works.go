@@ -116,3 +116,12 @@ type OperationHistoryGetReq struct {
 func (h *OperationHistoryGetReq) GetId() interface{} {
 	return h.Id
 }
+
+type OrderWorksHandleReq struct {
+	ID         int    `json:"id"`
+	ActionType string `json:"actionType"`
+}
+
+func (s *OrderWorksHandleReq) GetId() int {
+	return s.ID
+}
