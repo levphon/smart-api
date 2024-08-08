@@ -118,8 +118,12 @@ func (h *OperationHistoryGetReq) GetId() interface{} {
 }
 
 type OrderWorksHandleReq struct {
-	ID         int    `json:"id"`
-	ActionType string `json:"actionType"`
+	ID          int    `json:"id"`
+	Title       string `json:"title" comment:"标题"`         // 工单标题
+	CurrentNode string `json:"currentNode" comment:"当前节点"` // 当前节点
+	ActionType  string `json:"actionType"`
+	common.ControlBy
+	common.ModelTime
 }
 
 func (s *OrderWorksHandleReq) GetId() int {

@@ -230,9 +230,10 @@ func (e OrderWorks) Handle(c *gin.Context) {
 		e.Error(500, err, fmt.Sprintf("更新失败 err:%v", err))
 		return
 	}
-
+	req.SetUpdateBy(user.GetUserId(c))
+	handle := user.GetUserId(c)
 	go func() {
-		err := s.Handle(&req)
+		err := s.Handle(&req, handle)
 		if err != nil {
 
 		}
@@ -242,7 +243,7 @@ func (e OrderWorks) Handle(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-	e.OK(req.GetId(), "更新成功")
+	e.OK(req.GetId(), "操作成功")
 }
 
 // 删除OrderWorks

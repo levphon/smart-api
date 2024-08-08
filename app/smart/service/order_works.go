@@ -6,10 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"go-admin/app/smart/models"
-	models3 "go-admin/app/system/models"
 	models2 "go-admin/common/models"
 	"strconv"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -167,7 +165,6 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 	data.Process = flowManageData.Name
 	// 获取所有的nodes数据
 	nodes, ok := flowManageData.StrucTure["nodes"].([]interface{})
-	fmt.Println("nodes=", nodes)
 	if !ok {
 		return fmt.Errorf("failed to parse nodes from structure")
 	}
@@ -193,7 +190,7 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 			}
 
 			// 获取姓名并设置到 CurrentHandler
-			handlerName, err := e.getHandlerNameByID(handlerID)
+			handlerName, err := GetHandlerNameByID(tx, handlerID)
 			if err != nil {
 				return fmt.Errorf("failed to get handler name by ID: %v", err)
 			}
@@ -216,30 +213,6 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 		return err
 	}
 	return nil
-}
-
-// 假设这是获取姓名的示例函数
-func (e *OrderWorks) getHandlerNameByID(handlerID int) (string, error) {
-	var err error
-
-	var users models3.SysUser
-	tx := e.Orm.Debug().Begin()
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		} else {
-			tx.Commit()
-		}
-	}()
-
-	if err = tx.Where("user_id = ?", handlerID).First(&users).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return "", fmt.Errorf("handler ID %d not found", handlerID)
-		}
-		return "", err
-	}
-
-	return users.NickName, nil
 }
 
 // Update OrderWorksry
@@ -270,8 +243,6 @@ func (e *OrderWorks) Update(c *dto.OrderWorksUpdateReq) error {
 		e.Log.Errorf(fmt.Sprintf("No changes for order with '%v'", model.Title))
 		return fmt.Errorf("no changes for order with '%v'", model.Title)
 	}
-	// 构建更新内容描述字符串
-	updateDescriptionStr := buildUpdateDescription(&model, c)
 
 	// 显式地指定要更新的字段
 	updates := map[string]interface{}{
@@ -288,8 +259,21 @@ func (e *OrderWorks) Update(c *dto.OrderWorksUpdateReq) error {
 		return fmt.Errorf("failed to update order with title '%v': %s", c.Title, err)
 	}
 
+	// 构建更新内容描述字符串
+	updateDescriptionStr := BuildUpdateDescription(&model, c)
+
+	historyReq := dto.OrderWorksHistReq{
+		Title:          model.Title,
+		Transfer:       "更新", // 假设流转操作类型保存在 ActionType 中
+		Remark:         updateDescriptionStr,
+		CurrentNode:    model.CurrentNode,
+		Status:         c.Status,
+		HandlerId:      c.ControlBy.UpdateBy,
+		HandleTime:     models2.JSONTime(time.Now()),
+		HandleDuration: calculateHandleDuration(model.ModelTime.UpdatedAt),
+	}
 	// 记录操作历史
-	if err = recordOperationHistory(tx, c, updateDescriptionStr); err != nil {
+	if err = RecordOperationHistory(tx, &historyReq); err != nil {
 		e.Log.Errorf("Failed to record operation history: %s", err)
 		return fmt.Errorf("failed to record operation history: %s", err)
 	}
@@ -328,54 +312,6 @@ func (e *OrderWorks) Remove(d *dto.OrderWorksDeleteReq) error {
 		return err
 	}
 	return nil
-}
-
-func buildUpdateDescription(model *models.OrderWorks, c *dto.OrderWorksUpdateReq) string {
-	var updateDescription []string
-
-	if model.Priority != c.Priority {
-		oldPriority := PriorityMap[model.Priority]
-		newPriority := PriorityMap[c.Priority]
-		updateDescription = append(updateDescription, fmt.Sprintf("优先级: '%v' => '%v'", oldPriority, newPriority))
-	}
-	if model.Status != c.Status {
-		oldStatus := StatusMap[model.Status]
-		newStatus := StatusMap[c.Status]
-		updateDescription = append(updateDescription, fmt.Sprintf("状态: '%v' => '%v'", oldStatus, newStatus))
-	}
-	if model.CurrentHandler != c.CurrentHandler {
-		oldHandler := model.CurrentHandler
-		newHandler := c.CurrentHandler
-		updateDescription = append(updateDescription, fmt.Sprintf("处理人: '%v' => '%v'", oldHandler, newHandler))
-	}
-
-	return strings.Join(updateDescription, ", ")
-}
-
-func recordOperationHistory(tx *gorm.DB, c *dto.OrderWorksUpdateReq, updateDescriptionStr string) error {
-	var operation = models.OperationHistory{
-		Title:          c.Title,
-		NodeName:       c.CurrentNode,
-		Transfer:       "修改工单信息",
-		Remark:         fmt.Sprintf("更新：%v", updateDescriptionStr),
-		Handler:        c.ControlBy.UpdateBy,
-		HandleTime:     time.Now(),
-		HandleDuration: calculateHandleDuration(c.ModelTime.UpdatedAt),
-		ControlBy:      c.ControlBy, // 可以根据实际情况更改为具体处理人
-		ModelTime:      c.ModelTime,
-	}
-	return tx.Create(&operation).Error
-
-}
-
-// 计算处理时长
-func calculateHandleDuration(updatedAt models2.JSONTime) int64 {
-	// Convert JSONTime to time.Time
-	updatedTime := updatedAt.ToTime()
-
-	currentTime := time.Now()
-	duration := currentTime.Sub(updatedTime)
-	return int64(duration.Minutes())
 }
 
 // 根据ID获取工单

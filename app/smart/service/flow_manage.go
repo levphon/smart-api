@@ -140,7 +140,6 @@ func (e *FlowManage) Update(c *dto.FlowManageUpdateReq) error {
 	}
 	// 使用 Generate 方法生成数据
 	c.Generate(&model)
-	fmt.Println(&model)
 	// 更新字段
 	if err = tx.Save(&model).Error; err != nil {
 		e.Log.Errorf("Failed to update order with title '%v': %s", c.Name, err)

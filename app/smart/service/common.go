@@ -8,7 +8,10 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 	"go-admin/app/smart/models"
 	"go-admin/app/smart/service/dto"
+	models3 "go-admin/app/system/models"
+	models2 "go-admin/common/models"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -28,7 +31,6 @@ func (e *WorksNotify) Insert(c *dto.WorksNotifyReq) error {
 			tx.Commit()
 		}
 	}()
-	fmt.Println(&data)
 	var count int64
 	if err := tx.Model(&models.WorksNotify{}).Where("order_id = ?", data.OrderID).Count(&count).Error; err != nil {
 		return fmt.Errorf("failed to count notifications")
@@ -90,8 +92,6 @@ func (e *WorksNotify) UpdateNotify(c *dto.WorksNotifyUpdateReq) error {
 		return fmt.Errorf("error querying notify with ID '%v': %s", c.GetId(), err)
 	}
 
-	fmt.Println("model.ReadStatus == c.ReadStatus", model.ReadStatus, c.ReadStatus)
-
 	// 判断是否需要执行更新操作
 	if model.ReadStatus == c.ReadStatus {
 		return fmt.Errorf(fmt.Sprintf("No changes for notify with '%v'", model.Title))
@@ -113,4 +113,72 @@ func (e *WorksNotify) UpdateNotify(c *dto.WorksNotifyUpdateReq) error {
 	}
 
 	return nil
+}
+
+func BuildUpdateDescription(model *models.OrderWorks, c *dto.OrderWorksUpdateReq) string {
+	var updateDescription []string
+
+	if model.Priority != c.Priority {
+		oldPriority := PriorityMap[model.Priority]
+		newPriority := PriorityMap[c.Priority]
+		updateDescription = append(updateDescription, fmt.Sprintf("优先级: '%v' => '%v'", oldPriority, newPriority))
+	}
+	if model.Status != c.Status {
+		oldStatus := StatusMap[model.Status]
+		newStatus := StatusMap[c.Status]
+		updateDescription = append(updateDescription, fmt.Sprintf("状态: '%v' => '%v'", oldStatus, newStatus))
+	}
+	if model.CurrentHandler != c.CurrentHandler {
+		oldHandler := model.CurrentHandler
+		newHandler := c.CurrentHandler
+		updateDescription = append(updateDescription, fmt.Sprintf("处理人: '%v' => '%v'", oldHandler, newHandler))
+	}
+
+	return strings.Join(updateDescription, ", ")
+}
+
+func RecordOperationHistory(tx *gorm.DB, req dto.OperationHistoryRequest) error {
+	// 获取处理人名称
+	handlerName, err := GetHandlerNameByID(tx, req.GetHandlerId())
+
+	if err != nil {
+		return fmt.Errorf("failed to get handler name: %w", err)
+	}
+
+	var operation = models.OperationHistory{
+		Title:          req.GetTitle(),
+		NodeName:       req.GetCurrentNode(),
+		Transfer:       req.GetTransfer(),
+		Status:         req.GetStatus(),
+		Remark:         req.GetRemark(),
+		HandlerId:      req.GetHandlerId(),
+		HandlerName:    handlerName,
+		HandleTime:     req.GetHandleTime(),
+		HandleDuration: req.GetHandleDuration(),
+	}
+	return tx.Create(&operation).Error
+
+}
+
+// 计算处理时长
+func calculateHandleDuration(updatedAt models2.JSONTime) int64 {
+	// Convert JSONTime to time.Time
+	updatedTime := updatedAt.ToTime()
+	currentTime := time.Now()
+	duration := currentTime.Sub(updatedTime)
+	return int64(duration.Minutes()) // 返回秒数
+}
+
+// 根据用户id获取姓名
+func GetHandlerNameByID(tx *gorm.DB, handlerID int) (string, error) {
+	var users models3.SysUser
+
+	if err := tx.Where("user_id = ?", handlerID).First(&users).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return "", fmt.Errorf("handler ID %d not found", handlerID)
+		}
+		return "", err
+	}
+
+	return users.NickName, nil
 }

@@ -78,3 +78,57 @@ func (s *WorksNotifyGetReq) GetId() interface{} {
 //func (s *WorksNotifyDeleteReq) GetId() interface{} {
 //	return s.Id
 //}
+
+type OperationHistoryRequest interface {
+	GetTitle() string
+	GetCurrentNode() string
+	GetTransfer() string
+	GetRemark() string
+	GetStatus() string
+	GetHandlerId() int
+	GetHandleTime() common.JSONTime
+	GetHandleDuration() int64
+}
+
+type OrderWorksHistReq struct {
+	Title          string
+	CurrentNode    string
+	Transfer       string
+	Remark         string
+	Status         string
+	HandlerId      int
+	HandleTime     common.JSONTime // 修改为 time.Time 类型
+	HandleDuration int64
+}
+
+func (req *OrderWorksHistReq) GetTitle() string {
+	return req.Title
+}
+
+func (req *OrderWorksHistReq) GetCurrentNode() string {
+	return req.CurrentNode
+}
+
+func (req *OrderWorksHistReq) GetTransfer() string {
+	return req.Transfer
+}
+
+func (req *OrderWorksHistReq) GetStatus() string {
+	return req.Status
+}
+
+func (req *OrderWorksHistReq) GetRemark() string {
+	return req.Remark
+}
+
+func (req *OrderWorksHistReq) GetHandlerId() int {
+	return req.HandlerId
+}
+
+func (req *OrderWorksHistReq) GetHandleTime() common.JSONTime {
+	return req.HandleTime
+}
+
+func (req *OrderWorksHistReq) GetHandleDuration() int64 {
+	return req.HandleDuration
+}

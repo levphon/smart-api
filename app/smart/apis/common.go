@@ -35,7 +35,12 @@ func (n WorksNotify) SendNotify(c *gin.Context) {
 	// 设置创建人
 	req.SetCreateBy(user.GetUserId(c))
 
-	err = s.Insert(&req)
+	go func() {
+		err := s.Insert(&req)
+		if err != nil {
+
+		}
+	}()
 	if err != nil {
 		n.Error(500, err, fmt.Sprintf("创建失败 err:%v", err))
 		return
