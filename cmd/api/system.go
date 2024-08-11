@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/go-admin-team/go-admin-core/sdk/config"
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
@@ -14,7 +15,6 @@ import (
 	"github.com/go-admin-team/go-admin-core/config/source/file"
 	"github.com/go-admin-team/go-admin-core/sdk"
 	"github.com/go-admin-team/go-admin-core/sdk/api"
-	"github.com/go-admin-team/go-admin-core/sdk/config"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg"
 	"github.com/spf13/cobra"
 
@@ -61,6 +61,7 @@ func init() {
 func setup() {
 	// 注入配置扩展项
 	config.ExtendConfig = &ext.ExtConfig
+
 	//1. 读取配置
 	config.Setup(
 		file.NewSource(file.WithPath(configYml)),

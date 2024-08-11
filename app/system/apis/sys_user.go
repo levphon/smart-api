@@ -452,8 +452,13 @@ func (e SysUser) GetInfo(c *gin.Context) {
 	}
 	mp["userName"] = sysUser.NickName
 	mp["userId"] = sysUser.UserId
-	mp["deptId"] = sysUser.DeptId
 	mp["name"] = sysUser.NickName
 	mp["code"] = 200
+	// 新增返回字段
+	mp["deptId"] = sysUser.DeptId
+	mp["phone"] = sysUser.Phone
+	mp["sex"] = sysUser.Sex
+	mp["email"] = sysUser.Email
+	mp["postId"] = sysUser.PostId
 	e.OK(mp, "")
 }

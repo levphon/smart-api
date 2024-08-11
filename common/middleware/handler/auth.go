@@ -1,7 +1,11 @@
 package handler
 
 import (
+	"github.com/go-admin-team/go-admin-core/logger"
+	"github.com/go-admin-team/go-admin-core/sdk/pkg/captcha"
 	"go-admin/app/system/models"
+	"go-admin/app/system/service"
+	"go-admin/app/system/service/dto"
 	"go-admin/common"
 	"net/http"
 
@@ -10,7 +14,6 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/api"
 	"github.com/go-admin-team/go-admin-core/sdk/config"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg"
-	"github.com/go-admin-team/go-admin-core/sdk/pkg/captcha"
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/response"
@@ -68,7 +71,6 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 		response.Error(c, 500, err, "数据库连接获取失败")
 		return nil, jwt.ErrFailedAuthentication
 	}
-
 	var loginVals Login
 	var status = "2"
 	var msg = "登录成功"
@@ -76,7 +78,6 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 	defer func() {
 		LoginLogToDB(c, status, msg, username)
 	}()
-
 	if err = c.ShouldBind(&loginVals); err != nil {
 		username = loginVals.Username
 		msg = "数据解析失败"
@@ -93,17 +94,65 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 			return nil, jwt.ErrInvalidVerificationode
 		}
 	}
-	sysUser, role, e := loginVals.GetUser(db)
-	if e == nil {
-		username = loginVals.Username
-
-		return map[string]interface{}{"user": sysUser, "role": role}, nil
+	if loginVals.Source == "LDAP" {
+		// LDAP 登录逻辑
+		if err = handleLDAPLogin(c, loginVals); err != nil {
+			msg = "LDAP 登录失败"
+			status = "1"
+			log.Warnf("%s login failed!", loginVals.Username)
+			return nil, err
+		}
 	} else {
-		msg = "登录失败"
-		status = "1"
-		log.Warnf("%s login failed!", loginVals.Username)
+		// 系统登录逻辑
+		if sysUser, role, e := loginVals.GetUser(db); e == nil {
+			username = loginVals.Username
+			return map[string]interface{}{"user": sysUser, "role": role}, nil
+		} else {
+			msg = "登录失败"
+			status = "1"
+			log.Warnf("%s login failed!", loginVals.Username)
+			return nil, jwt.ErrFailedAuthentication
+		}
 	}
+	// 如果 LDAP 登录成功但未找到用户信息
+	if sysUser, role, e := loginVals.GetUser(db); e == nil {
+		username = loginVals.Username
+		return map[string]interface{}{"user": sysUser, "role": role}, nil
+	}
+
+	msg = "登录失败"
+	status = "1"
+	log.Warnf("%s login failed!", loginVals.Username)
 	return nil, jwt.ErrFailedAuthentication
+}
+
+func handleLDAPLogin(c *gin.Context, loginVals Login) error {
+
+	// 初始化 gorm.DB
+	orm, err := pkg.GetOrm(c)
+	if err != nil {
+		return err
+	}
+
+	// 获取 logger 实例
+	log := logger.NewLogger() // 根据实际方法调整
+
+	logHelper := logger.NewHelper(log)
+
+	// 初始化 SysLdap 实例，并设置 Orm 和 Log
+	ldapService := service.SysLdap{
+		Orm: orm,
+		Log: logHelper,
+	}
+
+	ldapUser := dto.LdapUserInsertReq{
+		Username: loginVals.Username,
+		Password: loginVals.Password,
+		Source:   loginVals.Source,
+	}
+
+	// 调用 LdapAuth 方法进行 LDAP 认证和用户注册
+	return ldapService.LdapAuth(&ldapUser)
 }
 
 // LoginLogToDB Write log to database

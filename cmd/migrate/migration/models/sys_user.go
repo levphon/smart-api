@@ -20,6 +20,7 @@ type SysUser struct {
 	PostId   int    `json:"postId" gorm:"type:bigint;comment:岗位"`
 	Remark   string `json:"remark" gorm:"type:varchar(255);comment:备注"`
 	Status   string `json:"status" gorm:"type:varchar(4);comment:状态"`
+	Source   string `json:"source" gorm:"size:255;comment:用户来源"`
 	ControlBy
 	ModelTime
 }

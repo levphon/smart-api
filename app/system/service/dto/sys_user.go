@@ -102,7 +102,30 @@ type SysUserInsertReq struct {
 	PostId   int    `json:"postId" comment:"岗位"`
 	Remark   string `json:"remark" comment:"备注"`
 	Status   string `json:"status" comment:"状态" vd:"len($)>0" default:"1"`
+	Source   string `json:"source" comment:"用户来源" vd:"len($)>0" default:"1"`
 	common.ControlBy
+}
+
+type LdapUserInsertReq struct {
+	Username string `json:"username" binding:"required" comment:"用户名" vd:"len($)>0"`
+	Password string `json:"password" binding:"required" comment:"密码"`
+	Source   string `json:"source" comment:"用户来源" vd:"len($)>0" default:"1"`
+	Code     string `form:"Code" json:"code" binding:"required"`
+	UUID     string `form:"UUID" json:"uuid" binding:"required"`
+	RoleId   int    `json:"roleId" comment:"角色ID" default:"2"`
+	Status   string `json:"status" comment:"状态"  default:"2"`
+}
+
+func (s *LdapUserInsertReq) Generate(model *models.SysUser) {
+	model.Username = s.Username
+	model.Password = s.Password
+	model.Source = s.Source
+	if s.RoleId == 0 {
+		model.RoleId = 2 // 设置默认值
+	}
+	if s.Status == "" {
+		model.Status = "2" // 设置默认值
+	}
 }
 
 func (s *SysUserInsertReq) Generate(model *models.SysUser) {
@@ -121,6 +144,7 @@ func (s *SysUserInsertReq) Generate(model *models.SysUser) {
 	model.PostId = s.PostId
 	model.Remark = s.Remark
 	model.Status = s.Status
+	model.Source = s.Source
 	model.CreateBy = s.CreateBy
 }
 
@@ -141,6 +165,7 @@ type SysUserUpdateReq struct {
 	PostId   int    `json:"postId" comment:"岗位"`
 	Remark   string `json:"remark" comment:"备注"`
 	Status   string `json:"status" comment:"状态" default:"1"`
+	Source   string `json:"source" comment:"用户来源" vd:"len($)>0" default:"1"`
 	common.ControlBy
 }
 
@@ -158,6 +183,7 @@ func (s *SysUserUpdateReq) Generate(model *models.SysUser) {
 	model.DeptId = s.DeptId
 	model.PostId = s.PostId
 	model.Remark = s.Remark
+	model.Source = s.Source
 	model.Status = s.Status
 }
 

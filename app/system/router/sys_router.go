@@ -29,6 +29,7 @@ func InitSysRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) *gin.Rou
 	}
 	// 需要认证
 	sysCheckRoleRouterInit(g, authMiddleware)
+
 	return g
 }
 
@@ -71,10 +72,19 @@ func sysCheckRoleRouterInit(r *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddle
 	v1 := r.Group("/api/v1")
 	{
 		v1.POST("/login", authMiddleware.LoginHandler)
+
 		// Refresh time can be longer than token timeout
 		v1.GET("/refresh_token", authMiddleware.RefreshHandler)
 	}
 	registerBaseRouter(v1, authMiddleware)
+}
+func InitLDAPRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) {
+	ldapRouter := r.Group("/api/v1/ldap")
+	{
+		ldapRouter.POST("/login", authMiddleware.LoginHandler)
+		ldapRouter.GET("/login", authMiddleware.LoginHandler)
+
+	}
 }
 
 // 注册基础的路由，在服务启动时进行

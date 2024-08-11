@@ -41,8 +41,6 @@ func tip() {
 func init() {
 	rootCmd.AddCommand(api.StartCmd)
 	rootCmd.AddCommand(migrate.StartCmd)
-	//rootCmd.AddCommand(version.StartCmd)
-	//rootCmd.AddCommand(config.StartCmd)
 }
 
 // Execute : apply commands

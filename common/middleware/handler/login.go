@@ -9,6 +9,7 @@ import (
 type Login struct {
 	Username string `form:"UserName" json:"username" binding:"required"`
 	Password string `form:"Password" json:"password" binding:"required"`
+	Source   string `json:"source" comment:"用户来源" vd:"len($)>0" default:"1"`
 	Code     string `form:"Code" json:"code" binding:"required"`
 	UUID     string `form:"UUID" json:"uuid" binding:"required"`
 }

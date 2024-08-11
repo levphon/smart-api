@@ -35,6 +35,8 @@ func InitRouter() {
 	InitSysRouter(r, authMiddleware)
 
 	// 注册业务路由
-	// TODO: 这里可存放业务路由，里边并无实际路由只有演示代码
 	InitSmartApiRouter(r, authMiddleware)
+
+	// 注册LDAP路由
+	InitLDAPRouter(r, authMiddleware)
 }

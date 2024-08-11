@@ -42,7 +42,6 @@ func (e *WorksNotify) Insert(c *dto.WorksNotifyReq) error {
 	}
 	message := fmt.Sprintf("工单标题: %s 需要你的处理", data.Title)
 	data.Message = message
-	data.ReadStatus = 0
 
 	err = tx.Create(&data).Error
 	if err != nil {
@@ -52,11 +51,17 @@ func (e *WorksNotify) Insert(c *dto.WorksNotifyReq) error {
 	return nil
 }
 
-func (e *WorksNotify) GetNotify(pageNum, limit int, objects *[]models.WorksNotify, userName string) error {
+func (e *WorksNotify) GetNotify(pageNum, limit int, objects *[]models.WorksNotify, userid int) error {
+	tx := e.Orm.Debug().Begin()
+
+	userName, err := GetHandlerNameByID(tx, userid)
+	if err != nil {
+		return fmt.Errorf("failed to get handler name: %w", err)
+	}
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 	// 查询并分页获取订单项数据
-	db := e.Orm.Where("currentHandler = ?", userName).Limit(limit).Offset(offset).Find(objects)
+	db := tx.Where("currentHandler = ?", userName).Limit(limit).Offset(offset).Find(objects)
 
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询通知信息失败: %s", err)
