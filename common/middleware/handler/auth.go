@@ -102,7 +102,7 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 			log.Warnf("%s login failed!", loginVals.Username)
 			return nil, err
 		}
-	} else {
+	} else if loginVals.Source == "SYSTEM" {
 		// 系统登录逻辑
 		if sysUser, role, e := loginVals.GetUser(db); e == nil {
 			username = loginVals.Username
@@ -113,6 +113,11 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 			log.Warnf("%s login failed!", loginVals.Username)
 			return nil, jwt.ErrFailedAuthentication
 		}
+	} else {
+		msg = "登录失败"
+		status = "1"
+		log.Warnf("%s login failed!", loginVals.Username)
+		return nil, jwt.ErrFailedAuthentication
 	}
 	// 如果 LDAP 登录成功但未找到用户信息
 	if sysUser, role, e := loginVals.GetUser(db); e == nil {

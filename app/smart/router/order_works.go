@@ -24,7 +24,7 @@ func registerOrderWorksAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJW
 		// 查询所有的工单
 		r.GET("/list", api.GetPage)
 		// 根据ID 查询
-		r.GET("/list:id", api.Get)
+		r.GET("/list/:id", api.Get)
 		// 我的待办
 		r.GET("/myBacklog", api.MyBacklogGet)
 		// 我创建的

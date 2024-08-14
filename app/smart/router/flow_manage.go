@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
 	"go-admin/app/smart/apis"
+	"go-admin/common/actions"
 	"go-admin/common/middleware"
 )
 
@@ -16,7 +17,7 @@ func init() {
 // 注册工单模板路由
 func registerFlowManageAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.FlowManage{}
-	r := v1.Group("/flowManage").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+	r := v1.Group("/flowManage").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole()).Use(actions.PermissionAction())
 	{
 		r.POST("/create", api.Insert)
 		r.POST("/clone/:id", api.Clone)

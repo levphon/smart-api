@@ -82,8 +82,6 @@ func InitLDAPRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) {
 	ldapRouter := r.Group("/api/v1/ldap")
 	{
 		ldapRouter.POST("/login", authMiddleware.LoginHandler)
-		ldapRouter.GET("/login", authMiddleware.LoginHandler)
-
 	}
 }
 
