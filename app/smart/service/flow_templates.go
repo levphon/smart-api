@@ -5,13 +5,10 @@ package service
 import (
 	"errors"
 	"fmt"
-	"go-admin/app/smart/models"
-	models2 "go-admin/common/models"
-	"gorm.io/gorm"
-	"time"
-
 	"github.com/go-admin-team/go-admin-core/sdk/service"
+	"go-admin/app/smart/models"
 	"go-admin/app/smart/service/dto"
+	"gorm.io/gorm"
 )
 
 type FlowTemplates struct {
@@ -64,9 +61,6 @@ func (e *FlowTemplates) Insert(c *dto.FlowTemplatesInsertReq) error {
 			tx.Commit()
 		}
 	}()
-
-	data.CreatedAt = models2.JSONTime(time.Now())
-	data.UpdatedAt = models2.JSONTime(time.Now())
 
 	var existingFlowTemplates models.FlowTemplates
 	if err = tx.Where("name = ?", data.Name).First(&existingFlowTemplates).Error; err == nil {

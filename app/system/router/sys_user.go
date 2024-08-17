@@ -18,6 +18,7 @@ func registerSysUserRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddle
 	r := v1.Group("/sys-user").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole()).Use(actions.PermissionAction())
 	{
 		r.GET("", api.GetPage)
+		r.GET("/specify-user", api.GetSpecify)
 		r.GET("/:id", api.Get)
 		r.POST("", api.Insert)
 		r.PUT("", api.Update)

@@ -204,9 +204,6 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 		return fmt.Errorf("userTask node not found in flow structure")
 	}
 
-	data.CreatedAt = models2.JSONTime(time.Now())
-	data.UpdatedAt = models2.JSONTime(time.Now())
-
 	err = tx.Create(&data).Error
 	if err != nil {
 		e.Log.Errorf("db error:%s", err)

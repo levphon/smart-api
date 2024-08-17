@@ -14,16 +14,14 @@ import (
 	"go-admin/common/global"
 )
 
-type OrderItems struct {
+type OrderTask struct {
 	api.Api
 }
 
-func (e OrderItems) GetPage(c *gin.Context) {
-
+func (e OrderTask) GetPage(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
-
-	s := service.OrderItems{}
+	s := service.OrderTask{}
 	// 创建数据库连接和绑定请求
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -36,10 +34,10 @@ func (e OrderItems) GetPage(c *gin.Context) {
 		return
 	}
 
-	// 定义一个存储所有订单项数据的切片
-	var objects []models.OrderItems
+	// 定义一个存储所有工单类别数据的切片
+	var objects []models.OrderTask
 
-	err = s.GetOrderItemsPage(pageNum, limit, &objects)
+	err = s.GetOrderTaskPage(pageNum, limit, &objects)
 	if err != nil {
 		e.Error(500, err, "查询失败")
 		return
@@ -47,10 +45,10 @@ func (e OrderItems) GetPage(c *gin.Context) {
 
 	e.OK(objects, "查询成功")
 }
-
-func (e OrderItems) Get(c *gin.Context) {
-	s := service.OrderItems{}
-	req := dto.OrderItemsGetReq{}
+func (e OrderTask) Get(c *gin.Context) {
+	s := service.OrderTask{}
+	// 请求结构体 id
+	req := dto.OrderTaskGetReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON, nil).
@@ -61,8 +59,9 @@ func (e OrderItems) Get(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-	var object models.OrderItems
+	var object models.OrderTask
 
+	// &object 因为是传递的地址，object 地址对应的内存值会被修改，所以就不需要接收返回值了
 	err = s.Get(&req, &object)
 	if err != nil {
 		e.Error(500, err, "查询失败")
@@ -72,10 +71,10 @@ func (e OrderItems) Get(c *gin.Context) {
 	e.OK(object, "查询成功")
 }
 
-func (e OrderItems) Insert(c *gin.Context) {
-	s := service.OrderItems{}
+func (e OrderTask) Insert(c *gin.Context) {
+	s := service.OrderTask{}
 
-	req := dto.OrderItemsInsertReq{}
+	req := dto.OrderTaskInsertReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON).
@@ -94,17 +93,18 @@ func (e OrderItems) Insert(c *gin.Context) {
 		e.Error(500, err, fmt.Sprintf("创建失败 err:%v", err))
 		return
 	}
-	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Title))
+	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Name))
 }
 
-func (e OrderItems) Update(c *gin.Context) {
-	s := service.OrderItems{}
-	req := dto.OrderItemsUpdateReq{}
+func (e OrderTask) Update(c *gin.Context) {
+	s := service.OrderTask{}
+	req := dto.OrderTaskUpdateReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req).
 		MakeService(&s.Service).
 		Errors
+
 	if err != nil {
 		e.Logger.Error(err)
 		e.Error(500, err, fmt.Sprintf("更新失败 err:%v", err))
@@ -112,6 +112,7 @@ func (e OrderItems) Update(c *gin.Context) {
 	}
 	req.SetUpdateBy(user.GetUserId(c))
 	req.Regenerator = user.GetUserName(c)
+
 	err = s.Update(&req)
 	if err != nil {
 		e.Error(500, err, err.Error())
@@ -119,10 +120,10 @@ func (e OrderItems) Update(c *gin.Context) {
 	}
 	e.OK(req.GetId(), "更新成功")
 }
+func (e OrderTask) Delete(c *gin.Context) {
+	s := service.OrderTask{}
 
-func (e OrderItems) Delete(c *gin.Context) {
-	s := service.OrderItems{}
-	req := dto.OrderItemsDeleteReq{}
+	req := dto.OrderTaskDeleteReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON, nil).
@@ -133,7 +134,6 @@ func (e OrderItems) Delete(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-
 	err = s.Remove(&req)
 	if err != nil {
 		e.Error(500, err, fmt.Sprintf("删除失败 err:%v", err))

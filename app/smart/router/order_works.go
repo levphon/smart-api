@@ -49,7 +49,7 @@ func registerOrderWorksAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJW
 		r.GET("/notify", notifyApi.GetNotify)
 
 		// 发送通知消息
-		r.POST("/notify/create", notifyApi.SendNotify)
+		r.POST("/notify/create", notifyApi.CreateNotify)
 
 		// 处理通知消息
 		r.PUT("/notify/update", notifyApi.UpdateNotify)

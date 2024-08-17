@@ -74,6 +74,7 @@ require (
 	github.com/go-admin-team/redis-watcher/v2 v2.0.0-20231102130416-bfe327cac940 // indirect
 	github.com/go-admin-team/redisqueue/v2 v2.0.1-0.20231102124201-508101cc789a // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.5 // indirect
+	github.com/go-lark/lark v1.15.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
@@ -106,6 +107,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/kyokomi/emoji/v2 v2.2.11 // indirect
+	github.com/larksuite/oapi-sdk-go/v3 v3.3.1 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect

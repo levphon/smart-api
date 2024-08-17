@@ -21,6 +21,11 @@ type SysUserGetPageReq struct {
 	DeptJoin       `search:"type:left;on:dept_id:dept_id;table:sys_user;join:sys_dept"`
 	SysUserOrder
 }
+type SysUserGetSpecifyReq struct {
+	dto.Pagination `search:"-"`
+	UserId         int    `form:"userId" search:"type:exact;column:id;table:sys_user" comment:"用户ID"`
+	Username       string `form:"username" search:"type:exact;column:username;table:sys_user" comment:"用户名"`
+}
 
 type SysUserOrder struct {
 	UserIdOrder    string `search:"type:order;column:user_id;table:sys_user" form:"userIdOrder"`

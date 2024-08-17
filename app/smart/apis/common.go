@@ -18,7 +18,7 @@ type WorksNotify struct {
 	api.Api
 }
 
-func (n WorksNotify) SendNotify(c *gin.Context) {
+func (n WorksNotify) CreateNotify(c *gin.Context) {
 	s := service.WorksNotify{}
 
 	req := dto.WorksNotifyReq{}

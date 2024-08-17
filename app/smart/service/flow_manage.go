@@ -8,9 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
 	"go-admin/app/smart/models"
-	models2 "go-admin/common/models"
-	"time"
-
 	"gorm.io/gorm"
 
 	"github.com/go-admin-team/go-admin-core/sdk/service"
@@ -69,8 +66,7 @@ func (e *FlowManage) Insert(c *dto.FlowManageInsertReq) error {
 			tx.Commit()
 		}
 	}()
-	data.CreatedAt = models2.JSONTime(time.Now())
-	data.UpdatedAt = models2.JSONTime(time.Now())
+
 	var extFlowManage models.FlowManage
 	if err = tx.Where("name = ?", data.Name).First(&extFlowManage).Error; err == nil {
 		// 如果存在相同标题的订单项，返回相应的错误消息

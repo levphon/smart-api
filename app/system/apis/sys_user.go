@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin/binding"
 	"go-admin/app/system/models"
 	"golang.org/x/crypto/bcrypt"
@@ -56,6 +57,35 @@ func (e SysUser) GetPage(c *gin.Context) {
 	}
 
 	e.PageOK(list, int(count), req.GetPageIndex(), req.GetPageSize(), "查询成功")
+}
+
+func (e SysUser) GetSpecify(c *gin.Context) {
+	s := service.SysUser{}
+	req := dto.SysUserGetSpecifyReq{}
+	err := e.MakeContext(c).
+		MakeOrm().
+		Bind(&req).
+		MakeService(&s.Service).
+		Errors
+	if err != nil {
+		e.Logger.Error(err)
+		e.Error(500, err, err.Error())
+		return
+	}
+
+	// 数据权限检查
+	p := actions.GetPermissionFromContext(c)
+
+	list := make([]models.SysUser, 0)
+	var count int64
+
+	err = s.GetSpecifyUser(&req, p, &list, &count)
+	if err != nil {
+		e.Error(500, err, "查询失败")
+		return
+	}
+
+	e.OK(list, "查询成功")
 }
 
 // Get
@@ -460,5 +490,8 @@ func (e SysUser) GetInfo(c *gin.Context) {
 	mp["sex"] = sysUser.Sex
 	mp["email"] = sysUser.Email
 	mp["postId"] = sysUser.PostId
+	fmt.Println(sysUser.Phone, sysUser.Email, sysUser.DeptId, sysUser.PostId, sysUser.NickName)
+	mp["profileComplete"] = sysUser.Phone != "" && sysUser.Email != "" && sysUser.DeptId != 0 && sysUser.PostId != 0 && sysUser.NickName != ""
+
 	e.OK(mp, "")
 }

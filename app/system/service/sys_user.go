@@ -38,6 +38,33 @@ func (e *SysUser) GetPage(c *dto.SysUserGetPageReq, p *actions.DataPermission, l
 	return nil
 }
 
+// GetSpecifyUser 获取指定用户信息
+// GetSpecifyUser 获取指定用户信息
+func (e *SysUser) GetSpecifyUser(c *dto.SysUserGetSpecifyReq, p *actions.DataPermission, list *[]models.SysUser, count *int64) error {
+	var err error
+
+	// 构建查询条件
+	query := e.Orm.Debug().Preload("Dept").
+		Scopes(
+			actions.Permission((&models.SysUser{}).TableName(), p), // 使用指针类型
+		)
+
+	// 根据传入的查询参数进行筛选，例如根据用户ID或者用户名查询
+	if c.UserId != 0 {
+		query = query.Where("id = ?", c.UserId)
+	} else if c.Username != "" {
+		query = query.Where("username = ?", c.Username)
+	}
+
+	// 查询用户信息
+	err = query.Find(list).Count(count).Error
+	if err != nil {
+		e.Log.Errorf("db error: %s", err)
+		return err
+	}
+	return nil
+}
+
 // Get 获取SysUser对象
 func (e *SysUser) Get(d *dto.SysUserById, p *actions.DataPermission, model *models.SysUser) error {
 	var data models.SysUser
