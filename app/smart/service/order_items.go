@@ -17,9 +17,16 @@ type OrderItems struct {
 }
 
 // 分页获取OrderItems 所有的数据
-func (e *OrderItems) GetOrderItemsPage(pageNum, limit int, objects *[]models.OrderItems) error {
+func (e *OrderItems) GetOrderItemsPage(pageNum, limit int, objects *[]models.OrderItems, total *int64) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
+
+	// 查询总数，不应用分页限制
+	err := e.Orm.Model(&models.OrderItems{}).Count(total).Error
+	if err != nil {
+		e.Log.Errorf("查询总数失败: %s", err)
+		return fmt.Errorf("查询总数失败: %s", err)
+	}
 
 	// 查询并分页获取订单项数据
 	db := e.Orm.Limit(limit).Offset(offset).Find(objects)

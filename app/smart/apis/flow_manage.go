@@ -36,14 +36,14 @@ func (e FlowManage) GetPage(c *gin.Context) {
 
 	// 定义一个存储所有工单类别数据的切片
 	var objects []models.FlowManage
-
-	err = s.GetFlowManagePage(pageNum, limit, &objects)
+	var total int64
+	err = s.GetFlowManagePage(pageNum, limit, &objects, &total)
 	if err != nil {
 		e.Error(500, err, "查询失败")
 		return
 	}
 
-	e.OK(objects, "查询成功")
+	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
 func (e FlowManage) Get(c *gin.Context) {
 	s := service.FlowManage{}

@@ -37,14 +37,15 @@ func (e OrderCategory) GetPage(c *gin.Context) {
 
 	// 定义一个存储所有工单类别数据的切片
 	var objects []models.OrderCategory
+	var total int64
 
-	err = s.GetOrderCategoryPage(pageNum, limit, &objects)
+	err = s.GetOrderCategoryPage(pageNum, limit, &objects, &total)
 	if err != nil {
 		e.Error(500, err, "查询失败")
 		return
 	}
 
-	e.OK(objects, "查询成功")
+	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
 
 func (e OrderCategory) Get(c *gin.Context) {

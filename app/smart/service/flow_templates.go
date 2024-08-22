@@ -16,9 +16,15 @@ type FlowTemplates struct {
 }
 
 // 分页获取FlowTemplates 所有的数据
-func (e *FlowTemplates) GetFlowTemplatesPage(pageNum, limit int, objects *[]models.FlowTemplates) error {
+func (e *FlowTemplates) GetFlowTemplatesPage(pageNum, limit int, objects *[]models.FlowTemplates, total *int64) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
+	// 查询总数，不应用分页限制
+	err := e.Orm.Model(&models.FlowTemplates{}).Count(total).Error
+	if err != nil {
+		e.Log.Errorf("查询总数失败: %s", err)
+		return fmt.Errorf("查询总数失败: %s", err)
+	}
 
 	// 查询并分页获取订单项数据
 	db := e.Orm.Limit(limit).Offset(offset).Find(objects)

@@ -19,11 +19,17 @@ type FlowManage struct {
 }
 
 // 分页获取FlowManage所有的数据
-func (e *FlowManage) GetFlowManagePage(pageNum, limit int, objects *[]models.FlowManage) error {
+func (e *FlowManage) GetFlowManagePage(pageNum, limit int, objects *[]models.FlowManage, total *int64) error {
 
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 
+	// 查询总数，不应用分页限制
+	err := e.Orm.Model(&models.FlowManage{}).Count(total).Error
+	if err != nil {
+		e.Log.Errorf("查询总数失败: %s", err)
+		return fmt.Errorf("查询总数失败: %s", err)
+	}
 	// 查询并分页获取订单项数据
 	db := e.Orm.Limit(limit).Offset(offset).Find(objects)
 
@@ -31,6 +37,11 @@ func (e *FlowManage) GetFlowManagePage(pageNum, limit int, objects *[]models.Flo
 		e.Log.Errorf("分页查询流程失败: %s", err)
 		return fmt.Errorf("分页查询流程失败: %s", err)
 	}
+
+	//// 将 total 值赋给每个对象的 Total 字段
+	//for i := range *objects {
+	//	(*objects)[i].Total = total
+	//}
 	return nil
 }
 
@@ -38,9 +49,14 @@ func (e *FlowManage) GetFlowManagePage(pageNum, limit int, objects *[]models.Flo
 func (e *FlowManage) Get(d *dto.FlowManageGetReq, model *models.FlowManage) error {
 	var err error
 	var data models.FlowManage
+	var total int64
+	err = e.Orm.Model(&models.FlowManage{}).Count(&total).Error
+	if err != nil {
+		e.Log.Errorf("查询总数失败: %s", err)
+		return fmt.Errorf("查询总数失败: %s", err)
+	}
 
-	db := e.Orm.Model(&data).
-		First(model, d.GetId())
+	db := e.Orm.Model(&data).First(model, d.GetId())
 	err = db.Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		e.Log.Errorf("db error:%s", err)

@@ -6,17 +6,16 @@ import (
 )
 
 type FlowManageInsertReq struct {
-	ID          int                    `uri:"id" comment:"编码"`      // 编码
-	Name        string                 `json:"name" comment:"流程名称"` // 流程名称
-	Icon        string                 `json:"icon" comment:"图标"`   // 订单项图标
-	CategoryID  uint                   `json:"categoryId" comment:"类别"`
-	Task        models.TaskSliceString `json:"task" comment:"任务"`
-	Notice      models.FlowSliceInt    `json:"notice" comment:"通知方式"`
-	Comments    bool                   `json:"comments" comment:"是否开启留言"`
-	Ratings     bool                   `json:"ratings" comment:"是否开启评分"`
-	Description string                 `json:"description" comment:"流程描述"`
-	Creator     string                 `json:"creator" comment:"创建人"` // 创建人
-	StrucTure   models.StrucTure       `json:"structure" comment:"流程数据"`
+	ID          int                 `uri:"id" comment:"编码"`        // 编码
+	Name        string              `json:"name" comment:"流程名称"` // 流程名称
+	Icon        string              `json:"icon" comment:"图标"`     // 订单项图标
+	CategoryID  uint                `json:"categoryId" comment:"类别"`
+	Notice      models.FlowSliceInt `json:"notice" comment:"通知方式"`
+	Comments    bool                `json:"comments" comment:"是否开启留言"`
+	Ratings     bool                `json:"ratings" comment:"是否开启评分"`
+	Description string              `json:"description" comment:"流程描述"`
+	Creator     string              `json:"creator" comment:"创建人"` // 创建人
+	StrucTure   models.StrucTure    `json:"structure" comment:"流程数据"`
 	common.ControlBy
 	common.ModelTime
 }
@@ -30,7 +29,6 @@ func (s *FlowManageInsertReq) Generate(model *models.FlowManage) {
 	model.CategoryID = s.CategoryID
 	model.Comments = s.Comments
 	model.Ratings = s.Ratings
-	model.Task = s.Task
 	model.Notice = s.Notice
 	model.Creator = s.Creator
 	model.Description = s.Description
@@ -44,17 +42,16 @@ func (s *FlowManageInsertReq) GetId() interface{} {
 }
 
 type FlowManageUpdateReq struct {
-	ID          int                    `uri:"id" comment:"编码"`      // 编码
-	Name        string                 `json:"name" comment:"流程名称"` // 流程名称
-	Icon        string                 `json:"icon" comment:"图标"`   // 订单项图标
-	CategoryID  uint                   `json:"categoryId" comment:"类别"`
-	Task        models.TaskSliceString `json:"task" comment:"任务"`
-	Notice      models.FlowSliceInt    `json:"notice" comment:"通知方式"`
-	Comments    bool                   `json:"comments" comment:"是否开启留言"`
-	Ratings     bool                   `json:"ratings" comment:"是否开启评分"`
-	Description string                 `json:"description" comment:"流程描述"`
-	Regenerator string                 `json:"regenerator" comment:"更新人"` // 更新人
-	StrucTure   models.StrucTure       `json:"structure" comment:"流程数据"`
+	ID          int                 `uri:"id" comment:"编码"`        // 编码
+	Name        string              `json:"name" comment:"流程名称"` // 流程名称
+	Icon        string              `json:"icon" comment:"图标"`     // 订单项图标
+	CategoryID  uint                `json:"categoryId" comment:"类别"`
+	Notice      models.FlowSliceInt `json:"notice" comment:"通知方式"`
+	Comments    bool                `json:"comments" comment:"是否开启留言"`
+	Ratings     bool                `json:"ratings" comment:"是否开启评分"`
+	Description string              `json:"description" comment:"流程描述"`
+	Regenerator string              `json:"regenerator" comment:"更新人"` // 更新人
+	StrucTure   models.StrucTure    `json:"structure" comment:"流程数据"`
 	common.ControlBy
 	common.ModelTime
 }
@@ -69,7 +66,6 @@ func (s *FlowManageUpdateReq) Generate(model *models.FlowManage) {
 	model.CategoryID = s.CategoryID
 	model.Comments = s.Comments
 	model.Ratings = s.Ratings
-	model.Task = s.Task
 	model.Notice = s.Notice
 	model.Description = s.Description
 	model.Regenerator = s.Regenerator

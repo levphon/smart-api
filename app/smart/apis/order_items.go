@@ -38,14 +38,15 @@ func (e OrderItems) GetPage(c *gin.Context) {
 
 	// 定义一个存储所有订单项数据的切片
 	var objects []models.OrderItems
+	var total int64
 
-	err = s.GetOrderItemsPage(pageNum, limit, &objects)
+	err = s.GetOrderItemsPage(pageNum, limit, &objects, &total)
 	if err != nil {
 		e.Error(500, err, "查询失败")
 		return
 	}
 
-	e.OK(objects, "查询成功")
+	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
 
 func (e OrderItems) Get(c *gin.Context) {
