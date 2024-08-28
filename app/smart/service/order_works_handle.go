@@ -35,7 +35,7 @@ type NodeInfo struct {
 	AssignValue int    `json:"assignValue"`
 }
 
-// Handle OrderWorksry
+// Handle OrderWorks
 func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 	var err error
 	var model = models.OrderWorks{}
