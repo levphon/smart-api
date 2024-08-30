@@ -29,5 +29,8 @@ func registerExecMachineAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJ
 		r.PUT("/update", api.Update)
 		// 删除任务
 		r.DELETE("/delete", api.Delete)
+		// 新增连接测试接口
+		r.POST("/testConnection", api.TestConnection) // 添加连接测试接口
+
 	}
 }

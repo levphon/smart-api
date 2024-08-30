@@ -37,11 +37,6 @@ func (e *FlowManage) GetFlowManagePage(pageNum, limit int, objects *[]models.Flo
 		e.Log.Errorf("分页查询流程失败: %s", err)
 		return fmt.Errorf("分页查询流程失败: %s", err)
 	}
-
-	//// 将 total 值赋给每个对象的 Total 字段
-	//for i := range *objects {
-	//	(*objects)[i].Total = total
-	//}
 	return nil
 }
 

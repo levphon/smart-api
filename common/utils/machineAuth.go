@@ -1,6 +1,6 @@
 // @Author sunwenbo
 // 2024/8/28 15:34
-package service
+package utils
 
 import (
 	"fmt"

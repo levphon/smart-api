@@ -142,3 +142,29 @@ func (e ExecMachine) Delete(c *gin.Context) {
 	}
 	e.OK(req.GetId(), "删除成功")
 }
+
+// TestConnection 测试机器连接是否成功
+func (e *ExecMachine) TestConnection(c *gin.Context) {
+	s := service.ExecMachine{}
+	req := dto.ExecMachineGetReq{}
+	err := e.MakeContext(c).
+		MakeOrm().
+		Bind(&req, binding.JSON, nil).
+		MakeService(&s.Service).Errors
+	if err != nil {
+		e.Logger.Error(err)
+		e.Error(500, err, err.Error())
+		return
+	}
+	var object models.ExecMachine
+
+	// &object 因为是传递的地址，object 地址对应的内存值会被修改，所以就不需要接收返回值了
+	err = s.TestConn(&req, &object)
+	// 根据测试结果返回状态信息
+	if err != nil {
+		e.Error(500, err, fmt.Sprintf("连接失败 err:%v", err.Error()))
+	} else {
+		e.OK(req.GetId(), fmt.Sprintf("测试连接成功"))
+	}
+
+}

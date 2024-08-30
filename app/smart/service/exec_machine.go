@@ -6,6 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"go-admin/app/smart/models"
+	common "go-admin/common/models"
+	"go-admin/common/utils"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"time"
 
@@ -64,7 +67,7 @@ func (e *ExecMachine) Insert(c *dto.ExecMachineInsertReq) error {
 	c.Generate(&data)
 
 	// 连接测试
-	connTest := ConnectionTest{}
+	connTest := utils.ConnectionTest{}
 	err = connTest.TestConnection(data.AuthType, data.Ip, data.Port, data.UserName, data.PassWord, data.KeyPath)
 	if err != nil {
 		e.Log.Errorf("connection test failed: %v", err)
@@ -88,7 +91,19 @@ func (e *ExecMachine) Insert(c *dto.ExecMachineInsertReq) error {
 		return err
 	}
 
-	data.Heartbeat = time.Now()
+	// 加密密码
+	key := "your-secret-keys" // 替换为你自己的密钥
+	encryptedPassword, err := utils.Encrypt(data.PassWord, key)
+
+	// 加密密码
+	//hashedPassword, err := bcrypt.GenerateFromPassword([]byte(data.PassWord), bcrypt.DefaultCost)
+	if err != nil {
+		e.Log.Errorf("password encryption failed: %v", err)
+		return fmt.Errorf("password encryption failed: %v", err)
+	}
+	data.PassWord = encryptedPassword // 使用加密后的密码
+
+	data.Heartbeat = common.JSONTime(time.Now())
 	err = tx.Create(&data).Error
 	if err != nil {
 		e.Log.Errorf("db error:%s", err)
@@ -120,26 +135,56 @@ func (e *ExecMachine) Update(c *dto.ExecMachineUpdateReq) error {
 		return fmt.Errorf("error querying  machine with ID '%v': %s", c.GetId(), err)
 	}
 
-	// 判断是否需要执行更新操作
-	if model.HostName == c.HostName && model.Ip == c.Ip && model.UserName == c.UserName && model.PassWord == c.PassWord && model.Port == c.Port &&
-		model.Status == c.Status && model.AuthType == c.AuthType && model.KeyPath == c.KeyPath && model.Description == c.Description {
-		e.Log.Errorf(fmt.Sprintf("No changes for machine with '%v'", model.HostName))
-		return fmt.Errorf("no changes for machine with '%v'", model.HostName)
+	// 构建一个更新数据的 map
+	updates := map[string]interface{}{}
+
+	// 手动检测每个字段的变化
+	if model.Ip != c.Ip {
+		updates["ip"] = c.Ip
+	}
+	if model.HostName != c.HostName {
+		updates["host_name"] = c.HostName
+	}
+	if model.UserName != c.UserName {
+		updates["user_name"] = c.UserName
+	}
+	if model.Port != c.Port {
+		updates["port"] = c.Port
+	}
+	if model.Status != c.Status {
+		updates["status"] = c.Status
+	}
+	if model.AuthType != c.AuthType {
+		updates["auth_type"] = c.AuthType
+	}
+	if model.KeyPath != c.KeyPath {
+		updates["key_path"] = c.KeyPath
+	}
+	if model.Description != c.Description {
+		updates["description"] = c.Description
 	}
 
-	// 手动映射要更新的字段
-	model.HostName = c.HostName
-	model.Ip = c.Ip
-	model.UserName = c.UserName
-	model.PassWord = c.PassWord
-	model.Port = c.Port
-	model.Status = c.Status
-	model.AuthType = c.AuthType
-	model.KeyPath = c.KeyPath
-	model.Description = c.Description
+	// 密码检测和加密
+	if c.PassWord != "" && bcrypt.CompareHashAndPassword([]byte(model.PassWord), []byte(c.PassWord)) != nil {
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(c.PassWord), bcrypt.DefaultCost)
+		if err != nil {
+			e.Log.Errorf("password encryption failed: %v", err)
+			return fmt.Errorf("password encryption failed: %v", err)
+		}
+		updates["pass_word"] = string(hashedPassword) // 使用加密后的密码
+	}
 
-	// 更新所有字段（包括零值）
-	if err = tx.Model(&model).Updates(model).Error; err != nil {
+	// 如果没有字段发生变化
+	if len(updates) == 0 {
+		e.Log.Infof("No changes detected for machine with hostname '%v'", c.HostName)
+		return fmt.Errorf("no changes for machine with hostname '%v'", c.HostName)
+	}
+
+	// 更新人更新
+	updates["regenerator"] = c.Regenerator
+
+	// 进行更新
+	if err = tx.Model(&model).Updates(updates).Error; err != nil {
 		e.Log.Errorf("Failed to update machine with ID '%v': %s", c.GetId(), err)
 		return fmt.Errorf("failed to update machine with ID '%v': %s", c.GetId(), err)
 	}
@@ -172,5 +217,41 @@ func (e *ExecMachine) Remove(d *dto.ExecMachineDeleteReq) error {
 		err = errors.New("无权删除该数据")
 		return err
 	}
+	return nil
+}
+
+// 测试连接
+func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachine) error {
+	var machine models.ExecMachine
+
+	// 根据 ID 查找机器信息
+	err := e.Orm.First(&machine, d.GetId()).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			e.Log.Errorf("machine with ID '%v' not found: %s", d.GetId(), err)
+			return fmt.Errorf("machine with ID '%v' not found", d.GetId())
+		}
+		e.Log.Errorf("error retrieving machine with ID '%v': %s", d.GetId(), err)
+		return err
+	}
+	key := "your-secret-keys" // 替换为你自己的密钥
+	password, err := utils.Decrypt(machine.PassWord, key)
+	if err != nil {
+		e.Log.Errorf("password decryption failed: %v", err)
+		return fmt.Errorf("password decryption failed: %v", err)
+	}
+
+	// 复用之前的连接测试代码
+	connTest := utils.ConnectionTest{}
+
+	err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.KeyPath)
+	if err != nil {
+		e.Log.Errorf("connection test failed: %v", err)
+		return err
+	}
+
+	// 将获取到的机器信息赋值给模型
+	*model = machine
+
 	return nil
 }
