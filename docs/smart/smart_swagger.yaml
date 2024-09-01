@@ -1,4 +1,179 @@
 definitions:
+  dto.ExecMachineDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.ExecMachineGetReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.ExecMachineInsertReq:
+    properties:
+      authType:
+        description: 认证方式：1=用户名密码，2=公私钥
+        type: integer
+      createBy:
+        type: integer
+      creator:
+        description: 创建者
+        type: string
+      description:
+        description: 描述信息
+        type: string
+      heartbeat:
+        description: 最近一次心跳时间
+        type: string
+      hostName:
+        description: 主机名
+        type: string
+      id:
+        description: 编码
+        type: integer
+      ip:
+        description: IP地址
+        type: string
+      keyPath:
+        description: 公私钥路径
+        type: string
+      passWord:
+        description: 密码
+        type: string
+      port:
+        description: 端口号
+        type: integer
+      status:
+        description: 状态
+        type: integer
+      updateBy:
+        type: integer
+      userName:
+        description: 用户名
+        type: string
+    type: object
+  dto.ExecMachineUpdateReq:
+    properties:
+      authType:
+        description: 认证方式：1=用户名密码，2=公私钥
+        type: integer
+      createBy:
+        type: integer
+      description:
+        description: 描述信息
+        type: string
+      heartbeat:
+        description: 最近一次心跳时间
+        type: string
+      hostName:
+        description: 主机名
+        type: string
+      id:
+        description: 编码
+        type: integer
+      ip:
+        description: IP地址
+        type: string
+      keyPath:
+        description: 公私钥路径
+        type: string
+      passWord:
+        description: 密码
+        type: string
+      port:
+        description: 端口号
+        type: integer
+      regenerator:
+        description: 更新人
+        type: string
+      status:
+        description: 状态
+        type: integer
+      updateBy:
+        type: integer
+      userName:
+        description: 用户名
+        type: string
+    type: object
+  dto.FlowManageDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.FlowManageInsertReq:
+    properties:
+      categoryId:
+        type: integer
+      comments:
+        type: boolean
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建人
+        type: string
+      description:
+        type: string
+      icon:
+        description: 订单项图标
+        type: string
+      id:
+        description: 编码
+        type: integer
+      name:
+        description: 流程名称
+        type: string
+      notice:
+        items:
+          type: integer
+        type: array
+      ratings:
+        type: boolean
+      structure:
+        $ref: '#/definitions/go-admin_app_smart_models.StrucTure'
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  dto.FlowManageUpdateReq:
+    properties:
+      categoryId:
+        type: integer
+      comments:
+        type: boolean
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        type: string
+      icon:
+        description: 订单项图标
+        type: string
+      id:
+        description: 编码
+        type: integer
+      name:
+        description: 流程名称
+        type: string
+      notice:
+        items:
+          type: integer
+        type: array
+      ratings:
+        type: boolean
+      regenerator:
+        description: 更新人
+        type: string
+      structure:
+        $ref: '#/definitions/go-admin_app_smart_models.StrucTure'
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
   dto.GetSetSysConfigReq:
     properties:
       configKey:
@@ -170,14 +345,10 @@ definitions:
     type: object
   dto.SysDictDataDeleteReq:
     properties:
-      createBy:
-        type: integer
       ids:
         items:
           type: integer
         type: array
-      updateBy:
-        type: integer
     type: object
   dto.SysDictDataGetAllResp:
     properties:
@@ -357,7 +528,7 @@ definitions:
         type: integer
       sysApi:
         items:
-          $ref: '#/definitions/models.SysApi'
+          $ref: '#/definitions/go-admin_app_system_models.SysApi'
         type: array
       title:
         description: 显示名称
@@ -420,7 +591,7 @@ definitions:
         type: integer
       sysApi:
         items:
-          $ref: '#/definitions/models.SysApi'
+          $ref: '#/definitions/go-admin_app_system_models.SysApi'
         type: array
       title:
         description: 显示名称
@@ -533,11 +704,11 @@ definitions:
         type: string
       sysDept:
         items:
-          $ref: '#/definitions/models.SysDept'
+          $ref: '#/definitions/go-admin_app_system_models.SysDept'
         type: array
       sysMenu:
         items:
-          $ref: '#/definitions/models.SysMenu'
+          $ref: '#/definitions/go-admin_app_system_models.SysMenu'
         type: array
       updateBy:
         type: integer
@@ -581,11 +752,11 @@ definitions:
         type: string
       sysDept:
         items:
-          $ref: '#/definitions/models.SysDept'
+          $ref: '#/definitions/go-admin_app_system_models.SysDept'
         type: array
       sysMenu:
         items:
-          $ref: '#/definitions/models.SysMenu'
+          $ref: '#/definitions/go-admin_app_system_models.SysMenu'
         type: array
       updateBy:
         type: integer
@@ -613,6 +784,9 @@ definitions:
       roleId:
         type: integer
       sex:
+        type: string
+      source:
+        default: "1"
         type: string
       status:
         default: "1"
@@ -683,23 +857,99 @@ definitions:
         description: 用户ID
         type: integer
     type: object
-  handler.Login:
+  go-admin_app_smart_models.ExecMachine:
     properties:
-      code:
+      authType:
+        description: 认证方式：1=用户名密码，2=公私钥
+        type: integer
+      createBy:
+        type: integer
+      createdAt:
         type: string
-      password:
+      creator:
+        description: 创建者
         type: string
-      username:
+      description:
+        description: 描述信息
         type: string
-      uuid:
+      heartbeat:
+        description: 最近一次心跳时间
         type: string
-    required:
-    - code
-    - password
-    - username
-    - uuid
+      hostName:
+        description: 主机名
+        type: string
+      id:
+        type: integer
+      ip:
+        description: IP地址
+        type: string
+      keyPath:
+        description: 公私钥路径
+        type: string
+      passWord:
+        description: 密码
+        type: string
+      port:
+        description: 端口
+        type: integer
+      regenerator:
+        description: 更新人
+        type: string
+      status:
+        description: 状态  1 为在线 2为离线
+        type: integer
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+      userName:
+        description: 用户名
+        type: string
     type: object
-  models.SysApi:
+  go-admin_app_smart_models.FlowManage:
+    properties:
+      categoryId:
+        type: integer
+      comments:
+        type: boolean
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建人
+        type: string
+      description:
+        type: string
+      icon:
+        description: 订单项图标
+        type: string
+      id:
+        type: integer
+      name:
+        description: 流程名称
+        type: string
+      notice:
+        description: 变为json切片
+        items:
+          type: integer
+        type: array
+      ratings:
+        type: boolean
+      regenerator:
+        description: 更新人
+        type: string
+      structure:
+        $ref: '#/definitions/go-admin_app_smart_models.StrucTure'
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  go-admin_app_smart_models.StrucTure:
+    additionalProperties: true
+    type: object
+  go-admin_app_system_models.SysApi:
     properties:
       action:
         type: string
@@ -722,7 +972,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  models.SysConfig:
+  go-admin_app_system_models.SysConfig:
     properties:
       configKey:
         type: string
@@ -747,11 +997,11 @@ definitions:
       updatedAt:
         type: string
     type: object
-  models.SysDept:
+  go-admin_app_system_models.SysDept:
     properties:
       children:
         items:
-          $ref: '#/definitions/models.SysDept'
+          $ref: '#/definitions/go-admin_app_system_models.SysDept'
         type: array
       createBy:
         type: integer
@@ -792,7 +1042,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  models.SysMenu:
+  go-admin_app_system_models.SysMenu:
     properties:
       action:
         type: string
@@ -804,7 +1054,7 @@ definitions:
         type: string
       children:
         items:
-          $ref: '#/definitions/models.SysMenu'
+          $ref: '#/definitions/go-admin_app_system_models.SysMenu'
         type: array
       component:
         type: string
@@ -844,7 +1094,7 @@ definitions:
         type: integer
       sysApi:
         items:
-          $ref: '#/definitions/models.SysApi'
+          $ref: '#/definitions/go-admin_app_system_models.SysApi'
         type: array
       title:
         type: string
@@ -854,6 +1104,25 @@ definitions:
         type: string
       visible:
         type: string
+    type: object
+  handler.Login:
+    properties:
+      code:
+        type: string
+      password:
+        type: string
+      source:
+        default: "1"
+        type: string
+      username:
+        type: string
+      uuid:
+        type: string
+    required:
+    - code
+    - password
+    - username
+    - uuid
     type: object
   response.Page:
     properties:
@@ -1055,15 +1324,16 @@ definitions:
         type: string
     type: object
 info:
-  contact: {}
+  contact:
+    email: swb956721830@163.com
   description: |-
-    基于Gin + Vue + Element UI的前后端分离权限管理系统的接口文档
-    添加qq群: 521386980 进入技术交流群 请先star，谢谢！
+    基于Gin + Vue + Element UI的前后端分离运维工单系统的接口文档
+    添加qq群: xxxx 进入技术交流群 请先star，谢谢！
   license:
-    name: MIT
+    name: Apache 2.0
     url: https://github.com/go-admin-team/go-admin/blob/master/LICENSE.md
-  title: go-admin API
-  version: 2.0.0
+  title: smart-api API
+  version: 1.0.0
 paths:
   /api/v1/app-config:
     get:
@@ -1541,6 +1811,156 @@ paths:
       summary: 修改字典类型
       tags:
       - 字典类型
+  /api/v1/flow-manage:
+    delete:
+      description: 删除FlowManage
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除FlowManage
+      tags:
+      - 流程管理
+    get:
+      description: 获取FlowManage列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取FlowManage列表
+      tags:
+      - 流程管理
+    post:
+      consumes:
+      - application/json
+      description: 创建FlowManage
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建FlowManage
+      tags:
+      - 流程管理
+  /api/v1/flow-manage/{id}:
+    get:
+      description: 获取FlowManage
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取FlowManage
+      tags:
+      - 流程管理
+    put:
+      consumes:
+      - application/json
+      description: 修改FlowManage
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改FlowManage
+      tags:
+      - 流程管理
+  /api/v1/flow-manage/clone/{id}:
+    post:
+      consumes:
+      - application/json
+      description: 克隆FlowManage
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "克隆成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 克隆FlowManage
+      tags:
+      - 流程管理
   /api/v1/getinfo:
     get:
       description: 获取JSON
@@ -1582,6 +2002,149 @@ paths:
       summary: 登陆
       tags:
       - 登陆
+  /api/v1/machine:
+    delete:
+      description: 删除ExecMachine
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExecMachineDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除ExecMachine
+      tags:
+      - 执行节点管理
+    get:
+      description: 获取ExecMachine列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.ExecMachine'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取ExecMachine列表
+      tags:
+      - 执行节点管理
+    post:
+      consumes:
+      - application/json
+      description: 创建ExecMachine
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExecMachineInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建ExecMachine
+      tags:
+      - 执行节点管理
+  /api/v1/machine/{id}:
+    get:
+      description: 获取ExecMachine
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.ExecMachine'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取ExecMachine
+      tags:
+      - 执行节点管理
+    put:
+      consumes:
+      - application/json
+      description: 修改ExecMachine
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExecMachineUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改ExecMachine
+      tags:
+      - 执行节点管理
+  /api/v1/machine/testConnection:
+    post:
+      description: 测试连接ExecMachine
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExecMachineGetReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "连接成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 测试连接ExecMachine
+      tags:
+      - 执行节点管理
   /api/v1/menu:
     delete:
       description: 删除数据
@@ -1600,23 +2163,6 @@ paths:
       security:
       - Bearer: []
       summary: 删除菜单
-      tags:
-      - 菜单
-    get:
-      description: 获取JSON
-      parameters:
-      - description: menuName
-        in: query
-        name: menuName
-        type: string
-      responses:
-        "200":
-          description: '{"code": 200, "data": [...]}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: Menu列表数据
       tags:
       - 菜单
     post:
@@ -1716,6 +2262,24 @@ paths:
       security:
       - Bearer: []
       summary: 根据登录角色名称获取菜单列表数据（左菜单使用）
+      tags:
+      - 菜单
+  /api/v1/menus:
+    get:
+      description: 获取JSON
+      parameters:
+      - description: menuName
+        in: query
+        name: menuName
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: Menu列表数据
       tags:
       - 菜单
   /api/v1/post:
@@ -2107,7 +2671,7 @@ paths:
                   - properties:
                       list:
                         items:
-                          $ref: '#/definitions/models.SysApi'
+                          $ref: '#/definitions/go-admin_app_system_models.SysApi'
                         type: array
                     type: object
               type: object
@@ -2132,7 +2696,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/models.SysApi'
+                  $ref: '#/definitions/go-admin_app_system_models.SysApi'
               type: object
       security:
       - Bearer: []
@@ -2221,7 +2785,7 @@ paths:
                   - properties:
                       list:
                         items:
-                          $ref: '#/definitions/models.SysApi'
+                          $ref: '#/definitions/go-admin_app_system_models.SysApi'
                         type: array
                     type: object
               type: object

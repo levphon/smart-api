@@ -41,5 +41,4 @@ var CasbinExclude = []UrlInfo{
 	{Url: "/api/v1/user/pwd/set", Method: "PUT"},
 	{Url: "/api/v1/sys-user", Method: "PUT"},
 	{Url: "/api/v1/post", Method: "GET"},
-	//{Url: "/api/v1/order/works/notify", Method: "GET"},
 }

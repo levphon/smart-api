@@ -1,14 +1,16 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "基于Gin + Vue + Element UI的前后端分离权限管理系统的接口文档\n添加qq群: 521386980 进入技术交流群 请先star，谢谢！",
-        "title": "go-admin API",
-        "contact": {},
+        "description": "基于Gin + Vue + Element UI的前后端分离运维工单系统的接口文档\n添加qq群: xxxx 进入技术交流群 请先star，谢谢！",
+        "title": "smart-api API",
+        "contact": {
+            "email": "swb956721830@163.com"
+        },
         "license": {
-            "name": "MIT",
+            "name": "Apache 2.0",
             "url": "https://github.com/go-admin-team/go-admin/blob/master/LICENSE.md"
         },
-        "version": "2.0.0"
+        "version": "1.0.0"
     },
     "paths": {
         "/api/v1/app-config": {
@@ -786,6 +788,260 @@
                 }
             }
         },
+        "/api/v1/flow-manage": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取FlowManage列表",
+                "tags": [
+                    "流程管理"
+                ],
+                "summary": "获取FlowManage列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页条数",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "pageIndex",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/response.Page"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "list": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/definitions/go-admin_app_smart_models.FlowManage"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "创建FlowManage",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "流程管理"
+                ],
+                "summary": "创建FlowManage",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FlowManageInsertReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"添加成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "删除FlowManage",
+                "tags": [
+                    "流程管理"
+                ],
+                "summary": "删除FlowManage",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FlowManageDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/flow-manage/clone/{id}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "克隆FlowManage",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "流程管理"
+                ],
+                "summary": "克隆FlowManage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FlowManageUpdateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"克隆成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/flow-manage/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取FlowManage",
+                "tags": [
+                    "流程管理"
+                ],
+                "summary": "获取FlowManage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/go-admin_app_smart_models.FlowManage"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "修改FlowManage",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "流程管理"
+                ],
+                "summary": "修改FlowManage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.FlowManageUpdateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"修改成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/getinfo": {
             "get": {
                 "security": [
@@ -839,23 +1095,29 @@
                 }
             }
         },
-        "/api/v1/menu": {
+        "/api/v1/machine": {
             "get": {
                 "security": [
                     {
                         "Bearer": []
                     }
                 ],
-                "description": "获取JSON",
+                "description": "获取ExecMachine列表",
                 "tags": [
-                    "菜单"
+                    "执行节点管理"
                 ],
-                "summary": "Menu列表数据",
+                "summary": "获取ExecMachine列表",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "menuName",
-                        "name": "menuName",
+                        "type": "integer",
+                        "description": "页条数",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "pageIndex",
                         "in": "query"
                     }
                 ],
@@ -863,11 +1125,221 @@
                     "200": {
                         "description": "{\"code\": 200, \"data\": [...]}",
                         "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/response.Page"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "list": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/definitions/go-admin_app_smart_models.ExecMachine"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "创建ExecMachine",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "执行节点管理"
+                ],
+                "summary": "创建ExecMachine",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExecMachineInsertReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"添加成功\"}",
+                        "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
             },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "删除ExecMachine",
+                "tags": [
+                    "执行节点管理"
+                ],
+                "summary": "删除ExecMachine",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExecMachineDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/machine/testConnection": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "测试连接ExecMachine",
+                "tags": [
+                    "执行节点管理"
+                ],
+                "summary": "测试连接ExecMachine",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExecMachineGetReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"连接成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/machine/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取ExecMachine",
+                "tags": [
+                    "执行节点管理"
+                ],
+                "summary": "获取ExecMachine",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/go-admin_app_smart_models.ExecMachine"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "修改ExecMachine",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "执行节点管理"
+                ],
+                "summary": "修改ExecMachine",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExecMachineUpdateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"修改成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/menu": {
             "post": {
                 "security": [
                     {
@@ -1051,6 +1523,36 @@
                     "菜单"
                 ],
                 "summary": "根据登录角色名称获取菜单列表数据（左菜单使用）",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/menus": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取JSON",
+                "tags": [
+                    "菜单"
+                ],
+                "summary": "Menu列表数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "menuName",
+                        "name": "menuName",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "{\"code\": 200, \"data\": [...]}",
@@ -1670,7 +2172,7 @@
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/models.SysApi"
+                                                                "$ref": "#/definitions/go-admin_app_system_models.SysApi"
                                                             }
                                                         }
                                                     }
@@ -1748,7 +2250,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/models.SysApi"
+                                            "$ref": "#/definitions/go-admin_app_system_models.SysApi"
                                         }
                                     }
                                 }
@@ -1864,7 +2366,7 @@
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/models.SysApi"
+                                                                "$ref": "#/definitions/go-admin_app_system_models.SysApi"
                                                             }
                                                         }
                                                     }
@@ -2781,6 +3283,256 @@
         }
     },
     "definitions": {
+        "dto.ExecMachineDeleteReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.ExecMachineGetReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.ExecMachineInsertReq": {
+            "type": "object",
+            "properties": {
+                "authType": {
+                    "description": "认证方式：1=用户名密码，2=公私钥",
+                    "type": "integer"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "creator": {
+                    "description": "创建者",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "描述信息",
+                    "type": "string"
+                },
+                "heartbeat": {
+                    "description": "最近一次心跳时间",
+                    "type": "string"
+                },
+                "hostName": {
+                    "description": "主机名",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "编码",
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "IP地址",
+                    "type": "string"
+                },
+                "keyPath": {
+                    "description": "公私钥路径",
+                    "type": "string"
+                },
+                "passWord": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "端口号",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "userName": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ExecMachineUpdateReq": {
+            "type": "object",
+            "properties": {
+                "authType": {
+                    "description": "认证方式：1=用户名密码，2=公私钥",
+                    "type": "integer"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "description": {
+                    "description": "描述信息",
+                    "type": "string"
+                },
+                "heartbeat": {
+                    "description": "最近一次心跳时间",
+                    "type": "string"
+                },
+                "hostName": {
+                    "description": "主机名",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "编码",
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "IP地址",
+                    "type": "string"
+                },
+                "keyPath": {
+                    "description": "公私钥路径",
+                    "type": "string"
+                },
+                "passWord": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "端口号",
+                    "type": "integer"
+                },
+                "regenerator": {
+                    "description": "更新人",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "userName": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.FlowManageDeleteReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.FlowManageInsertReq": {
+            "type": "object",
+            "properties": {
+                "categoryId": {
+                    "type": "integer"
+                },
+                "comments": {
+                    "type": "boolean"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "创建人",
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "订单项图标",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "编码",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "流程名称",
+                    "type": "string"
+                },
+                "notice": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "ratings": {
+                    "type": "boolean"
+                },
+                "structure": {
+                    "$ref": "#/definitions/go-admin_app_smart_models.StrucTure"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.FlowManageUpdateReq": {
+            "type": "object",
+            "properties": {
+                "categoryId": {
+                    "type": "integer"
+                },
+                "comments": {
+                    "type": "boolean"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "订单项图标",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "编码",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "流程名称",
+                    "type": "string"
+                },
+                "notice": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "ratings": {
+                    "type": "boolean"
+                },
+                "regenerator": {
+                    "description": "更新人",
+                    "type": "string"
+                },
+                "structure": {
+                    "$ref": "#/definitions/go-admin_app_smart_models.StrucTure"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.GetSetSysConfigReq": {
             "type": "object",
             "properties": {
@@ -3032,17 +3784,11 @@
         "dto.SysDictDataDeleteReq": {
             "type": "object",
             "properties": {
-                "createBy": {
-                    "type": "integer"
-                },
                 "ids": {
                     "type": "array",
                     "items": {
                         "type": "integer"
                     }
-                },
-                "updateBy": {
-                    "type": "integer"
                 }
             }
         },
@@ -3310,7 +4056,7 @@
                 "sysApi": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysApi"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysApi"
                     }
                 },
                 "title": {
@@ -3397,7 +4143,7 @@
                 "sysApi": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysApi"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysApi"
                     }
                 },
                 "title": {
@@ -3565,13 +4311,13 @@
                 "sysDept": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysDept"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysDept"
                     }
                 },
                 "sysMenu": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysMenu"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysMenu"
                     }
                 },
                 "updateBy": {
@@ -3634,13 +4380,13 @@
                 "sysDept": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysDept"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysDept"
                     }
                 },
                 "sysMenu": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysMenu"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysMenu"
                     }
                 },
                 "updateBy": {
@@ -3683,6 +4429,10 @@
                 },
                 "sex": {
                     "type": "string"
+                },
+                "source": {
+                    "type": "string",
+                    "default": "1"
                 },
                 "status": {
                     "type": "string",
@@ -3786,30 +4536,137 @@
                 }
             }
         },
-        "handler.Login": {
+        "go-admin_app_smart_models.ExecMachine": {
             "type": "object",
-            "required": [
-                "code",
-                "password",
-                "username",
-                "uuid"
-            ],
             "properties": {
-                "code": {
+                "authType": {
+                    "description": "认证方式：1=用户名密码，2=公私钥",
+                    "type": "integer"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
                     "type": "string"
                 },
-                "password": {
+                "creator": {
+                    "description": "创建者",
                     "type": "string"
                 },
-                "username": {
+                "description": {
+                    "description": "描述信息",
                     "type": "string"
                 },
-                "uuid": {
+                "heartbeat": {
+                    "description": "最近一次心跳时间",
+                    "type": "string"
+                },
+                "hostName": {
+                    "description": "主机名",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "IP地址",
+                    "type": "string"
+                },
+                "keyPath": {
+                    "description": "公私钥路径",
+                    "type": "string"
+                },
+                "passWord": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "端口",
+                    "type": "integer"
+                },
+                "regenerator": {
+                    "description": "更新人",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态  1 为在线 2为离线",
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userName": {
+                    "description": "用户名",
                     "type": "string"
                 }
             }
         },
-        "models.SysApi": {
+        "go-admin_app_smart_models.FlowManage": {
+            "type": "object",
+            "properties": {
+                "categoryId": {
+                    "type": "integer"
+                },
+                "comments": {
+                    "type": "boolean"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "创建人",
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "订单项图标",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "流程名称",
+                    "type": "string"
+                },
+                "notice": {
+                    "description": "变为json切片",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "ratings": {
+                    "type": "boolean"
+                },
+                "regenerator": {
+                    "description": "更新人",
+                    "type": "string"
+                },
+                "structure": {
+                    "$ref": "#/definitions/go-admin_app_smart_models.StrucTure"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "go-admin_app_smart_models.StrucTure": {
+            "type": "object",
+            "additionalProperties": true
+        },
+        "go-admin_app_system_models.SysApi": {
             "type": "object",
             "properties": {
                 "action": {
@@ -3844,7 +4701,7 @@
                 }
             }
         },
-        "models.SysConfig": {
+        "go-admin_app_system_models.SysConfig": {
             "type": "object",
             "properties": {
                 "configKey": {
@@ -3882,13 +4739,13 @@
                 }
             }
         },
-        "models.SysDept": {
+        "go-admin_app_system_models.SysDept": {
             "type": "object",
             "properties": {
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysDept"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysDept"
                     }
                 },
                 "createBy": {
@@ -3946,7 +4803,7 @@
                 }
             }
         },
-        "models.SysMenu": {
+        "go-admin_app_system_models.SysMenu": {
             "type": "object",
             "properties": {
                 "action": {
@@ -3964,7 +4821,7 @@
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysMenu"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysMenu"
                     }
                 },
                 "component": {
@@ -4024,7 +4881,7 @@
                 "sysApi": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SysApi"
+                        "$ref": "#/definitions/go-admin_app_system_models.SysApi"
                     }
                 },
                 "title": {
@@ -4037,6 +4894,33 @@
                     "type": "string"
                 },
                 "visible": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.Login": {
+            "type": "object",
+            "required": [
+                "code",
+                "password",
+                "username",
+                "uuid"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "uuid": {
                     "type": "string"
                 }
             }

@@ -15,7 +15,7 @@ import (
 
 	"go-admin/common/middleware"
 	"go-admin/common/middleware/handler"
-	_ "go-admin/docs/admin"
+	_ "go-admin/docs/smart"
 )
 
 func InitSysRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) *gin.RouterGroup {
@@ -58,7 +58,9 @@ func sysStaticFileRouter(r *gin.RouterGroup) {
 }
 
 func sysSwaggerRouter(r *gin.RouterGroup) {
-	r.GET("/swagger/admin/*any", ginSwagger.WrapHandler(swaggerfiles.NewHandler(), ginSwagger.InstanceName("admin")))
+	// r.GET("/swagger/smart/*any", ginSwagger.WrapHandler(swaggerfiles.NewHandler(), ginSwagger.InstanceName("smart")))
+	r.GET("/swagger/smart/*any", ginSwagger.WrapHandler(swaggerfiles.NewHandler(), ginSwagger.InstanceName("smart")))
+
 }
 
 func sysCheckRoleRouterInit(r *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {

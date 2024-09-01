@@ -18,6 +18,15 @@ type ExecMachine struct {
 	api.Api
 }
 
+// GetPage 获取ExecMachine列表
+// @Summary 获取ExecMachine列表
+// @Description 获取ExecMachine列表
+// @Tags 执行节点管理
+// @Param pageSize query int false "页条数"
+// @Param pageIndex query int false "页码"
+// @Success 200 {object} response.Response{data=response.Page{list=[]models.ExecMachine}} "{"code": 200, "data": [...]}"
+// @Router /api/v1/machine [get]
+// @Security Bearer
 func (e ExecMachine) GetPage(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
@@ -46,6 +55,15 @@ func (e ExecMachine) GetPage(c *gin.Context) {
 
 	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
+
+// Get 获取ExecMachine
+// @Summary 获取ExecMachine
+// @Description 获取ExecMachine
+// @Tags 执行节点管理
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.ExecMachine} "{"code": 200, "data": [...]}"
+// @Router /api/v1/machine/{id} [get]
+// @Security Bearer
 func (e ExecMachine) Get(c *gin.Context) {
 	s := service.ExecMachine{}
 	// 请求结构体 id
@@ -72,6 +90,16 @@ func (e ExecMachine) Get(c *gin.Context) {
 	e.OK(object, "查询成功")
 }
 
+// Insert 创建ExecMachine
+// @Summary 创建ExecMachine
+// @Description 创建ExecMachine
+// @Tags 执行节点管理
+// @Accept application/json
+// @Product application/json
+// @Param data body dto.ExecMachineInsertReq true "data"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "添加成功"}"
+// @Router /api/v1/machine [post]
+// @Security Bearer
 func (e ExecMachine) Insert(c *gin.Context) {
 	s := service.ExecMachine{}
 
@@ -97,6 +125,17 @@ func (e ExecMachine) Insert(c *gin.Context) {
 	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.HostName))
 }
 
+// Update 修改ExecMachine
+// @Summary 修改ExecMachine
+// @Description 修改ExecMachine
+// @Tags 执行节点管理
+// @Accept application/json
+// @Product application/json
+// @Param id path int true "id"
+// @Param data body dto.ExecMachineUpdateReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
+// @Router /api/v1/machine/{id} [put]
+// @Security Bearer
 func (e ExecMachine) Update(c *gin.Context) {
 	s := service.ExecMachine{}
 	req := dto.ExecMachineUpdateReq{}
@@ -121,6 +160,15 @@ func (e ExecMachine) Update(c *gin.Context) {
 	}
 	e.OK(req.GetId(), "更新成功")
 }
+
+// Delete 删除ExecMachine
+// @Summary 删除ExecMachine
+// @Description 删除ExecMachine
+// @Tags 执行节点管理
+// @Param data body dto.ExecMachineDeleteReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
+// @Router /api/v1/machine [delete]
+// @Security Bearer
 func (e ExecMachine) Delete(c *gin.Context) {
 	s := service.ExecMachine{}
 
@@ -143,7 +191,14 @@ func (e ExecMachine) Delete(c *gin.Context) {
 	e.OK(req.GetId(), "删除成功")
 }
 
-// TestConnection 测试机器连接是否成功
+// TestConnection ExecMachine
+// @Summary 测试连接ExecMachine
+// @Description 测试连接ExecMachine
+// @Tags 执行节点管理
+// @Param data body dto.ExecMachineGetReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "连接成功"}"
+// @Router /api/v1/machine/testConnection [post]
+// @Security Bearer
 func (e *ExecMachine) TestConnection(c *gin.Context) {
 	s := service.ExecMachine{}
 	req := dto.ExecMachineGetReq{}
