@@ -19,15 +19,15 @@ func registerExecMachineAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJ
 
 	r := v1.Group("/exec-machine").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
-		// 查询所有的任务
+		// 查询所有节点
 		r.GET("", api.GetPage)
 		// 根据ID 查询
 		r.GET("/:id", api.Get)
-		// 创建任务
+		// 创建节点
 		r.POST("", api.Insert)
-		// 更新任务信息
+		// 更新节点信息
 		r.PUT("", api.Update)
-		// 删除任务
+		// 删除节点
 		r.DELETE("", api.Delete)
 		// 新增连接测试接口
 		r.POST("/testConnection", api.TestConnection) // 添加连接测试接口

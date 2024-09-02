@@ -8,7 +8,6 @@ import (
 	"go-admin/app/smart/models"
 	common "go-admin/common/models"
 	"go-admin/common/utils"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"time"
 
@@ -164,14 +163,16 @@ func (e *ExecMachine) Update(c *dto.ExecMachineUpdateReq) error {
 		updates["description"] = c.Description
 	}
 
-	// 密码检测和加密
-	if c.PassWord != "" && bcrypt.CompareHashAndPassword([]byte(model.PassWord), []byte(c.PassWord)) != nil {
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(c.PassWord), bcrypt.DefaultCost)
+	if model.PassWord != c.PassWord {
+		// 密码检测和加密
+		key := "your-secret-keys" // 替换为你自己的密钥
+		encryptedPassword, err := utils.Encrypt(c.PassWord, key)
+
 		if err != nil {
 			e.Log.Errorf("password encryption failed: %v", err)
 			return fmt.Errorf("password encryption failed: %v", err)
 		}
-		updates["password"] = string(hashedPassword) // 使用加密后的密码
+		updates["password"] = encryptedPassword
 	}
 
 	// 如果没有字段发生变化
@@ -235,6 +236,7 @@ func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachi
 		return err
 	}
 	key := "your-secret-keys" // 替换为你自己的密钥
+	fmt.Println("machine.PassWord=", machine.PassWord)
 	password, err := utils.Decrypt(machine.PassWord, key)
 	if err != nil {
 		e.Log.Errorf("password decryption failed: %v", err)
