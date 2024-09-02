@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-admin-team/go-admin-core/sdk/api"
@@ -39,7 +40,7 @@ func (e SysMenu) GetPage(c *gin.Context) {
 	var list = make([]models.SysMenu, 0)
 	err = s.GetPage(&req, &list).Error
 	if err != nil {
-		e.Error(500, err, "查询失败")
+		e.Error(500, err, fmt.Sprintf("获取SysMenu失败，\r\n失败信息 %s", err.Error()))
 		return
 	}
 	e.OK(list, "查询成功")

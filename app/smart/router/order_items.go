@@ -11,27 +11,17 @@ import (
 
 func init() {
 	routerCheckRole = append(routerCheckRole, registerOrderItemsAuthRouter)
-	//routerNoCheckRole = append(routerNoCheckRole, registerOrderRouter)
 }
 
 // registerSysApiRouter 需要JWT认证
 func registerOrderItemsAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.OrderItems{}
-	r := v1.Group("/order/items").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+	r := v1.Group("/order-items").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
-		r.GET("/list", api.GetPage)
-		r.GET("/list:id", api.Get)
-		r.POST("/create", api.Insert)
-		r.PUT("/update", api.Update)
-		r.DELETE("/delete", api.Delete)
+		r.GET("", api.GetPage)
+		r.GET("/:id", api.Get)
+		r.POST("", api.Insert)
+		r.PUT("", api.Update)
+		r.DELETE("", api.Delete)
 	}
 }
-
-//// 注册路由 不进行JWT认证的
-//func registerOrderRouter(v1 *gin.RouterGroup) {
-//	api := apis.Test{}
-//	r := v1.Group("/app/v1")
-//	{
-//		r.GET("/", api.Get)
-//	}
-//}

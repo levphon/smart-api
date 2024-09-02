@@ -11,12 +11,12 @@ import (
 
 type ConnectionTest struct{}
 
-func (c *ConnectionTest) TestConnection(authType int, ip string, port int, username, password, keyPath string) error {
+func (c *ConnectionTest) TestConnection(authType string, ip string, port int, username, password, keyPath string) error {
 	switch authType {
-	case 1:
+	case "1":
 		// 通过用户名和密码进行SSH连接测试
 		return c.testPasswordAuth(ip, port, username, password)
-	case 2:
+	case "2":
 		// 通过公私钥进行SSH连接测试
 		return c.testKeyAuth(ip, port, username, keyPath)
 	default:

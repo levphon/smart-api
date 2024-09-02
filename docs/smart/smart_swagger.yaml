@@ -174,11 +174,366 @@ definitions:
       updatedAt:
         type: string
     type: object
+  dto.FlowTemplatesDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.FlowTemplatesInsertReq:
+    properties:
+      bindCount:
+        type: integer
+      bindFlow:
+        type: integer
+      categoryId:
+        type: integer
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建人
+        type: string
+      description:
+        type: string
+      formData:
+        $ref: '#/definitions/go-admin_app_smart_models.FormData'
+      id:
+        type: integer
+      name:
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  dto.FlowTemplatesUpdateReq:
+    properties:
+      bindCount:
+        type: integer
+      bindFlow:
+        type: integer
+      categoryId:
+        type: integer
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        type: string
+      formData:
+        $ref: '#/definitions/go-admin_app_smart_models.FormData'
+      id:
+        type: integer
+      name:
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
   dto.GetSetSysConfigReq:
     properties:
       configKey:
         type: string
       configValue:
+        type: string
+    type: object
+  dto.OrderCategoryDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.OrderCategoryInsertReq:
+    properties:
+      chineseName:
+        description: 中文名称
+        type: string
+      createBy:
+        type: integer
+      creator:
+        description: 创建人
+        type: string
+      id:
+        description: 编码
+        type: integer
+      name:
+        description: 标题
+        type: string
+      updateBy:
+        type: integer
+    type: object
+  dto.OrderCategoryUpdateReq:
+    properties:
+      chineseName:
+        description: 中文名称
+        type: string
+      createBy:
+        type: integer
+      id:
+        description: 编码
+        type: integer
+      name:
+        description: 标题
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      updateBy:
+        type: integer
+    type: object
+  dto.OrderItemsDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.OrderItemsInsertReq:
+    properties:
+      bindTempLate:
+        description: 绑定模板
+        type: string
+      categoryId:
+        description: 类别ID
+        type: integer
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        type: string
+      description:
+        description: 订单项描述
+        type: string
+      favorite:
+        description: 是否为收藏项
+        type: boolean
+      icon:
+        description: 订单项图标
+        type: string
+      id:
+        description: 编码
+        type: integer
+      link:
+        description: 连接到网页
+        type: string
+      title:
+        description: 标题
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  dto.OrderItemsUpdateReq:
+    properties:
+      bindTempLate:
+        description: 绑定模板
+        type: string
+      categoryId:
+        description: 类别ID
+        type: integer
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        description: 订单项描述
+        type: string
+      favorite:
+        description: 是否为收藏项
+        type: boolean
+      icon:
+        description: 订单项图标
+        type: string
+      id:
+        description: 编码
+        type: integer
+      link:
+        description: 连接到网页
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      title:
+        description: 标题
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  dto.OrderTaskDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.OrderTaskInsertReq:
+    properties:
+      content:
+        description: 任务内容
+        type: string
+      createBy:
+        type: integer
+      creator:
+        description: 创建者
+        type: string
+      description:
+        description: 描述信息
+        type: string
+      id:
+        description: 编码
+        type: integer
+      interpreter:
+        description: 解释器
+        type: string
+      name:
+        description: 任务名称
+        type: string
+      taskType:
+        description: 任务类型
+        type: string
+      updateBy:
+        type: integer
+    type: object
+  dto.OrderTaskUpdateReq:
+    properties:
+      content:
+        description: 任务内容
+        type: string
+      createBy:
+        type: integer
+      description:
+        description: 描述信息
+        type: string
+      id:
+        description: 编码
+        type: integer
+      interpreter:
+        description: 解释器
+        type: string
+      name:
+        description: 任务名称
+        type: string
+      regenerator:
+        description: 更新者
+        type: string
+      taskType:
+        description: 任务类型
+        type: string
+      updateBy:
+        type: integer
+    type: object
+  dto.OrderWorksDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.OrderWorksInsertReq:
+    properties:
+      bindFlowData:
+        allOf:
+        - $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
+        description: 工单流程数据
+      createBy:
+        type: integer
+      creator:
+        type: string
+      currentHandler:
+        description: 当前处理人
+        type: string
+      currentHandlerId:
+        description: 当前处理人
+        type: integer
+      currentNode:
+        description: 当前节点
+        type: string
+      department:
+        description: 部门
+        type: string
+      description:
+        description: 描述
+        type: string
+      formData:
+        allOf:
+        - $ref: '#/definitions/go-admin_app_smart_models.FormData'
+        description: 工单表单数据
+      id:
+        description: 编码
+        type: integer
+      priority:
+        description: 优先级
+        type: string
+      process:
+        description: 流程
+        type: string
+      status:
+        description: 状态
+        type: string
+      template:
+        description: 模板
+        type: string
+      title:
+        description: 工单标题
+        type: string
+      updateBy:
+        type: integer
+    type: object
+  dto.OrderWorksUpdateReq:
+    properties:
+      bindFlowData:
+        allOf:
+        - $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
+        description: 工单流程数据
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      currentHandler:
+        description: 当前处理人
+        type: string
+      currentHandlerId:
+        description: 当前处理人
+        type: integer
+      currentNode:
+        description: 当前节点
+        type: string
+      department:
+        description: 部门
+        type: string
+      description:
+        description: 描述
+        type: string
+      formData:
+        allOf:
+        - $ref: '#/definitions/go-admin_app_smart_models.FormData'
+        description: 工单表单数据
+      id:
+        description: 编码
+        type: integer
+      priority:
+        description: 优先级
+        type: string
+      process:
+        description: 流程
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      status:
+        description: 状态
+        type: string
+      template:
+        description: 模板
+        type: string
+      title:
+        description: 工单标题
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
         type: string
     type: object
   dto.PassWord:
@@ -857,6 +1212,57 @@ definitions:
         description: 用户ID
         type: integer
     type: object
+  dto.WorksNotifyReq:
+    properties:
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      currentHandler:
+        type: string
+      department:
+        type: string
+      id:
+        description: 编码
+        type: integer
+      message:
+        description: 通知的详细消息内容。
+        type: string
+      orderId:
+        description: 关联的工单 ID，方便关联具体的工单。
+        type: integer
+      priority:
+        type: string
+      readStatus:
+        description: 通知的阅读状态，例如是否已读。
+        type: integer
+      status:
+        type: string
+      title:
+        description: 工单标题
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  dto.WorksNotifyUpdateReq:
+    properties:
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      id:
+        description: 编码
+        type: integer
+      readStatus:
+        description: 通知的阅读状态，例如是否已读。
+        type: integer
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
   go-admin_app_smart_models.ExecMachine:
     properties:
       authType:
@@ -941,6 +1347,229 @@ definitions:
         type: string
       structure:
         $ref: '#/definitions/go-admin_app_smart_models.StrucTure'
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  go-admin_app_smart_models.FlowTemplates:
+    properties:
+      bindCount:
+        type: integer
+      bindFlow:
+        type: integer
+      categoryId:
+        type: integer
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建人
+        type: string
+      description:
+        type: string
+      formData:
+        $ref: '#/definitions/go-admin_app_smart_models.FormData'
+      id:
+        type: integer
+      name:
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  go-admin_app_smart_models.FormData:
+    additionalProperties: true
+    type: object
+  go-admin_app_smart_models.OperationHistory:
+    properties:
+      createdAt:
+        type: string
+      handleDuration:
+        description: 处理时长 (以秒为单位)
+        type: integer
+      handleTime:
+        description: 处理时间
+        type: string
+      handlerId:
+        description: 处理人ID
+        type: integer
+      handlerName:
+        description: 处理人姓名
+        type: string
+      id:
+        description: 主键ID
+        type: integer
+      nodeName:
+        description: 节点名称
+        type: string
+      remark:
+        description: 备注
+        type: string
+      status:
+        description: 流转状态 1 同意， 0 拒绝， 2 其他
+        type: string
+      title:
+        description: 工单标题
+        type: string
+      transfer:
+        description: 流转
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  go-admin_app_smart_models.OrderCategory:
+    properties:
+      chineseName:
+        type: string
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建人
+        type: string
+      flowTemplates:
+        items:
+          $ref: '#/definitions/go-admin_app_smart_models.FlowTemplates'
+        type: array
+      id:
+        type: integer
+      name:
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  go-admin_app_smart_models.OrderItems:
+    properties:
+      bindTempLate:
+        description: 绑定模板
+        type: string
+      categoryId:
+        type: integer
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建人
+        type: string
+      description:
+        description: 订单项描述
+        type: string
+      favorite:
+        description: 是否为收藏项
+        type: boolean
+      icon:
+        description: 订单项图标
+        type: string
+      id:
+        type: integer
+      link:
+        description: 连接到网页
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      title:
+        description: 订单项标题
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  go-admin_app_smart_models.OrderTask:
+    properties:
+      content:
+        description: 任务内容
+        type: string
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建者
+        type: string
+      description:
+        description: 描述信息
+        type: string
+      id:
+        type: integer
+      interpreter:
+        description: 解释器
+        type: string
+      name:
+        description: 任务名称
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      taskType:
+        description: 任务类型
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  go-admin_app_smart_models.OrderWorks:
+    properties:
+      bindFlowData:
+        $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 创建人
+        type: string
+      currentHandler:
+        description: 当前处理人
+        type: string
+      currentHandlerID:
+        description: 当前处理人ID
+        type: integer
+      currentNode:
+        description: 当前节点
+        type: string
+      department:
+        description: 部门
+        type: string
+      description:
+        type: string
+      formData:
+        $ref: '#/definitions/go-admin_app_smart_models.FormData'
+      id:
+        type: integer
+      priority:
+        description: 优先级
+        type: string
+      process:
+        description: 流程
+        type: string
+      regenerator:
+        description: 更新人
+        type: string
+      status:
+        description: 状态
+        type: string
+      template:
+        description: 模板
+        type: string
+      title:
+        description: 工单标题
+        type: string
       updateBy:
         type: integer
       updatedAt:
@@ -1811,198 +2440,7 @@ paths:
       summary: 修改字典类型
       tags:
       - 字典类型
-  /api/v1/flow-manage:
-    delete:
-      description: 删除FlowManage
-      parameters:
-      - description: body
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.FlowManageDeleteReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "删除成功"}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 删除FlowManage
-      tags:
-      - 流程管理
-    get:
-      description: 获取FlowManage列表
-      parameters:
-      - description: 页条数
-        in: query
-        name: pageSize
-        type: integer
-      - description: 页码
-        in: query
-        name: pageIndex
-        type: integer
-      responses:
-        "200":
-          description: '{"code": 200, "data": [...]}'
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  allOf:
-                  - $ref: '#/definitions/response.Page'
-                  - properties:
-                      list:
-                        items:
-                          $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
-                        type: array
-                    type: object
-              type: object
-      security:
-      - Bearer: []
-      summary: 获取FlowManage列表
-      tags:
-      - 流程管理
-    post:
-      consumes:
-      - application/json
-      description: 创建FlowManage
-      parameters:
-      - description: data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.FlowManageInsertReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "添加成功"}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 创建FlowManage
-      tags:
-      - 流程管理
-  /api/v1/flow-manage/{id}:
-    get:
-      description: 获取FlowManage
-      parameters:
-      - description: id
-        in: path
-        name: id
-        type: integer
-      responses:
-        "200":
-          description: '{"code": 200, "data": [...]}'
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
-              type: object
-      security:
-      - Bearer: []
-      summary: 获取FlowManage
-      tags:
-      - 流程管理
-    put:
-      consumes:
-      - application/json
-      description: 修改FlowManage
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: body
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.FlowManageUpdateReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "修改成功"}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 修改FlowManage
-      tags:
-      - 流程管理
-  /api/v1/flow-manage/clone/{id}:
-    post:
-      consumes:
-      - application/json
-      description: 克隆FlowManage
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: body
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.FlowManageUpdateReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "克隆成功"}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 克隆FlowManage
-      tags:
-      - 流程管理
-  /api/v1/getinfo:
-    get:
-      description: 获取JSON
-      responses:
-        "200":
-          description: '{"code": 200, "data": [...]}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 获取个人信息
-      tags:
-      - 个人中心
-  /api/v1/login:
-    post:
-      consumes:
-      - application/json
-      description: |-
-        获取token
-        LoginHandler can be used by clients to get a jwt token.
-        Payload needs to be json in the form of {"username": "USERNAME", "password": "PASSWORD"}.
-        Reply will be of the form {"token": "TOKEN"}.
-        dev mode：It should be noted that all fields cannot be empty, and a value of 0 can be passed in addition to the account password
-        注意：开发模式：需要注意全部字段不能为空，账号密码外可以传入0值
-      parameters:
-      - description: account
-        in: body
-        name: account
-        required: true
-        schema:
-          $ref: '#/definitions/handler.Login'
-      responses:
-        "200":
-          description: '{"code": 200, "expire": "2019-08-07T12:45:48+08:00", "token":
-            ".eyJleHAiOjE1NjUxNTMxNDgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTU2NTE0OTU0OH0.-zvzHvbg0A"
-            }'
-          schema:
-            type: string
-      summary: 登陆
-      tags:
-      - 登陆
-  /api/v1/machine:
+  /api/v1/exec-machine:
     delete:
       description: 删除ExecMachine
       parameters:
@@ -2076,7 +2514,7 @@ paths:
       summary: 创建ExecMachine
       tags:
       - 执行节点管理
-  /api/v1/machine/{id}:
+  /api/v1/exec-machine/{id}:
     get:
       description: 获取ExecMachine
       parameters:
@@ -2125,7 +2563,7 @@ paths:
       summary: 修改ExecMachine
       tags:
       - 执行节点管理
-  /api/v1/machine/testConnection:
+  /api/v1/exec-machine/testConnection:
     post:
       description: 测试连接ExecMachine
       parameters:
@@ -2145,6 +2583,320 @@ paths:
       summary: 测试连接ExecMachine
       tags:
       - 执行节点管理
+  /api/v1/flow-manage:
+    delete:
+      description: 删除FlowManage
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除FlowManage
+      tags:
+      - 工单流程管理
+    get:
+      description: 获取FlowManage列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取FlowManage列表
+      tags:
+      - 工单流程管理
+    post:
+      consumes:
+      - application/json
+      description: 创建FlowManage
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建FlowManage
+      tags:
+      - 工单流程管理
+  /api/v1/flow-manage/{id}:
+    get:
+      description: 获取FlowManage
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.FlowManage'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取FlowManage
+      tags:
+      - 工单流程管理
+    put:
+      consumes:
+      - application/json
+      description: 修改FlowManage
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改FlowManage
+      tags:
+      - 工单流程管理
+  /api/v1/flow-manage/clone/{id}:
+    post:
+      consumes:
+      - application/json
+      description: 克隆FlowManage
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowManageUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "克隆成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 克隆FlowManage
+      tags:
+      - 工单流程管理
+  /api/v1/flow-templates:
+    delete:
+      description: 删除FlowTemplates
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowTemplatesDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除FlowTemplates
+      tags:
+      - 流程模板管理
+    get:
+      description: 获取FlowTemplates列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.FlowTemplates'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取FlowTemplates列表
+      tags:
+      - 流程模板管理
+    post:
+      consumes:
+      - application/json
+      description: 创建FlowTemplates
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowTemplatesInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建FlowTemplates
+      tags:
+      - 流程模板管理
+  /api/v1/flow-templates/{id}:
+    get:
+      description: 获取FlowTemplates
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.FlowTemplates'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取FlowTemplates
+      tags:
+      - 流程模板管理
+    put:
+      consumes:
+      - application/json
+      description: 修改FlowTemplates
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FlowTemplatesUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改FlowTemplates
+      tags:
+      - 流程模板管理
+  /api/v1/getinfo:
+    get:
+      description: 获取JSON
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 获取个人信息
+      tags:
+      - 个人中心
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        获取token
+        LoginHandler can be used by clients to get a jwt token.
+        Payload needs to be json in the form of {"username": "USERNAME", "password": "PASSWORD"}.
+        Reply will be of the form {"token": "TOKEN"}.
+        dev mode：It should be noted that all fields cannot be empty, and a value of 0 can be passed in addition to the account password
+        注意：开发模式：需要注意全部字段不能为空，账号密码外可以传入0值
+      parameters:
+      - description: account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/handler.Login'
+      responses:
+        "200":
+          description: '{"code": 200, "expire": "2019-08-07T12:45:48+08:00", "token":
+            ".eyJleHAiOjE1NjUxNTMxNDgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTU2NTE0OTU0OH0.-zvzHvbg0A"
+            }'
+          schema:
+            type: string
+      summary: 登陆
+      tags:
+      - 登陆
   /api/v1/menu:
     delete:
       description: 删除数据
@@ -2282,6 +3034,699 @@ paths:
       summary: Menu列表数据
       tags:
       - 菜单
+  /api/v1/order-category:
+    delete:
+      description: 删除OrderCategory
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderCategoryDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除OrderCategory
+      tags:
+      - 工单分类
+    post:
+      consumes:
+      - application/json
+      description: 创建OrderCategory
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderCategoryInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建OrderCategory
+      tags:
+      - 工单分类
+  /api/v1/order-category/:
+    get:
+      description: 获取OrderCategory列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.OrderCategory'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderCategory列表
+      tags:
+      - 工单分类
+  /api/v1/order-category/{id}:
+    get:
+      description: 获取OrderCategory
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OrderCategory'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderCategory
+      tags:
+      - 工单分类
+    put:
+      consumes:
+      - application/json
+      description: 修改OrderCategory
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderCategoryUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改OrderCategory
+      tags:
+      - 工单分类
+  /api/v1/order-items:
+    delete:
+      description: 删除OrderItems
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderItemsDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除OrderItems
+      tags:
+      - 工单项目
+    get:
+      description: 获取OrderItems列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.OrderItems'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderItems列表
+      tags:
+      - 工单项目
+    post:
+      consumes:
+      - application/json
+      description: 创建OrderItems
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderItemsInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建OrderItems
+      tags:
+      - 工单项目
+  /api/v1/order-items/{id}:
+    get:
+      description: 获取OrderItems
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OrderItems'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderItems
+      tags:
+      - 工单项目
+    put:
+      consumes:
+      - application/json
+      description: 修改OrderItems
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderItemsUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改OrderItems
+      tags:
+      - 工单项目
+  /api/v1/order-task:
+    delete:
+      description: 删除OrderTask
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderTaskDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除OrderTask
+      tags:
+      - 工单任务
+    get:
+      description: 获取OrderTask列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.OrderTask'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderTask列表
+      tags:
+      - 工单任务
+    post:
+      consumes:
+      - application/json
+      description: 创建OrderTask
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderTaskInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建OrderTask
+      tags:
+      - 工单任务
+  /api/v1/order-task/{id}:
+    get:
+      description: 获取OrderTask
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OrderTask'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderTask
+      tags:
+      - 工单任务
+    put:
+      consumes:
+      - application/json
+      description: 修改OrderTask
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderTaskUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改OrderTask
+      tags:
+      - 工单任务
+  /api/v1/order-works:
+    delete:
+      description: 删除OrderWorks
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderWorksDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除OrderWorks
+      tags:
+      - 工单处理相关
+    get:
+      description: 获取OrderWorks列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.OrderWorks'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderWorks列表
+      tags:
+      - 工单处理相关
+    post:
+      consumes:
+      - application/json
+      description: 创建OrderWorks
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderWorksInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建OrderWorks
+      tags:
+      - 工单处理相关
+  /api/v1/order-works/{id}:
+    get:
+      description: 获取OrderWorks
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OrderWorks'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OrderWorks
+      tags:
+      - 工单处理相关
+    put:
+      consumes:
+      - application/json
+      description: 修改OrderWorks
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderWorksUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改OrderWorks
+      tags:
+      - 工单处理相关
+  /api/v1/order-works/createdByMe:
+    get:
+      description: 获取我创建的
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OrderWorks'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取我创建的
+      tags:
+      - 工单处理相关
+  /api/v1/order-works/handle:
+    put:
+      consumes:
+      - application/json
+      description: 处理OrderWorks
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderWorksUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 处理OrderWorks
+      tags:
+      - 工单处理相关
+  /api/v1/order-works/myBacklog:
+    get:
+      description: 获取我的待办
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OrderWorks'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取我的待办
+      tags:
+      - 工单处理相关
+  /api/v1/order-works/relatedToMe:
+    get:
+      description: 获取关于我的工单
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OrderWorks'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取关于我的工单
+      tags:
+      - 工单处理相关
+  /api/v1/order/works/history:
+    get:
+      description: 获取OperationHistory列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.OperationHistory'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OperationHistory列表
+      tags:
+      - 操作历史
+  /api/v1/order/works/notify:
+    get:
+      description: 获取OperationHistory
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/go-admin_app_smart_models.OperationHistory'
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取OperationHistory
+      tags:
+      - 操作历史
+    post:
+      consumes:
+      - application/json
+      description: 创建OperationHistory
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.WorksNotifyReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 创建OperationHistory
+      tags:
+      - 操作历史
+    put:
+      consumes:
+      - application/json
+      description: 修改OperationHistory
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.WorksNotifyUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "修改成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 修改OperationHistory
+      tags:
+      - 操作历史
   /api/v1/post:
     delete:
       description: 删除数据

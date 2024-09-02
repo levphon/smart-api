@@ -22,6 +22,15 @@ type OperationHistory struct {
 	api.Api
 }
 
+// GetPage 获取OrderWorks列表
+// @Summary 获取OrderWorks列表
+// @Description 获取OrderWorks列表
+// @Tags 工单处理相关
+// @Param pageSize query int false "页条数"
+// @Param pageIndex query int false "页码"
+// @Success 200 {object} response.Response{data=response.Page{list=[]models.OrderWorks}} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-works [get]
+// @Security Bearer
 func (e OrderWorks) GetPage(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
@@ -50,6 +59,15 @@ func (e OrderWorks) GetPage(c *gin.Context) {
 
 	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
+
+// Get 获取OrderWorks
+// @Summary 获取OrderWorks
+// @Description 获取OrderWorks
+// @Tags 工单处理相关
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-works/{id} [get]
+// @Security Bearer
 func (e OrderWorks) Get(c *gin.Context) {
 	s := service.OrderWorks{}
 	// 请求结构体 id
@@ -75,6 +93,15 @@ func (e OrderWorks) Get(c *gin.Context) {
 
 	e.OK(object, "查询成功")
 }
+
+// MyBacklogGet 获取我的待办
+// @Summary 获取我的待办
+// @Description 获取我的待办
+// @Tags 工单处理相关
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-works/myBacklog [get]
+// @Security Bearer
 func (e OrderWorks) MyBacklogGet(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
@@ -105,6 +132,15 @@ func (e OrderWorks) MyBacklogGet(c *gin.Context) {
 	e.OK(objects, "查询成功")
 
 }
+
+// CreatedByMe 获取我创建的
+// @Summary 获取我创建的
+// @Description 获取我创建的
+// @Tags 工单处理相关
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-works/createdByMe [get]
+// @Security Bearer
 func (e OrderWorks) CreatedByMe(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
@@ -135,6 +171,15 @@ func (e OrderWorks) CreatedByMe(c *gin.Context) {
 	e.OK(objects, "查询成功")
 
 }
+
+// RelatedToMe 获取关于我的工单
+// @Summary 获取关于我的工单
+// @Description 获取关于我的工单
+// @Tags 工单处理相关
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-works/relatedToMe [get]
+// @Security Bearer
 func (e OrderWorks) RelatedToMe(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
@@ -165,6 +210,17 @@ func (e OrderWorks) RelatedToMe(c *gin.Context) {
 	e.OK(objects, "查询成功")
 
 }
+
+// Insert 创建OrderWorks
+// @Summary 创建OrderWorks
+// @Description 创建OrderWorks
+// @Tags 工单处理相关
+// @Accept application/json
+// @Product application/json
+// @Param data body dto.OrderWorksInsertReq true "data"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "添加成功"}"
+// @Router /api/v1/order-works [post]
+// @Security Bearer
 func (e OrderWorks) Insert(c *gin.Context) {
 	s := service.OrderWorks{}
 
@@ -190,7 +246,17 @@ func (e OrderWorks) Insert(c *gin.Context) {
 	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Title))
 }
 
-// 更新OrderWorks
+// Update 修改OrderWorks
+// @Summary 修改OrderWorks
+// @Description 修改OrderWorks
+// @Tags 工单处理相关
+// @Accept application/json
+// @Product application/json
+// @Param id path int true "id"
+// @Param data body dto.OrderWorksUpdateReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
+// @Router /api/v1/order-works/{id} [put]
+// @Security Bearer
 func (e OrderWorks) Update(c *gin.Context) {
 	s := service.OrderWorks{}
 	req := dto.OrderWorksUpdateReq{}
@@ -216,7 +282,17 @@ func (e OrderWorks) Update(c *gin.Context) {
 	e.OK(req.GetId(), "更新成功")
 }
 
-// 工单处理
+// Handle 处理OrderWorks
+// @Summary 处理OrderWorks
+// @Description 处理OrderWorks
+// @Tags 工单处理相关
+// @Accept application/json
+// @Product application/json
+// @Param id path int true "id"
+// @Param data body dto.OrderWorksUpdateReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
+// @Router /api/v1/order-works/handle [put]
+// @Security Bearer
 func (e OrderWorks) Handle(c *gin.Context) {
 	s := service.OrderWorks{}
 	req := dto.OrderWorksHandleReq{}
@@ -247,7 +323,14 @@ func (e OrderWorks) Handle(c *gin.Context) {
 	e.OK(req.GetId(), "操作成功")
 }
 
-// 删除OrderWorks
+// Delete 删除OrderWorks
+// @Summary 删除OrderWorks
+// @Description 删除OrderWorks
+// @Tags 工单处理相关
+// @Param data body dto.OrderWorksDeleteReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
+// @Router /api/v1/order-works [delete]
+// @Security Bearer
 func (e OrderWorks) Delete(c *gin.Context) {
 	s := service.OrderWorks{}
 
@@ -268,35 +351,4 @@ func (e OrderWorks) Delete(c *gin.Context) {
 		return
 	}
 	e.OK(req.GetId(), "删除成功")
-}
-
-// 获取工单历史
-func (h OperationHistory) GetOperationHistory(c *gin.Context) {
-	// 分页查询返回pageNum和limit
-	pageNum, limit := global.PagingQuery(c)
-	title := c.Query("title")
-
-	s := service.OperationHistory{}
-	// 创建数据库连接和绑定请求
-	err := h.MakeContext(c).
-		MakeOrm().
-		Bind(binding.JSON, nil).
-		MakeService(&s.Service).
-		Errors
-	if err != nil {
-		h.Logger.Error(err)
-		h.Error(500, err, err.Error())
-		return
-	}
-	// 定义一个存储所有工单类别数据的切片
-	var objects []models.OperationHistory
-
-	err = s.GetHistory(pageNum, limit, &objects, title)
-	if err != nil {
-		h.Error(500, err, "查询失败")
-		return
-	}
-
-	h.OK(objects, "查询成功")
-
 }

@@ -17,13 +17,13 @@ func init() {
 // 注册工单模板路由
 func registerFlowManageAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.FlowManage{}
-	r := v1.Group("/flowManage").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole()).Use(actions.PermissionAction())
+	r := v1.Group("/flow-manage").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole()).Use(actions.PermissionAction())
 	{
-		r.POST("/create", api.Insert)
-		r.POST("/clone/:id", api.Clone)
-		r.GET("/list", api.GetPage)
-		r.GET("/details:id", api.Get)
-		r.PUT("/update", api.Update)
-		r.DELETE("/delete", api.Delete)
+		r.POST("", api.Insert)
+		r.POST("/:id", api.Clone)
+		r.GET("", api.GetPage)
+		r.GET("/:id", api.Get)
+		r.PUT("", api.Update)
+		r.DELETE("", api.Delete)
 	}
 }

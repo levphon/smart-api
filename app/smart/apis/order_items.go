@@ -18,6 +18,15 @@ type OrderItems struct {
 	api.Api
 }
 
+// GetPage 获取OrderItems列表
+// @Summary 获取OrderItems列表
+// @Description 获取OrderItems列表
+// @Tags 工单项目
+// @Param pageSize query int false "页条数"
+// @Param pageIndex query int false "页码"
+// @Success 200 {object} response.Response{data=response.Page{list=[]models.OrderItems}} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-items [get]
+// @Security Bearer
 func (e OrderItems) GetPage(c *gin.Context) {
 
 	// 分页查询返回pageNum和limit
@@ -49,6 +58,14 @@ func (e OrderItems) GetPage(c *gin.Context) {
 	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
 
+// Get 获取OrderItems
+// @Summary 获取OrderItems
+// @Description 获取OrderItems
+// @Tags 工单项目
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.OrderItems} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-items/{id} [get]
+// @Security Bearer
 func (e OrderItems) Get(c *gin.Context) {
 	s := service.OrderItems{}
 	req := dto.OrderItemsGetReq{}
@@ -73,6 +90,16 @@ func (e OrderItems) Get(c *gin.Context) {
 	e.OK(object, "查询成功")
 }
 
+// Insert 创建OrderItems
+// @Summary 创建OrderItems
+// @Description 创建OrderItems
+// @Tags 工单项目
+// @Accept application/json
+// @Product application/json
+// @Param data body dto.OrderItemsInsertReq true "data"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "添加成功"}"
+// @Router /api/v1/order-items [post]
+// @Security Bearer
 func (e OrderItems) Insert(c *gin.Context) {
 	s := service.OrderItems{}
 
@@ -98,6 +125,17 @@ func (e OrderItems) Insert(c *gin.Context) {
 	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Title))
 }
 
+// Update 修改OrderItems
+// @Summary 修改OrderItems
+// @Description 修改OrderItems
+// @Tags 工单项目
+// @Accept application/json
+// @Product application/json
+// @Param id path int true "id"
+// @Param data body dto.OrderItemsUpdateReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
+// @Router /api/v1/order-items/{id} [put]
+// @Security Bearer
 func (e OrderItems) Update(c *gin.Context) {
 	s := service.OrderItems{}
 	req := dto.OrderItemsUpdateReq{}
@@ -121,6 +159,14 @@ func (e OrderItems) Update(c *gin.Context) {
 	e.OK(req.GetId(), "更新成功")
 }
 
+// Delete 删除OrderItems
+// @Summary 删除OrderItems
+// @Description 删除OrderItems
+// @Tags 工单项目
+// @Param data body dto.OrderItemsDeleteReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
+// @Router /api/v1/order-items [delete]
+// @Security Bearer
 func (e OrderItems) Delete(c *gin.Context) {
 	s := service.OrderItems{}
 	req := dto.OrderItemsDeleteReq{}

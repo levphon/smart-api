@@ -18,17 +18,17 @@ func init() {
 func registerOrderTaskAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.OrderTask{}
 
-	r := v1.Group("/order/task").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+	r := v1.Group("/order-task").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
 		// 查询所有的任务
-		r.GET("/list", api.GetPage)
+		r.GET("", api.GetPage)
 		// 根据ID 查询
-		r.GET("/list/:id", api.Get)
+		r.GET("/:id", api.Get)
 		// 创建任务
-		r.POST("/create", api.Insert)
+		r.POST("", api.Insert)
 		// 更新任务信息
-		r.PUT("/update", api.Update)
+		r.PUT("", api.Update)
 		// 删除任务
-		r.DELETE("/delete", api.Delete)
+		r.DELETE("", api.Delete)
 	}
 }

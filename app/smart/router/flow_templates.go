@@ -16,12 +16,12 @@ func init() {
 // 注册工单模板路由
 func registerFlowTemplatesAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.FlowTemplates{}
-	r := v1.Group("/flow/templates").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+	r := v1.Group("/flow-templates").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
-		r.GET("/list", api.GetPage)
-		r.GET("/list:id", api.Get)
-		r.POST("/create", api.Insert)
-		r.PUT("/update", api.Update)
-		r.DELETE("/delete", api.Delete)
+		r.GET("", api.GetPage)
+		r.GET("/:id", api.Get)
+		r.POST("", api.Insert)
+		r.PUT("", api.Update)
+		r.DELETE("", api.Delete)
 	}
 }

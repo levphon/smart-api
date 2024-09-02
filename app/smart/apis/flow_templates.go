@@ -18,6 +18,15 @@ type FlowTemplates struct {
 	api.Api
 }
 
+// GetPage 获取FlowTemplates列表
+// @Summary 获取FlowTemplates列表
+// @Description 获取FlowTemplates列表
+// @Tags 流程模板管理
+// @Param pageSize query int false "页条数"
+// @Param pageIndex query int false "页码"
+// @Success 200 {object} response.Response{data=response.Page{list=[]models.FlowTemplates}} "{"code": 200, "data": [...]}"
+// @Router /api/v1/flow-templates [get]
+// @Security Bearer
 func (e FlowTemplates) GetPage(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
@@ -48,6 +57,14 @@ func (e FlowTemplates) GetPage(c *gin.Context) {
 	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
 
+// Get 获取FlowTemplates
+// @Summary 获取FlowTemplates
+// @Description 获取FlowTemplates
+// @Tags 流程模板管理
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.FlowTemplates} "{"code": 200, "data": [...]}"
+// @Router /api/v1/flow-templates/{id} [get]
+// @Security Bearer
 func (e FlowTemplates) Get(c *gin.Context) {
 	s := service.FlowTemplates{}
 	// 请求结构体 id
@@ -74,6 +91,16 @@ func (e FlowTemplates) Get(c *gin.Context) {
 	e.OK(object, "查询成功")
 }
 
+// Insert 创建FlowTemplates
+// @Summary 创建FlowTemplates
+// @Description 创建FlowTemplates
+// @Tags 流程模板管理
+// @Accept application/json
+// @Product application/json
+// @Param data body dto.FlowTemplatesInsertReq true "data"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "添加成功"}"
+// @Router /api/v1/flow-templates [post]
+// @Security Bearer
 func (e FlowTemplates) Insert(c *gin.Context) {
 	s := service.FlowTemplates{}
 
@@ -99,7 +126,17 @@ func (e FlowTemplates) Insert(c *gin.Context) {
 	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Name))
 }
 
-// FlowTemplates
+// Update 修改FlowTemplates
+// @Summary 修改FlowTemplates
+// @Description 修改FlowTemplates
+// @Tags 流程模板管理
+// @Accept application/json
+// @Product application/json
+// @Param id path int true "id"
+// @Param data body dto.FlowTemplatesUpdateReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
+// @Router /api/v1/flow-templates/{id} [put]
+// @Security Bearer
 func (e FlowTemplates) Update(c *gin.Context) {
 	s := service.FlowTemplates{}
 	req := dto.FlowTemplatesUpdateReq{}
@@ -123,6 +160,14 @@ func (e FlowTemplates) Update(c *gin.Context) {
 	e.OK(req.GetId(), "更新成功")
 }
 
+// Delete 删除FlowTemplates
+// @Summary 删除FlowTemplates
+// @Description 删除FlowTemplates
+// @Tags 流程模板管理
+// @Param data body dto.FlowTemplatesDeleteReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
+// @Router /api/v1/flow-templates [delete]
+// @Security Bearer
 func (e FlowTemplates) Delete(c *gin.Context) {
 	s := service.FlowTemplates{}
 	req := dto.FlowTemplatesDeleteReq{}

@@ -11,18 +11,17 @@ import (
 
 func init() {
 	routerCheckRole = append(routerCheckRole, registerOrderCategoryAuthRouter)
-	//routerNoCheckRole = append(routerNoCheckRole, registerOrderRouter)
 }
 
 // 注册工单类别路由
 func registerOrderCategoryAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.OrderCategory{}
-	r := v1.Group("/flow/category").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+	r := v1.Group("/order-category").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
-		r.GET("/list", api.GetPage)
-		r.GET("/list:id", api.Get)
-		r.POST("/create", api.Insert)
-		r.PUT("/update", api.Update)
-		r.DELETE("/delete", api.Delete)
+		r.GET("", api.GetPage)
+		r.GET("/:id", api.Get)
+		r.POST("", api.Insert)
+		r.PUT("", api.Update)
+		r.DELETE("", api.Delete)
 	}
 }

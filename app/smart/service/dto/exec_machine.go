@@ -14,7 +14,7 @@ type ExecMachineInsertReq struct {
 	Port        int             `json:"port" comment:"端口号"`         // 端口号
 	Heartbeat   common.JSONTime `json:"heartbeat" comment:"心跳检查时间"` // 最近一次心跳时间
 	Status      int             `json:"status" comment:"状态"`        // 状态
-	AuthType    int             `json:"authType" comment:"认证类型"`    // 认证方式：1=用户名密码，2=公私钥
+	AuthType    string          `json:"authType" comment:"认证类型"`    // 认证方式：1=用户名密码，2=公私钥
 	KeyPath     string          `json:"keyPath" comment:"公私钥路径"`    // 公私钥路径
 	Creator     string          `json:"creator" comment:"创建者"`      // 创建者
 	Description string          `json:"description" comment:"描述"`   // 描述信息
@@ -52,7 +52,7 @@ type ExecMachineUpdateReq struct {
 	Port        int             `json:"port" comment:"端口号"`         // 端口号
 	Heartbeat   common.JSONTime `json:"heartbeat" comment:"心跳检查时间"` // 最近一次心跳时间
 	Status      int             `json:"status" comment:"状态"`        // 状态
-	AuthType    int             `json:"authType" comment:"认证类型"`    // 认证方式：1=用户名密码，2=公私钥
+	AuthType    string          `json:"authType" comment:"认证类型"`    // 认证方式：1=用户名密码，2=公私钥
 	KeyPath     string          `json:"keyPath" comment:"公私钥路径"`    // 公私钥路径
 	Regenerator string          `json:"regenerator" comment:"更新人"`  // 更新人
 	Description string          `json:"description" comment:"描述"`   // 描述信息

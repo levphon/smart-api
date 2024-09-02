@@ -18,6 +18,15 @@ type OrderCategory struct {
 	api.Api
 }
 
+// GetPage 获取OrderCategory列表
+// @Summary 获取OrderCategory列表
+// @Description 获取OrderCategory列表
+// @Tags 工单分类
+// @Param pageSize query int false "页条数"
+// @Param pageIndex query int false "页码"
+// @Success 200 {object} response.Response{data=response.Page{list=[]models.OrderCategory}} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-category/ [get]
+// @Security Bearer
 func (e OrderCategory) GetPage(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
@@ -48,6 +57,14 @@ func (e OrderCategory) GetPage(c *gin.Context) {
 	e.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
 
+// Get 获取OrderCategory
+// @Summary 获取OrderCategory
+// @Description 获取OrderCategory
+// @Tags 工单分类
+// @Param id path int false "id"
+// @Success 200 {object} response.Response{data=models.OrderCategory} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-category/{id} [get]
+// @Security Bearer
 func (e OrderCategory) Get(c *gin.Context) {
 	s := service.OrderCategory{}
 	// 请求结构体 id
@@ -74,6 +91,16 @@ func (e OrderCategory) Get(c *gin.Context) {
 	e.OK(object, "查询成功")
 }
 
+// Insert 创建OrderCategory
+// @Summary 创建OrderCategory
+// @Description 创建OrderCategory
+// @Tags 工单分类
+// @Accept application/json
+// @Product application/json
+// @Param data body dto.OrderCategoryInsertReq true "data"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "添加成功"}"
+// @Router /api/v1/order-category [post]
+// @Security Bearer
 func (e OrderCategory) Insert(c *gin.Context) {
 	s := service.OrderCategory{}
 
@@ -100,7 +127,17 @@ func (e OrderCategory) Insert(c *gin.Context) {
 	e.OK(req.GetId(), fmt.Sprintf("%v 创建成功", req.Name))
 }
 
-// Update orderCategory
+// Update 修改OrderCategory
+// @Summary 修改OrderCategory
+// @Description 修改OrderCategory
+// @Tags 工单分类
+// @Accept application/json
+// @Product application/json
+// @Param id path int true "id"
+// @Param data body dto.OrderCategoryUpdateReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
+// @Router /api/v1/order-category/{id} [put]
+// @Security Bearer
 func (e OrderCategory) Update(c *gin.Context) {
 	s := service.OrderCategory{}
 	req := dto.OrderCategoryUpdateReq{}
@@ -124,6 +161,14 @@ func (e OrderCategory) Update(c *gin.Context) {
 	e.OK(req.GetId(), "更新成功")
 }
 
+// Delete 删除OrderCategory
+// @Summary 删除OrderCategory
+// @Description 删除OrderCategory
+// @Tags 工单分类
+// @Param data body dto.OrderCategoryDeleteReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
+// @Router /api/v1/order-category [delete]
+// @Security Bearer
 func (e OrderCategory) Delete(c *gin.Context) {
 	s := service.OrderCategory{}
 

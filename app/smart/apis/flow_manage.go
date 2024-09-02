@@ -21,7 +21,7 @@ type FlowManage struct {
 // GetPage 获取FlowManage列表
 // @Summary 获取FlowManage列表
 // @Description 获取FlowManage列表
-// @Tags 流程管理
+// @Tags 工单流程管理
 // @Param pageSize query int false "页条数"
 // @Param pageIndex query int false "页码"
 // @Success 200 {object} response.Response{data=response.Page{list=[]models.FlowManage}} "{"code": 200, "data": [...]}"
@@ -58,7 +58,7 @@ func (e FlowManage) GetPage(c *gin.Context) {
 // Get 获取FlowManage
 // @Summary 获取FlowManage
 // @Description 获取FlowManage
-// @Tags 流程管理
+// @Tags 工单流程管理
 // @Param id path int false "id"
 // @Success 200 {object} response.Response{data=models.FlowManage} "{"code": 200, "data": [...]}"
 // @Router /api/v1/flow-manage/{id} [get]
@@ -92,7 +92,7 @@ func (e FlowManage) Get(c *gin.Context) {
 // Insert 创建FlowManage
 // @Summary 创建FlowManage
 // @Description 创建FlowManage
-// @Tags 流程管理
+// @Tags 工单流程管理
 // @Accept application/json
 // @Product application/json
 // @Param data body dto.FlowManageInsertReq true "data"
@@ -127,7 +127,7 @@ func (e FlowManage) Insert(c *gin.Context) {
 // Clone 克隆FlowManage
 // @Summary 克隆FlowManage
 // @Description 克隆FlowManage
-// @Tags 流程管理
+// @Tags 工单流程管理
 // @Accept application/json
 // @Product application/json
 // @Param id path int true "id"
@@ -160,10 +160,10 @@ func (e FlowManage) Clone(c *gin.Context) {
 	e.OK(id, "克隆成功")
 }
 
-// Update FlowManage
+// Update 修改FlowManage
 // @Summary 修改FlowManage
 // @Description 修改FlowManage
-// @Tags 流程管理
+// @Tags 工单流程管理
 // @Accept application/json
 // @Product application/json
 // @Param id path int true "id"
@@ -196,10 +196,10 @@ func (e FlowManage) Update(c *gin.Context) {
 	e.OK(req.GetId(), "更新成功")
 }
 
-// Delete FlowManage
+// Delete 删除FlowManage
 // @Summary 删除FlowManage
 // @Description 删除FlowManage
-// @Tags 流程管理
+// @Tags 工单流程管理
 // @Param data body dto.FlowManageDeleteReq true "body"
 // @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
 // @Router /api/v1/flow-manage [delete]

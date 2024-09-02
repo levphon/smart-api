@@ -14,7 +14,7 @@ type ExecMachine struct {
 	PassWord    string          `gorm:"column:password;type: varchar(100)" json:"passWord" form:"password"`             // 密码
 	Port        int             `gorm:"column:port;" json:"port" form:"port"`                                           // 端口
 	Status      int             `gorm:"column:status;" json:"status" form:"status"`                                     // 状态  1 为在线 2为离线
-	AuthType    int             `gorm:"column:auth_type;type:int" json:"authType" form:"authType"`                      // 认证方式：1=用户名密码，2=公私钥
+	AuthType    string          `gorm:"column:auth_type;type:varchar(10)" json:"authType" form:"authType"`              // 认证方式：1=用户名密码，2=公私钥
 	KeyPath     string          `gorm:"column:key_path;type:varchar(255)" json:"keyPath" form:"keyPath"`                // 公私钥路径
 	Creator     string          `gorm:"column:creator; type: varchar(45)" json:"creator" form:"creator"`                // 创建者
 	Heartbeat   models.JSONTime `gorm:"column:heartbeat;type:timestamp;default:NULL" json:"heartbeat" form:"heartbeat"` // 最近一次心跳时间

@@ -143,10 +143,10 @@ func (e *ExecMachine) Update(c *dto.ExecMachineUpdateReq) error {
 		updates["ip"] = c.Ip
 	}
 	if model.HostName != c.HostName {
-		updates["host_name"] = c.HostName
+		updates["hostname"] = c.HostName
 	}
 	if model.UserName != c.UserName {
-		updates["user_name"] = c.UserName
+		updates["username"] = c.UserName
 	}
 	if model.Port != c.Port {
 		updates["port"] = c.Port
@@ -171,7 +171,7 @@ func (e *ExecMachine) Update(c *dto.ExecMachineUpdateReq) error {
 			e.Log.Errorf("password encryption failed: %v", err)
 			return fmt.Errorf("password encryption failed: %v", err)
 		}
-		updates["pass_word"] = string(hashedPassword) // 使用加密后的密码
+		updates["password"] = string(hashedPassword) // 使用加密后的密码
 	}
 
 	// 如果没有字段发生变化
