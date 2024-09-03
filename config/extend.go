@@ -11,8 +11,9 @@ var ExtConfig *Extend
 // 使用方法： config.ExtConfig......即可！！
 
 type Extend struct {
-	Ldap   *Ldap // 这里配置对应配置文件的结构即可
-	Notify *Notify
+	Ldap       *Ldap // 这里配置对应配置文件的结构即可
+	Notify     *Notify
+	AesSecrets *AesSecrets // 对称加密 key
 }
 
 type Ldap struct {
@@ -31,4 +32,8 @@ type Notify struct {
 type BotCredit struct {
 	AppID     string `yaml:"appid" `
 	AppSecret string `yaml:"app_secret" `
+}
+
+type AesSecrets struct {
+	Key string `yaml:"key"`
 }

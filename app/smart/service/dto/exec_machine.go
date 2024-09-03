@@ -15,7 +15,7 @@ type ExecMachineInsertReq struct {
 	Heartbeat   common.JSONTime `json:"heartbeat" comment:"心跳检查时间"` // 最近一次心跳时间
 	Status      int             `json:"status" comment:"状态"`        // 状态
 	AuthType    string          `json:"authType" comment:"认证类型"`    // 认证方式：1=用户名密码，2=公私钥
-	KeyPath     string          `json:"keyPath" comment:"公私钥路径"`    // 公私钥路径
+	PrivateKey  string          `json:"privateKey" comment:"私钥内容"`  // 私钥内容
 	Creator     string          `json:"creator" comment:"创建者"`      // 创建者
 	Description string          `json:"description" comment:"描述"`   // 描述信息
 	common.ControlBy
@@ -32,7 +32,7 @@ func (s *ExecMachineInsertReq) Generate(model *models.ExecMachine) {
 	model.Port = s.Port
 	model.Status = s.Status
 	model.AuthType = s.AuthType
-	model.KeyPath = s.KeyPath
+	model.PrivateKey = s.PrivateKey
 	model.Creator = s.Creator
 	model.Description = s.Description
 	model.ControlBy = s.ControlBy
@@ -53,7 +53,7 @@ type ExecMachineUpdateReq struct {
 	Heartbeat   common.JSONTime `json:"heartbeat" comment:"心跳检查时间"` // 最近一次心跳时间
 	Status      int             `json:"status" comment:"状态"`        // 状态
 	AuthType    string          `json:"authType" comment:"认证类型"`    // 认证方式：1=用户名密码，2=公私钥
-	KeyPath     string          `json:"keyPath" comment:"公私钥路径"`    // 公私钥路径
+	PrivateKey  string          `json:"privateKey" comment:"私钥内容"`  // 私钥内容
 	Regenerator string          `json:"regenerator" comment:"更新人"`  // 更新人
 	Description string          `json:"description" comment:"描述"`   // 描述信息
 	common.ControlBy
@@ -72,7 +72,7 @@ func (s *ExecMachineUpdateReq) Generate(model *models.ExecMachine) {
 	model.Heartbeat = s.Heartbeat
 	model.Status = s.Status
 	model.AuthType = s.AuthType
-	model.KeyPath = s.KeyPath
+	model.PrivateKey = s.PrivateKey
 	model.Regenerator = s.Regenerator // 确保映射
 	model.Description = s.Description
 	model.ControlBy = s.ControlBy

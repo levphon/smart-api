@@ -59,7 +59,7 @@ func (e *ExecJob) Run() {
 	//TODO: 待完善部分
 	//str := time.Now().Format(timeFormat) + " [INFO] JobCore " + string(e.EntryId) + "exec success , spend :" + latencyTime.String()
 	//ws.SendAll(str)
-	log.Info("[Job] JobCore %s exec success , spend :%v", e.Name, latencyTime)
+	log.Info(fmt.Sprintf("[Job] JobCore %s exec success, spend: %v", e.Name, latencyTime))
 	return
 }
 
@@ -91,7 +91,7 @@ LOOP:
 	latencyTime := endTime.Sub(startTime)
 	//TODO: 待完善部分
 
-	log.Infof("[Job] JobCore %s exec success , spend :%v", h.Name, latencyTime)
+	log.Info(fmt.Sprintf("[Job] JobCore %s exec success , spend :%v", h.Name, latencyTime))
 	return
 }
 

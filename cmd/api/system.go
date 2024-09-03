@@ -102,6 +102,11 @@ func run() error {
 
 	}()
 
+	//// 启动 crontab 服务
+	//go func() {
+	//	utils.StartCronJob(sdk.Runtime.GetDb()) // 启动定时任务
+	//}()
+
 	// 如果为true，则开始下面的逻辑
 	if apiCheck {
 		var routers = sdk.Runtime.GetRouter()

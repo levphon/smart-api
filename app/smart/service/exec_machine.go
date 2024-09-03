@@ -8,6 +8,7 @@ import (
 	"go-admin/app/smart/models"
 	common "go-admin/common/models"
 	"go-admin/common/utils"
+	"go-admin/config"
 	"gorm.io/gorm"
 	"time"
 
@@ -67,7 +68,7 @@ func (e *ExecMachine) Insert(c *dto.ExecMachineInsertReq) error {
 
 	// 连接测试
 	connTest := utils.ConnectionTest{}
-	err = connTest.TestConnection(data.AuthType, data.Ip, data.Port, data.UserName, data.PassWord, data.KeyPath)
+	err = connTest.TestConnection(data.AuthType, data.Ip, data.Port, data.UserName, data.PassWord, data.PrivateKey)
 	if err != nil {
 		e.Log.Errorf("connection test failed: %v", err)
 		return fmt.Errorf("connection test failed: %v", err)
@@ -90,9 +91,10 @@ func (e *ExecMachine) Insert(c *dto.ExecMachineInsertReq) error {
 		return err
 	}
 
-	// 加密密码
-	key := "your-secret-keys" // 替换为你自己的密钥
-	encryptedPassword, err := utils.Encrypt(data.PassWord, key)
+	// 加密密码 key
+	cfg := config.ExtConfig.AesSecrets
+
+	encryptedPassword, err := utils.Encrypt(data.PassWord, cfg.Key)
 
 	// 加密密码
 	//hashedPassword, err := bcrypt.GenerateFromPassword([]byte(data.PassWord), bcrypt.DefaultCost)
@@ -156,8 +158,8 @@ func (e *ExecMachine) Update(c *dto.ExecMachineUpdateReq) error {
 	if model.AuthType != c.AuthType {
 		updates["auth_type"] = c.AuthType
 	}
-	if model.KeyPath != c.KeyPath {
-		updates["key_path"] = c.KeyPath
+	if model.PrivateKey != c.PrivateKey {
+		updates["private_key"] = c.PrivateKey
 	}
 	if model.Description != c.Description {
 		updates["description"] = c.Description
@@ -165,8 +167,8 @@ func (e *ExecMachine) Update(c *dto.ExecMachineUpdateReq) error {
 
 	if model.PassWord != c.PassWord {
 		// 密码检测和加密
-		key := "your-secret-keys" // 替换为你自己的密钥
-		encryptedPassword, err := utils.Encrypt(c.PassWord, key)
+		cfg := config.ExtConfig.AesSecrets
+		encryptedPassword, err := utils.Encrypt(c.PassWord, cfg.Key)
 
 		if err != nil {
 			e.Log.Errorf("password encryption failed: %v", err)
@@ -235,9 +237,8 @@ func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachi
 		e.Log.Errorf("error retrieving machine with ID '%v': %s", d.GetId(), err)
 		return err
 	}
-	key := "your-secret-keys" // 替换为你自己的密钥
-	fmt.Println("machine.PassWord=", machine.PassWord)
-	password, err := utils.Decrypt(machine.PassWord, key)
+	cfg := config.ExtConfig.AesSecrets
+	password, err := utils.Decrypt(machine.PassWord, cfg.Key)
 	if err != nil {
 		e.Log.Errorf("password decryption failed: %v", err)
 		return fmt.Errorf("password decryption failed: %v", err)
@@ -246,14 +247,18 @@ func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachi
 	// 复用之前的连接测试代码
 	connTest := utils.ConnectionTest{}
 
-	err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.KeyPath)
+	err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.PrivateKey)
 	if err != nil {
 		e.Log.Errorf("connection test failed: %v", err)
 		return err
 	}
 
-	// 将获取到的机器信息赋值给模型
-	*model = machine
+	// 更新数据库中的心跳时间
+	err = e.Orm.Model(&machine).UpdateColumn("heartbeat", common.JSONTime(time.Now())).Error
+	if err != nil {
+		e.Log.Errorf("failed to update heartbeat for machine ID '%v': %v", d.GetId(), err)
+		return fmt.Errorf("failed to update heartbeat for machine ID '%v': %v", d.GetId(), err)
+	}
 
 	return nil
 }
