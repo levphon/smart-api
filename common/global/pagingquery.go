@@ -14,7 +14,7 @@ func PagingQuery(c *gin.Context) (pageNum, limit int) {
 
 	// 默认分页参数，你也可以根据需求自定义默认值
 	defaultPage := 1
-	defaultPageSize := 999
+	defaultPageSize := 9999
 
 	// 将字符串参数转换为整数，处理可能的错误
 	pageNum, err := strconv.Atoi(page)

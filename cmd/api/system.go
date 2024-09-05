@@ -99,7 +99,6 @@ func run() error {
 	go func() {
 		jobs.InitJob()
 		jobs.Setup(sdk.Runtime.GetDb())
-
 	}()
 
 	//// 启动 crontab 服务

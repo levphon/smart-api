@@ -5,6 +5,7 @@ package utils
 import (
 	"fmt"
 	"golang.org/x/crypto/ssh"
+	"net"
 	"time"
 )
 
@@ -70,6 +71,19 @@ func (c *ConnectionTest) testKeyAuth(ip string, port int, username, privateKey s
 		return fmt.Errorf("failed to connect: %v", err)
 	}
 	defer client.Close()
+
+	return nil
+}
+
+func (ct *ConnectionTest) TestTCPPort(ip string, port int) error {
+	address := fmt.Sprintf("%s:%d", ip, port)
+	timeout := 3 * time.Second // 设置超时时间
+
+	conn, err := net.DialTimeout("tcp", address, timeout)
+	if err != nil {
+		return fmt.Errorf("failed to connect to %s: %v", address, err)
+	}
+	defer conn.Close()
 
 	return nil
 }

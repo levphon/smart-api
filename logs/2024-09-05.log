@@ -1,0 +1,20 @@
+2024-09-05 15:57:36.925+0800 info * => [0;0;32mroot:sunwenbo@tcp(127.0.0.1:3306)/smart-api?charset=utf8&parseTime=True&loc=Local&timeout=1000ms[0m
+2024-09-05 15:57:36.927+0800 info [0;0;32mmysql connect success ![0m
+2024-09-05 15:57:41.953+0800 info * => [0;0;32mroot:sunwenbo@tcp(127.0.0.1:3306)/smart-api?charset=utf8&parseTime=True&loc=Local&timeout=1000ms[0m
+2024-09-05 15:57:41.966+0800 info [0;0;32mmysql connect success ![0m
+2024-09-05 15:58:08.840+0800 ::1 9.979583ms info GET 200 /api/v1/exec-machine 747a2945-0579-4c33-a9ac-2d513a92d278 
+2024-09-05 15:58:10.034+0800 ::1 9.979583ms info GET 200 /api/v1/exec-machine 747a2945-0579-4c33-a9ac-2d513a92d278 [Job] JobCore 节点存活检测 exec success, spend: 32.543792ms
+2024-09-05 15:58:11.591+0800 ::1 1.717459ms info GET 200 /api/v1/exec-machine eaccb397-360a-4ff6-8c1e-f9b41ec76d21 
+2024-09-05 15:58:15.993+0800 ::1 10.545709ms info GET 200 /api/v1/sysjob?pageIndex=1&pageSize=10 83b0ef91-6013-4d93-84ad-cbf5d491e650 
+2024-09-05 15:58:16.509+0800 ::1 2.841208ms info GET 200 /api/v1/sysjob?pageIndex=1&pageSize=10 b772e75f-69f3-4bbf-9662-ea31ecc25193 
+2024-09-05 15:58:17.099+0800 ::1 1.925791ms info GET 200 /api/v1/sysjob?pageIndex=1&pageSize=10 329d3734-4478-488f-be55-370b1d0004b6 
+2024-09-05 15:59:10.046+0800 ::1 1.925791ms info GET 200 /api/v1/sysjob?pageIndex=1&pageSize=10 329d3734-4478-488f-be55-370b1d0004b6 [Job] JobCore 节点存活检测 exec success, spend: 44.278042ms
+2024-09-05 16:00:03.558+0800 127.0.0.1 2.448791ms info POST 404 /api/v1/machine/testConnection 39b6e1c1-b554-4ab9-b784-209f1af3f44b 
+2024-09-05 16:00:10.043+0800 127.0.0.1 2.448791ms info POST 404 /api/v1/machine/testConnection 39b6e1c1-b554-4ab9-b784-209f1af3f44b [Job] JobCore 节点存活检测 exec success, spend: 40.97025ms
+2024-09-05 16:00:33.587+0800 127.0.0.1 157.708µs info POST 404 /api/v1/machine/testConnection e75a6575-9651-443f-b272-c87502f86a16 
+2024-09-05 16:00:46.972+0800 127.0.0.1 195.859709ms info POST 200 /api/v1/exec-machine/testConnection 4f616e3a-d506-4102-87f8-4c863260c488 
+2024-09-05 16:01:10.035+0800 127.0.0.1 195.859709ms info POST 200 /api/v1/exec-machine/testConnection 4f616e3a-d506-4102-87f8-4c863260c488 [Job] JobCore 节点存活检测 exec success, spend: 30.525083ms
+2024-09-05 16:01:15.019+0800 service/exec_machine.go:252 error f7485ab3-aa20-4509-ab8d-1a113f5afed6 connection test failed: failed to connect: dial tcp 10.50.183.112:52828: connect: connection refused
+2024-09-05 16:01:15.019+0800 127.0.0.1 18.583916ms info POST 200 /api/v1/exec-machine/testConnection f7485ab3-aa20-4509-ab8d-1a113f5afed6 
+2024-09-05 16:01:18.317+0800 service/exec_machine.go:252 error 8dc6d9cd-46a3-439f-a05e-80eee0ec5474 connection test failed: failed to connect: dial tcp 10.50.183.112:52828: connect: connection refused
+2024-09-05 16:01:18.317+0800 127.0.0.1 22.221667ms info POST 200 /api/v1/exec-machine/testConnection 8dc6d9cd-46a3-439f-a05e-80eee0ec5474 
