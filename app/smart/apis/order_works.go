@@ -312,6 +312,7 @@ func (e OrderWorks) Handle(c *gin.Context) {
 	go func() {
 		err := s.Handle(&req, handle)
 		if err != nil {
+			fmt.Println("工单处理失败...")
 
 		}
 	}()

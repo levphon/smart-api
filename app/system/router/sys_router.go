@@ -81,9 +81,9 @@ func sysCheckRoleRouterInit(r *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddle
 	registerBaseRouter(v1, authMiddleware)
 }
 func InitLDAPRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) {
-	ldapRouter := r.Group("/api/v1/ldap")
+	ldapRouter := r.Group("/api/v1")
 	{
-		ldapRouter.POST("/login", authMiddleware.LoginHandler)
+		ldapRouter.POST("/ldap/login", authMiddleware.LoginHandler)
 	}
 }
 

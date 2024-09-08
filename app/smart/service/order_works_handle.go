@@ -57,28 +57,44 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 		e.Log.Errorf("Error querying order works with ID '%v': %s", c.GetId(), err)
 		return fmt.Errorf("error querying order works with ID '%v': %s", c.GetId(), err)
 	}
+
 	// 获取绑定的流程数据
 	flowData := model.BindFlowData
+	// 记录操作历史当前节点
+	curNode := model.CurrentNode
+
+	// 获取所有节点
+	nodes, ok := flowData.StrucTure["nodes"].([]interface{})
+	if !ok {
+		e.Log.Errorf("Nodes not found or not a valid structure")
+		return fmt.Errorf("nodes not found or not a valid structure")
+	}
 
 	// 获取当前节点
-	cutNodeId := findNodeByName(flowData.StrucTure, model.CurrentNode)
+	cutNodeId := findNodeByName(nodes, model.CurrentNode)
+
 	if cutNodeId == "" {
 		e.Log.Errorf("Current node '%v' not found in flow structure", model.CurrentNode)
 		return fmt.Errorf("current node '%v' not found in flow structure", model.CurrentNode)
 	}
 
-	// 获取边
+	// 获取边缘（包含流程顺序、以及源和目标节点）
 	edges, ok := flowData.StrucTure["edges"].([]interface{})
 	if !ok {
 		e.Log.Errorf("Edges not found or not a slice")
 		return fmt.Errorf("edges not found or not a slice")
 	}
-	targetNodeId := ""
+	var targetNodeId string
+
 	// 根据当前节点查找目标节点
 	switch c.ActionType {
 	// 1 为同意 0为拒绝
 	case "1":
-		targetNodeId = findNextNode(edges, cutNodeId)
+		targetNodeId, err = findNextNode(edges, cutNodeId, nodes)
+		if err != nil {
+			e.Log.Errorf("Error while finding next node: %v", err)
+			return fmt.Errorf("error finding next node: %v", err)
+		}
 	case "0":
 		targetNodeId = findPreviousNode(edges, cutNodeId)
 	default:
@@ -92,7 +108,6 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 
 	// 获取目标节点的名称和处理人
 	targetNodeInfo := findNodeInfoById(flowData.StrucTure, targetNodeId)
-
 	if targetNodeInfo == nil {
 		e.Log.Errorf("Target node information not found for ID '%v'", targetNodeId)
 		return fmt.Errorf("target node information not found for ID '%v'", targetNodeId)
@@ -127,7 +142,7 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 		Title:          model.Title,
 		Transfer:       "工单流转", // 假设流转操作类型保存在 ActionType 中
 		Remark:         "工单处理",
-		CurrentNode:    model.CurrentNode,
+		CurrentNode:    curNode,
 		Status:         c.ActionType,
 		HandlerId:      handle,
 		HandleTime:     models2.JSONTime(time.Now()),
@@ -142,15 +157,9 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 }
 
 // 辅助函数：根据节点名称查找节点 ID
-func findNodeByName(nodes models.StrucTure, currentNode string) string {
-	// 获取 nodes 列表
-	nodeList, ok := nodes["nodes"].([]interface{})
-	if !ok {
-		_ = fmt.Errorf("nodes is not a slice of interface{}")
-		return ""
-	}
+func findNodeByName(nodes []interface{}, currentNode string) string {
 
-	for _, node := range nodeList {
+	for _, node := range nodes {
 		// 确保 node 是一个 map[string]interface{}
 		n, ok := node.(map[string]interface{})
 		if !ok {
@@ -166,17 +175,43 @@ func findNodeByName(nodes models.StrucTure, currentNode string) string {
 }
 
 // 辅助函数：根据当前节点查找下一个节点
-func findNextNode(edges []interface{}, cutNodeId string) string {
-	for _, edge := range edges {
-		e, ok := edge.(map[string]interface{})
-		if !ok {
-			continue
+func findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}) (string, error) {
+	// 查找当前节点的类型
+	currentNodeType := getNodeTypeById(nodes, cutNodeId)
+	fmt.Println("nodes=", nodes)
+
+	// 判断是否为处理节点
+	if currentNodeType == "receive-task-node" {
+		fmt.Println("当前节点是处理节点，开始执行任务...")
+
+		// 使用新的函数获取任务名称和机器 IP
+		task, machine, err := getTaskAndMachineById(nodes, cutNodeId)
+		if err != nil {
+			return "", fmt.Errorf("获取任务和机器信息失败: %v", err)
 		}
-		if e["source"] == cutNodeId {
-			return e["target"].(string)
+		fmt.Println("task, machine,", task, machine)
+		// 将任务名称和机器 IP 传递给任务执行函数
+		success, err := executeTaskOnMachine(task, machine)
+		if err != nil {
+			return "", fmt.Errorf("任务执行失败: %v", err)
 		}
+
+		// 如果任务执行成功，返回下一个节点
+		if success {
+			nextNodeId := findNextNodeInEdges(edges, cutNodeId)
+			fmt.Printf("任务成功，跳转到下一个节点: %v\n", nextNodeId)
+			return nextNodeId, nil
+		}
+
+		// 如果任务执行失败，返回上一个节点
+		fmt.Println("任务失败，返回上一个节点...")
+		previousNodeId := findPreviousNode(edges, cutNodeId)
+		return previousNodeId, nil
 	}
-	return ""
+
+	// 如果当前节点不是处理节点，则找到下一个节点
+	nextNodeId := findNextNodeInEdges(edges, cutNodeId)
+	return nextNodeId, nil
 }
 
 // 辅助函数：根据当前节点查找上一个节点
@@ -240,4 +275,79 @@ func findNodeInfoById(nodes models.StrucTure, nodeId string) *NodeInfo {
 		}
 	}
 	return nil
+}
+
+// 根据节点ID查找节点类型
+func getNodeTypeById(nodes []interface{}, nodeId string) string {
+	for _, node := range nodes {
+		// 将每个节点断言为 map[string]interface{}
+		nodeMap, ok := node.(map[string]interface{})
+		if !ok {
+			continue // 如果断言失败，跳过这个节点
+		}
+		// 检查是否存在 "id" 并且是否与传入的 nodeId 匹配
+		if id, ok := nodeMap["id"].(string); ok && id == nodeId {
+			// 返回节点的 "type" 属性
+			if nodeType, ok := nodeMap["type"].(string); ok {
+				return nodeType
+			}
+		}
+	}
+	return ""
+}
+
+// 查找下一个节点
+func findNextNodeInEdges(edges []interface{}, cutNodeId string) string {
+	for _, edge := range edges {
+		e, ok := edge.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		if e["source"] == cutNodeId {
+			return e["target"].(string)
+		}
+	}
+	return ""
+}
+
+// 获取任务以及执行节点的ip
+func getTaskAndMachineById(nodes []interface{}, nodeId string) ([]interface{}, []interface{}, error) {
+	var task, machine []interface{}
+
+	for _, node := range nodes {
+		// 将每个节点断言为 map[string]interface{}
+		nodeMap, ok := node.(map[string]interface{})
+		if !ok {
+			continue // 如果断言失败，跳过这个节点
+		}
+
+		// 检查是否存在 "id" 并且是否与传入的 nodeId 匹配
+		if id, ok := nodeMap["id"].(string); ok && id == nodeId {
+			// 获取任务名称和机器 IP
+			if taskVal, taskOk := nodeMap["task"].([]interface{}); taskOk {
+				task = taskVal
+			} else {
+				return nil, nil, fmt.Errorf("任务信息未找到")
+			}
+
+			if machineVal, machineOk := nodeMap["machine"].([]interface{}); machineOk {
+				machine = machineVal
+			} else {
+				return nil, nil, fmt.Errorf("机器信息未找到")
+			}
+
+			return task, machine, nil
+		}
+	}
+
+	return nil, nil, fmt.Errorf("节点 ID '%v' 未找到", nodeId)
+}
+
+// 工单任务执行
+func executeTaskOnMachine(task []interface{}, machine []interface{}) (bool, error) {
+	fmt.Printf("开始在机器 %v 上执行任务 %v\n", machine, task)
+	// 模拟任务执行成功或失败，可以根据具体需求实现API调用或其他逻辑
+
+	// todo 获取到机器ip以及任务后，完成任务执行逻辑并且获取执行结果
+	return true, nil
 }

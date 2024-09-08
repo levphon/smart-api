@@ -247,7 +247,10 @@ func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachi
 	// 复用之前的连接测试代码
 	connTest := utils.ConnectionTest{}
 
-	err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.PrivateKey)
+	go func() {
+		err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.PrivateKey)
+	}()
+
 	if err != nil {
 		e.Log.Errorf("connection test failed: %v", err)
 		return err
