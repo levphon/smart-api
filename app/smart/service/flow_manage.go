@@ -136,21 +136,24 @@ func (e *FlowManage) Update(c *dto.FlowManageUpdateReq) error {
 			tx.Commit()
 		}
 	}()
+
 	// 根据 ID 查找要更新的记录
 	if err = tx.First(&model, c.GetId()).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			e.Log.Errorf("order works with ID '%v' not exists", c.GetId())
-			return fmt.Errorf("order works with ID '%v' not exists", c.GetId())
+			e.Log.Errorf("FlowManage record with ID '%v' does not exist", c.GetId())
+			return fmt.Errorf("record with ID '%v' does not exist", c.GetId())
 		}
-		e.Log.Errorf("Error querying order works with ID '%v': %s", c.GetId(), err)
-		return fmt.Errorf("error querying order works with ID '%v': %s", c.GetId(), err)
+		e.Log.Errorf("Error querying FlowManage with ID '%v': %s", c.GetId(), err)
+		return fmt.Errorf("error querying FlowManage with ID '%v': %s", c.GetId(), err)
 	}
+
 	// 使用 Generate 方法生成数据
 	c.Generate(&model)
-	// 更新字段
-	if err = tx.Save(&model).Error; err != nil {
-		e.Log.Errorf("Failed to update order with title '%v': %s", c.Name, err)
-		return fmt.Errorf("failed to update order with title '%v': %s", c.Name, err)
+
+	// 使用 Updates 方法更新字段，确保嵌套结构体 StrucTure 能被正确更新
+	if err = tx.Model(&model).Updates(model).Error; err != nil {
+		e.Log.Errorf("Failed to update FlowManage with ID '%v': %s", c.GetId(), err)
+		return fmt.Errorf("failed to update FlowManage with ID '%v': %s", c.GetId(), err)
 	}
 
 	return nil

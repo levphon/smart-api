@@ -15,33 +15,10 @@ type MachineService struct {
 // 测试机器连接并更新心跳字段
 func (s *MachineService) TestMachine(machine *models.ExecMachine) error {
 	var err error
-	// SSH 探测
-	// 获取加密配置
-	//cfg := config.ExtConfig.AesSecrets
-
-	//decryptPwd, err := Decrypt(machine.PassWord, cfg.Key)
-	//if err != nil {
-	//	return fmt.Errorf("password decryption failed: %v", err)
-	//}
-	//
-	//// 复用之前的连接测试代码
-	//connTest := ConnectionTest{}
-	//err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, decryptPwd, machine.PrivateKey)
-	//if err != nil {
-	//	// 连接失败，更新机器状态为 2
-	//	updateErr := s.Orm.Model(machine).UpdateColumns(map[string]interface{}{
-	//		"status": 2, // 2 表示连接失败
-	//	}).Error
-	//	if updateErr != nil {
-	//		return fmt.Errorf("failed to update status for machine ID '%v' after connection failure: %v", machine.ID, updateErr)
-	//	}
-	//	// 返回连接失败错误
-	//	return fmt.Errorf("connection test failed: %v", err)
-	//}
 
 	// 使用 TCP 端口探测
-	connTest := ConnectionTest{}
-	err = connTest.TestTCPPort(machine.Ip, machine.Port)
+	connTest := MachineConn{}
+	err = connTest.testTCPPort(machine.Ip, machine.Port)
 	if err != nil {
 		// 连接失败，更新机器状态为 2
 		updateErr := s.Orm.Model(machine).UpdateColumns(map[string]interface{}{

@@ -8,6 +8,9 @@ import (
 	"go-admin/app/smart/models"
 	"go-admin/app/smart/service/dto"
 	models2 "go-admin/common/models"
+	"go-admin/common/utils"
+	"go-admin/config"
+	"golang.org/x/crypto/ssh"
 	"gorm.io/gorm"
 	"regexp"
 	"time"
@@ -90,7 +93,7 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 	switch c.ActionType {
 	// 1 为同意 0为拒绝
 	case "1":
-		targetNodeId, err = findNextNode(edges, cutNodeId, nodes)
+		targetNodeId, err = e.findNextNode(edges, cutNodeId, nodes)
 		if err != nil {
 			e.Log.Errorf("Error while finding next node: %v", err)
 			return fmt.Errorf("error finding next node: %v", err)
@@ -175,23 +178,20 @@ func findNodeByName(nodes []interface{}, currentNode string) string {
 }
 
 // 辅助函数：根据当前节点查找下一个节点
-func findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}) (string, error) {
+func (e *OrderWorks) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}) (string, error) {
 	// 查找当前节点的类型
 	currentNodeType := getNodeTypeById(nodes, cutNodeId)
-	fmt.Println("nodes=", nodes)
 
 	// 判断是否为处理节点
 	if currentNodeType == "receive-task-node" {
 		fmt.Println("当前节点是处理节点，开始执行任务...")
-
 		// 使用新的函数获取任务名称和机器 IP
-		task, machine, err := getTaskAndMachineById(nodes, cutNodeId)
+		taskName, machine, err := getTaskAndMachineById(nodes, cutNodeId)
 		if err != nil {
 			return "", fmt.Errorf("获取任务和机器信息失败: %v", err)
 		}
-		fmt.Println("task, machine,", task, machine)
 		// 将任务名称和机器 IP 传递给任务执行函数
-		success, err := executeTaskOnMachine(task, machine)
+		success, err := e.executeTaskOnMachine(taskName, machine)
 		if err != nil {
 			return "", fmt.Errorf("任务执行失败: %v", err)
 		}
@@ -311,7 +311,7 @@ func findNextNodeInEdges(edges []interface{}, cutNodeId string) string {
 }
 
 // 获取任务以及执行节点的ip
-func getTaskAndMachineById(nodes []interface{}, nodeId string) ([]interface{}, []interface{}, error) {
+func getTaskAndMachineById(nodes []interface{}, nodeId string) (interface{}, interface{}, error) {
 	var task, machine []interface{}
 
 	for _, node := range nodes {
@@ -344,10 +344,91 @@ func getTaskAndMachineById(nodes []interface{}, nodeId string) ([]interface{}, [
 }
 
 // 工单任务执行
-func executeTaskOnMachine(task []interface{}, machine []interface{}) (bool, error) {
-	fmt.Printf("开始在机器 %v 上执行任务 %v\n", machine, task)
-	// 模拟任务执行成功或失败，可以根据具体需求实现API调用或其他逻辑
+func (e OrderWorks) executeTaskOnMachine(taskName interface{}, machineName interface{}) (bool, error) {
+	var err error
 
-	// todo 获取到机器ip以及任务后，完成任务执行逻辑并且获取执行结果
+	tx := e.Orm.Debug().Begin()
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	// 查询任务
+	var existingTask models.OrderTask
+	if err = tx.Where("name = ?", taskName).First(&existingTask).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, fmt.Errorf("task with name '%v' not found", taskName)
+		}
+		return false, fmt.Errorf("failed to query task: %v", err)
+	}
+
+	// 查询机器
+	var existingMachine models.ExecMachine
+	if err = tx.Where("hostname = ?", machineName).First(&existingMachine).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, fmt.Errorf("machine with name '%v' not found", machineName)
+		}
+		return false, fmt.Errorf("failed to query machine: %v", err)
+	}
+
+	var password string
+	var sshConfig *ssh.ClientConfig
+
+	// 创建 Connection 实例
+	conn := &utils.MachineConn{}
+
+	// 如果为密码认证，需要解密密码
+	if existingMachine.AuthType == "1" {
+		cfg := config.ExtConfig.AesSecrets
+		password, err = utils.Decrypt(existingMachine.PassWord, cfg.Key)
+		if err != nil {
+			e.Log.Errorf("password decryption failed: %v", err)
+			return false, fmt.Errorf("password decryption failed: %v", err)
+		}
+		sshConfig = &ssh.ClientConfig{
+			User: existingMachine.UserName,
+			Auth: []ssh.AuthMethod{
+				ssh.Password(password),
+			},
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+			Timeout:         5 * time.Second,
+		}
+		// 私钥认证方式
+	} else if existingMachine.AuthType == "2" {
+		signer, err := ssh.ParsePrivateKey([]byte(existingMachine.PrivateKey))
+		if err != nil {
+			return false, fmt.Errorf("failed to parse private key: %v", err)
+		}
+		sshConfig = &ssh.ClientConfig{
+			User: existingMachine.UserName,
+			Auth: []ssh.AuthMethod{
+				ssh.PublicKeys(signer),
+			},
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+			Timeout:         5 * time.Second,
+		}
+	} else {
+		return false, fmt.Errorf("unsupported AuthType: %v", existingMachine.AuthType)
+	}
+
+	host := fmt.Sprintf("%s:%d", existingMachine.Ip, existingMachine.Port)
+	client, err := ssh.Dial("tcp", host, sshConfig)
+	if err != nil {
+		return false, fmt.Errorf("failed to connect: %v", err)
+	}
+	defer client.Close()
+
+	// 执行任务
+	stdout, stderr, err := conn.ExecuteCommand(client, existingTask.Content)
+	if err != nil {
+		e.Log.Errorf("Command execution failed: stdout=%v, stderr=%v, error=%v", stdout, stderr, err)
+		return false, fmt.Errorf("command execution failed: %v", err)
+	}
+
+	fmt.Printf("任务执行成功: stdout=%v, stderr=%v\n", stdout, stderr)
+
 	return true, nil
 }

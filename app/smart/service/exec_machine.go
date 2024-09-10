@@ -67,7 +67,7 @@ func (e *ExecMachine) Insert(c *dto.ExecMachineInsertReq) error {
 	c.Generate(&data)
 
 	// 连接测试
-	connTest := utils.ConnectionTest{}
+	connTest := utils.MachineConn{}
 	err = connTest.TestConnection(data.AuthType, data.Ip, data.Port, data.UserName, data.PassWord, data.PrivateKey)
 	if err != nil {
 		e.Log.Errorf("connection test failed: %v", err)
@@ -237,16 +237,18 @@ func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachi
 		e.Log.Errorf("error retrieving machine with ID '%v': %s", d.GetId(), err)
 		return err
 	}
-	cfg := config.ExtConfig.AesSecrets
-	password, err := utils.Decrypt(machine.PassWord, cfg.Key)
-	if err != nil {
-		e.Log.Errorf("password decryption failed: %v", err)
-		return fmt.Errorf("password decryption failed: %v", err)
+	var password string
+	if machine.AuthType == "1" {
+		cfg := config.ExtConfig.AesSecrets
+		password, err = utils.Decrypt(machine.PassWord, cfg.Key)
+		if err != nil {
+			e.Log.Errorf("password decryption failed: %v", err)
+			return fmt.Errorf("password decryption failed: %v", err)
+		}
 	}
 
 	// 复用之前的连接测试代码
-	connTest := utils.ConnectionTest{}
-
+	connTest := utils.MachineConn{}
 	go func() {
 		err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.PrivateKey)
 	}()
