@@ -22,7 +22,7 @@ import (
     -- 节点 --
 	start: 开始节点
 	userTask: 审批节点
-	receiveTask: 处理节点
+	receive-task-node: 处理节点
 	scriptTask: 任务节点
 	end: 结束节点
 
@@ -36,6 +36,7 @@ import (
 type NodeInfo struct {
 	Name        string `json:"name"`
 	AssignValue int    `json:"assignValue"`
+	Clazz       string `json:"clazz"`
 }
 
 // Handle OrderWorks
@@ -116,22 +117,32 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 		return fmt.Errorf("target node information not found for ID '%v'", targetNodeId)
 	}
 
-	// 判断如果 targetNodeInfo.AssignValue 等于 0，说明当前节点是start或者是end
-	if targetNodeInfo.AssignValue == 0 {
+	// 处理节点类型
+
+	switch targetNodeInfo.Clazz {
+	case "end":
+		// 如果是结束节点
+		// fmt.Println("当前节点是结束节点，更新工单状态为 termination...")
 		model.CurrentNode = targetNodeInfo.Name
-		// 将工单创建人设置为当前处理人
-		model.CurrentHandlerID = model.CreateBy // 假设 workOrderCreator 是工单创建人的变量
+		model.CurrentHandlerID = model.CreateBy
 		model.CurrentHandler = model.Creator
-	} else {
+		model.Status = "termination"
+	case "start":
+		// 如果是开始节点
+		model.CurrentNode = targetNodeInfo.Name
+		model.CurrentHandlerID = model.CreateBy
+		model.CurrentHandler = model.Creator
+	default:
+		// 其他节点
 		model.CurrentNode = targetNodeInfo.Name
 		model.CurrentHandlerID = targetNodeInfo.AssignValue
 		model.CurrentHandler, err = GetHandlerNameByID(tx, targetNodeInfo.AssignValue)
+		if err != nil {
+			e.Log.Errorf("Error getting handler name for ID '%v': %s", targetNodeInfo.AssignValue, err)
+			return fmt.Errorf("error getting handler name for ID '%v': %s", targetNodeInfo.AssignValue, err)
+		}
 	}
 
-	if err != nil {
-		e.Log.Errorf("Error getting handler name for ID '%v': %s", targetNodeInfo.AssignValue, err)
-		return fmt.Errorf("error getting handler name for ID '%v': %s", targetNodeInfo.AssignValue, err)
-	}
 	beforeUpdate := model.UpdatedAt
 
 	// 保存更新
@@ -203,10 +214,17 @@ func (e *OrderWorks) findNextNode(edges []interface{}, cutNodeId string, nodes [
 			return nextNodeId, nil
 		}
 
-		// 如果任务执行失败，返回上一个节点
-		fmt.Println("任务失败，返回上一个节点...")
-		previousNodeId := findPreviousNode(edges, cutNodeId)
-		return previousNodeId, nil
+		return "", fmt.Errorf("任务执行失败: %v", err)
+
+		//// 如果任务执行失败，返回上一个节点
+		//fmt.Println("任务失败，返回上一个节点...")
+		//previousNodeId := findPreviousNode(edges, cutNodeId)
+		//return previousNodeId, nil
+	}
+
+	// 判断当前节点是否为结束节点
+	if currentNodeType == "end-node" {
+		return cutNodeId, nil
 	}
 
 	// 如果当前节点不是处理节点，则找到下一个节点
@@ -249,11 +267,15 @@ func findNodeInfoById(nodes models.StrucTure, nodeId string) *NodeInfo {
 		}
 
 		if n["id"] == nodeId {
+			// 提取 clazz 字段的值
+			clazz, _ := n["clazz"].(string)
+
 			// 检查 nodeId 是否包含 "start"
 			if re.MatchString(nodeId) {
 				return &NodeInfo{
 					Name:        n["label"].(string),
 					AssignValue: 0,
+					Clazz:       clazz, // 使用 clazz 作为 NodeType
 				}
 			}
 
@@ -270,6 +292,7 @@ func findNodeInfoById(nodes models.StrucTure, nodeId string) *NodeInfo {
 				return &NodeInfo{
 					Name:        n["label"].(string),
 					AssignValue: int(assignValue),
+					Clazz:       clazz,
 				}
 			}
 		}

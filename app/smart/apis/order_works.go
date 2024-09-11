@@ -304,23 +304,28 @@ func (e OrderWorks) Handle(c *gin.Context) {
 
 	if err != nil {
 		e.Logger.Error(err)
-		e.Error(500, err, fmt.Sprintf("更新失败 err:%v", err))
+		e.Error(500, err, fmt.Sprintf("绑定请求失败 err:%v", err))
 		return
 	}
+
 	req.SetUpdateBy(user.GetUserId(c))
 	handle := user.GetUserId(c)
-	go func() {
-		err := s.Handle(&req, handle)
-		if err != nil {
-			fmt.Println("工单处理失败...")
 
-		}
+	// 使用通道来接收异步执行的结果
+	done := make(chan error)
+	go func() {
+		done <- s.Handle(&req, handle)
 	}()
 
+	// 等待异步执行的结果
+	err = <-done
+
 	if err != nil {
-		e.Error(500, err, err.Error())
+		e.Logger.Error(err)
+		e.Error(500, err, fmt.Sprintf("工单处理失败, err:%v", err))
 		return
 	}
+
 	e.OK(req.GetId(), "操作成功")
 }
 
