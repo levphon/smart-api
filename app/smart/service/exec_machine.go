@@ -19,8 +19,11 @@ import (
 type ExecMachine struct {
 	service.Service
 }
+type ExecutionHistory struct {
+	service.Service
+}
 
-// 分页获取Ordermachine 所有的数据
+// GetExecMachinePage 分页获取Order-machine 所有的数据
 func (e *ExecMachine) GetExecMachinePage(pageNum, limit int, objects *[]models.ExecMachine, total *int64) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
@@ -42,7 +45,7 @@ func (e *ExecMachine) GetExecMachinePage(pageNum, limit int, objects *[]models.E
 	return nil
 }
 
-// 根据ID获取机器信息
+// Get 根据ID获取机器信息
 func (e *ExecMachine) Get(d *dto.ExecMachineGetReq, model *models.ExecMachine) error {
 	var err error
 	var data models.ExecMachine
@@ -195,7 +198,7 @@ func (e *ExecMachine) Update(c *dto.ExecMachineUpdateReq) error {
 	return nil
 }
 
-// Remove 删除Ordermachine
+// Remove 删除Order-machine
 func (e *ExecMachine) Remove(d *dto.ExecMachineDeleteReq) error {
 	var err error
 
@@ -223,8 +226,8 @@ func (e *ExecMachine) Remove(d *dto.ExecMachineDeleteReq) error {
 	return nil
 }
 
-// 测试连接
-func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachine) error {
+// TestConn 测试连接
+func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq) error {
 	var machine models.ExecMachine
 
 	// 根据 ID 查找机器信息
@@ -267,3 +270,60 @@ func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq, model *models.ExecMachi
 
 	return nil
 }
+
+// GetHistoryTask 分页获取ExecutionHistory 所有的数据
+func (h *ExecutionHistory) GetHistoryTask(pageNum, limit int, objects *[]models.ExecutionHistory, total *int64) error {
+	// 计算偏移量
+	offset := (pageNum - 1) * limit
+
+	// 查询总数，不应用分页限制
+	err := h.Orm.Model(&models.ExecutionHistory{}).Count(total).Error
+	if err != nil {
+		h.Log.Errorf("查询历史任务总数失败: %s", err)
+		return fmt.Errorf("查询历史任务总数失败: %s", err)
+	}
+
+	// 查询并分页获取订单项数据
+	db := h.Orm.Limit(limit).Offset(offset).Find(objects)
+
+	if err := db.Error; err != nil {
+		h.Log.Errorf("历史任务查询失败: %s", err)
+		return fmt.Errorf("历史任务查询失败: %s", err)
+	}
+	return nil
+}
+
+//var upgrader = websocket.Upgrader{
+//	CheckOrigin: func(r *http.Request) bool {
+//		return true
+//	},
+//}
+//
+//func UpgradeToWebSocket(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
+//	conn, err := upgrader.Upgrade(w, r, nil)
+//	if err != nil {
+//		return nil, err
+//	}
+//	return conn, nil
+//}
+//
+//func StreamCommandOutput(wsConn *websocket.Conn) {
+//	// 启动命令输出流
+//	// 模拟命令输出
+//	for {
+//		// 模拟命令输出
+//		msg := []byte("模拟命令输出")
+//		err := wsConn.WriteMessage(websocket.TextMessage, msg)
+//		if err != nil {
+//			log.Println("写入消息失败:", err)
+//			return
+//		}
+//	}
+//}
+//
+//func HandleWebSocketMessage(wsConn *websocket.Conn, msg []byte) {
+//	// 处理 WebSocket 消息
+//	log.Printf("收到消息: %s", msg)
+//
+//	// 根据消息内容触发相应操作
+//}

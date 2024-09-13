@@ -31,7 +31,7 @@ var StatusMap = map[string]string{
 	"reject":             "驳回",
 }
 
-type OrderWorks struct {
+type OrderWorksService struct {
 	service.Service
 }
 
@@ -40,7 +40,7 @@ type OperationHistory struct {
 }
 
 // 分页获取OrderWorksry 所有的数据
-func (e *OrderWorks) GetOrderWorksPage(pageNum, limit int, objects *[]models.OrderWorks, total *int64) error {
+func (e *OrderWorksService) GetOrderWorksPage(pageNum, limit int, objects *[]models.OrderWorks, total *int64) error {
 
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
@@ -63,7 +63,7 @@ func (e *OrderWorks) GetOrderWorksPage(pageNum, limit int, objects *[]models.Ord
 }
 
 // Get 获取我的待办
-func (e *OrderWorks) MyBackGet(pageNum, limit int, objects *[]models.OrderWorks, userid int) error {
+func (e *OrderWorksService) MyBackGet(pageNum, limit int, objects *[]models.OrderWorks, userid int) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 	// 查询并分页获取订单项数据
@@ -77,7 +77,7 @@ func (e *OrderWorks) MyBackGet(pageNum, limit int, objects *[]models.OrderWorks,
 }
 
 // Get 获取我创建的
-func (e *OrderWorks) CreatedByMe(pageNum, limit int, objects *[]models.OrderWorks, userid int) error {
+func (e *OrderWorksService) CreatedByMe(pageNum, limit int, objects *[]models.OrderWorks, userid int) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 	// 查询并分页获取订单项数据
@@ -91,7 +91,7 @@ func (e *OrderWorks) CreatedByMe(pageNum, limit int, objects *[]models.OrderWork
 }
 
 // Get 获取与我相关的
-func (e *OrderWorks) RelatedToMe(pageNum, limit int, objects *[]models.OrderWorks, userid int) error {
+func (e *OrderWorksService) RelatedToMe(pageNum, limit int, objects *[]models.OrderWorks, userid int) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
 	// 查询并分页获取订单项数据
@@ -105,7 +105,7 @@ func (e *OrderWorks) RelatedToMe(pageNum, limit int, objects *[]models.OrderWork
 }
 
 // 根据ID获取工单
-func (e *OrderWorks) Get(d *dto.OrderWorksGetReq, model *models.OrderWorks) error {
+func (e *OrderWorksService) Get(d *dto.OrderWorksGetReq, model *models.OrderWorks) error {
 	var err error
 	var data models.OrderWorks
 
@@ -123,7 +123,7 @@ func (e *OrderWorks) Get(d *dto.OrderWorksGetReq, model *models.OrderWorks) erro
 }
 
 // Insert 创建OrderWorks对象
-func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
+func (e *OrderWorksService) Insert(c *dto.OrderWorksInsertReq) error {
 	var err error
 	var data models.OrderWorks
 	c.Generate(&data)
@@ -220,7 +220,7 @@ func (e *OrderWorks) Insert(c *dto.OrderWorksInsertReq) error {
 }
 
 // Update OrderWorksry
-func (e *OrderWorks) Update(c *dto.OrderWorksUpdateReq) error {
+func (e *OrderWorksService) Update(c *dto.OrderWorksUpdateReq) error {
 	var err error
 	var model = models.OrderWorks{}
 
@@ -286,7 +286,7 @@ func (e *OrderWorks) Update(c *dto.OrderWorksUpdateReq) error {
 }
 
 // Remove 删除SysOrderWorksry
-func (e *OrderWorks) Remove(d *dto.OrderWorksDeleteReq) error {
+func (e *OrderWorksService) Remove(d *dto.OrderWorksDeleteReq) error {
 	var err error
 
 	var data models.OrderWorks

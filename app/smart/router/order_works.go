@@ -7,19 +7,23 @@ import (
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
 	"go-admin/app/smart/apis"
 	"go-admin/common/middleware"
+	"go-admin/common/utils"
 )
 
 func init() {
 	routerCheckRole = append(routerCheckRole, registerOrderWorksAuthRouter)
-	//routerNoCheckRole = append(routerNoCheckRole, registerOrderRouter)
 }
 
 // 注册工单类别路由
 func registerOrderWorksAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
-	api := apis.OrderWorks{}
+	api := apis.OrderWorksAPI{}
 	hisApi := apis.OperationHistory{}
 	notifyApi := apis.WorksNotify{}
+
 	r := v1.Group("/order-works").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+
+	wss := v1.Group("").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+
 	{
 		// 查询所有的工单
 		r.GET("", api.GetPage)
@@ -55,4 +59,10 @@ func registerOrderWorksAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJW
 		r.PUT("/notify", notifyApi.UpdateNotify)
 
 	}
+
+	{
+		// 自定义WebSocket处理程序
+		wss.GET("/ws/:id/task", utils.WsHandler)
+	}
+
 }

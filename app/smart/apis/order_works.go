@@ -14,7 +14,7 @@ import (
 	"go-admin/common/global"
 )
 
-type OrderWorks struct {
+type OrderWorksAPI struct {
 	api.Api
 }
 
@@ -31,10 +31,10 @@ type OperationHistory struct {
 // @Success 200 {object} response.Response{data=response.Page{list=[]models.OrderWorks}} "{"code": 200, "data": [...]}"
 // @Router /api/v1/order-works [get]
 // @Security Bearer
-func (e OrderWorks) GetPage(c *gin.Context) {
+func (e OrderWorksAPI) GetPage(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
-	s := service.OrderWorks{}
+	s := service.OrderWorksService{}
 	// 创建数据库连接和绑定请求
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -50,7 +50,6 @@ func (e OrderWorks) GetPage(c *gin.Context) {
 	// 定义一个存储所有工单类别数据的切片
 	var objects []models.OrderWorks
 	var total int64
-
 	err = s.GetOrderWorksPage(pageNum, limit, &objects, &total)
 	if err != nil {
 		e.Error(500, err, "查询失败")
@@ -68,8 +67,8 @@ func (e OrderWorks) GetPage(c *gin.Context) {
 // @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
 // @Router /api/v1/order-works/{id} [get]
 // @Security Bearer
-func (e OrderWorks) Get(c *gin.Context) {
-	s := service.OrderWorks{}
+func (e OrderWorksAPI) Get(c *gin.Context) {
+	s := service.OrderWorksService{}
 	// 请求结构体 id
 	req := dto.OrderWorksGetReq{}
 	err := e.MakeContext(c).
@@ -102,10 +101,10 @@ func (e OrderWorks) Get(c *gin.Context) {
 // @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
 // @Router /api/v1/order-works/myBacklog [get]
 // @Security Bearer
-func (e OrderWorks) MyBacklogGet(c *gin.Context) {
+func (e OrderWorksAPI) MyBacklogGet(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
-	s := service.OrderWorks{}
+	s := service.OrderWorksService{}
 	// 创建数据库连接和绑定请求
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -141,10 +140,10 @@ func (e OrderWorks) MyBacklogGet(c *gin.Context) {
 // @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
 // @Router /api/v1/order-works/createdByMe [get]
 // @Security Bearer
-func (e OrderWorks) CreatedByMe(c *gin.Context) {
+func (e OrderWorksAPI) CreatedByMe(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
-	s := service.OrderWorks{}
+	s := service.OrderWorksService{}
 	// 创建数据库连接和绑定请求
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -180,10 +179,10 @@ func (e OrderWorks) CreatedByMe(c *gin.Context) {
 // @Success 200 {object} response.Response{data=models.OrderWorks} "{"code": 200, "data": [...]}"
 // @Router /api/v1/order-works/relatedToMe [get]
 // @Security Bearer
-func (e OrderWorks) RelatedToMe(c *gin.Context) {
+func (e OrderWorksAPI) RelatedToMe(c *gin.Context) {
 	// 分页查询返回pageNum和limit
 	pageNum, limit := global.PagingQuery(c)
-	s := service.OrderWorks{}
+	s := service.OrderWorksService{}
 	// 创建数据库连接和绑定请求
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -221,8 +220,8 @@ func (e OrderWorks) RelatedToMe(c *gin.Context) {
 // @Success 200 {object} response.Response	"{"code": 200, "message": "添加成功"}"
 // @Router /api/v1/order-works [post]
 // @Security Bearer
-func (e OrderWorks) Insert(c *gin.Context) {
-	s := service.OrderWorks{}
+func (e OrderWorksAPI) Insert(c *gin.Context) {
+	s := service.OrderWorksService{}
 
 	req := dto.OrderWorksInsertReq{}
 	err := e.MakeContext(c).
@@ -257,8 +256,8 @@ func (e OrderWorks) Insert(c *gin.Context) {
 // @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
 // @Router /api/v1/order-works/{id} [put]
 // @Security Bearer
-func (e OrderWorks) Update(c *gin.Context) {
-	s := service.OrderWorks{}
+func (e OrderWorksAPI) Update(c *gin.Context) {
+	s := service.OrderWorksService{}
 	req := dto.OrderWorksUpdateReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -293,8 +292,9 @@ func (e OrderWorks) Update(c *gin.Context) {
 // @Success 200 {object} response.Response	"{"code": 200, "message": "修改成功"}"
 // @Router /api/v1/order-works/handle [put]
 // @Security Bearer
-func (e OrderWorks) Handle(c *gin.Context) {
-	s := service.OrderWorks{}
+func (e OrderWorksAPI) Handle(c *gin.Context) {
+	s := service.OrderWorksService{}
+
 	req := dto.OrderWorksHandleReq{}
 	err := e.MakeContext(c).
 		MakeOrm().
@@ -337,8 +337,8 @@ func (e OrderWorks) Handle(c *gin.Context) {
 // @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
 // @Router /api/v1/order-works [delete]
 // @Security Bearer
-func (e OrderWorks) Delete(c *gin.Context) {
-	s := service.OrderWorks{}
+func (e OrderWorksAPI) Delete(c *gin.Context) {
+	s := service.OrderWorksService{}
 
 	req := dto.OrderWorksDeleteReq{}
 	err := e.MakeContext(c).

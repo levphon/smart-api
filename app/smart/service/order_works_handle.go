@@ -40,7 +40,7 @@ type NodeInfo struct {
 }
 
 // Handle OrderWorks
-func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
+func (e *OrderWorksService) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 	var err error
 	var model = models.OrderWorks{}
 
@@ -76,7 +76,6 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 
 	// 获取当前节点
 	cutNodeId := findNodeByName(nodes, model.CurrentNode)
-
 	if cutNodeId == "" {
 		e.Log.Errorf("Current node '%v' not found in flow structure", model.CurrentNode)
 		return fmt.Errorf("current node '%v' not found in flow structure", model.CurrentNode)
@@ -112,6 +111,7 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 
 	// 获取目标节点的名称和处理人
 	targetNodeInfo := findNodeInfoById(flowData.StrucTure, targetNodeId)
+
 	if targetNodeInfo == nil {
 		e.Log.Errorf("Target node information not found for ID '%v'", targetNodeId)
 		return fmt.Errorf("target node information not found for ID '%v'", targetNodeId)
@@ -122,7 +122,6 @@ func (e *OrderWorks) Handle(c *dto.OrderWorksHandleReq, handle int) error {
 	switch targetNodeInfo.Clazz {
 	case "end":
 		// 如果是结束节点
-		// fmt.Println("当前节点是结束节点，更新工单状态为 termination...")
 		model.CurrentNode = targetNodeInfo.Name
 		model.CurrentHandlerID = model.CreateBy
 		model.CurrentHandler = model.Creator
@@ -189,7 +188,7 @@ func findNodeByName(nodes []interface{}, currentNode string) string {
 }
 
 // 辅助函数：根据当前节点查找下一个节点
-func (e *OrderWorks) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}) (string, error) {
+func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}) (string, error) {
 	// 查找当前节点的类型
 	currentNodeType := getNodeTypeById(nodes, cutNodeId)
 
@@ -201,6 +200,37 @@ func (e *OrderWorks) findNextNode(edges []interface{}, cutNodeId string, nodes [
 		if err != nil {
 			return "", fmt.Errorf("获取任务和机器信息失败: %v", err)
 		}
+
+		// 查询任务和机器的详细信息
+		var existingTask models.OrderTask
+		if err = e.Orm.Where("name = ?", taskName).First(&existingTask).Error; err != nil {
+			return "", fmt.Errorf("failed to query task: %v", err)
+		}
+
+		var existingMachine models.ExecMachine
+		if err = e.Orm.Where("hostname = ?", machine).First(&existingMachine).Error; err != nil {
+			return "", fmt.Errorf("failed to query machine: %v", err)
+		}
+
+		// 发送任务开始消息
+		startTime := time.Now().Format(time.RFC3339)
+		wsMessage := utils.Message{
+			Type:        "start",
+			TaskID:      existingTask.ID,
+			TaskName:    existingTask.Name,
+			Username:    existingMachine.UserName,
+			Host:        existingMachine.Ip,
+			Port:        existingMachine.Port,
+			Command:     existingTask.Content,
+			Output:      "",
+			ErrorOutput: "",
+			StartTime:   startTime,
+			EndTime:     "",
+			Duration:    "",
+		}
+
+		utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
+
 		// 将任务名称和机器 IP 传递给任务执行函数
 		success, err := e.executeTaskOnMachine(taskName, machine)
 		if err != nil {
@@ -367,7 +397,7 @@ func getTaskAndMachineById(nodes []interface{}, nodeId string) (interface{}, int
 }
 
 // 工单任务执行
-func (e OrderWorks) executeTaskOnMachine(taskName interface{}, machineName interface{}) (bool, error) {
+func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineName interface{}) (bool, error) {
 	var err error
 
 	tx := e.Orm.Debug().Begin()
@@ -397,44 +427,10 @@ func (e OrderWorks) executeTaskOnMachine(taskName interface{}, machineName inter
 		return false, fmt.Errorf("failed to query machine: %v", err)
 	}
 
-	var password string
-	var sshConfig *ssh.ClientConfig
-
-	// 创建 Connection 实例
-	conn := &utils.MachineConn{}
-
-	// 如果为密码认证，需要解密密码
-	if existingMachine.AuthType == "1" {
-		cfg := config.ExtConfig.AesSecrets
-		password, err = utils.Decrypt(existingMachine.PassWord, cfg.Key)
-		if err != nil {
-			e.Log.Errorf("password decryption failed: %v", err)
-			return false, fmt.Errorf("password decryption failed: %v", err)
-		}
-		sshConfig = &ssh.ClientConfig{
-			User: existingMachine.UserName,
-			Auth: []ssh.AuthMethod{
-				ssh.Password(password),
-			},
-			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-			Timeout:         5 * time.Second,
-		}
-		// 私钥认证方式
-	} else if existingMachine.AuthType == "2" {
-		signer, err := ssh.ParsePrivateKey([]byte(existingMachine.PrivateKey))
-		if err != nil {
-			return false, fmt.Errorf("failed to parse private key: %v", err)
-		}
-		sshConfig = &ssh.ClientConfig{
-			User: existingMachine.UserName,
-			Auth: []ssh.AuthMethod{
-				ssh.PublicKeys(signer),
-			},
-			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-			Timeout:         5 * time.Second,
-		}
-	} else {
-		return false, fmt.Errorf("unsupported AuthType: %v", existingMachine.AuthType)
+	// Set up SSH configuration
+	sshConfig, err := e.setupSSHConfig(existingMachine)
+	if err != nil {
+		return false, err
 	}
 
 	host := fmt.Sprintf("%s:%d", existingMachine.Ip, existingMachine.Port)
@@ -444,14 +440,125 @@ func (e OrderWorks) executeTaskOnMachine(taskName interface{}, machineName inter
 	}
 	defer client.Close()
 
+	// 创建 Connection 实例
+	conn := &utils.MachineConn{}
+
+	// 记录任务开始时间
+	startTime := time.Now()
+
 	// 执行任务
 	stdout, stderr, err := conn.ExecuteCommand(client, existingTask.Content)
+
+	// Determine end time and duration
+	endTime := time.Now()
+	duration := endTime.Sub(startTime).String()
+
+	// 创建并发送 WebSocket 消息
+	wsMessage := utils.Message{
+		TaskID:      existingTask.ID,
+		TaskName:    existingTask.Name,
+		Username:    existingMachine.UserName,
+		Host:        existingMachine.Ip,
+		Port:        existingMachine.Port,
+		Command:     existingTask.Content,
+		Output:      stdout,
+		ErrorOutput: stderr,
+		StartTime:   startTime.Format(time.RFC3339),
+		EndTime:     endTime.Format(time.RFC3339),
+		Duration:    duration,
+	}
+
 	if err != nil {
 		e.Log.Errorf("Command execution failed: stdout=%v, stderr=%v, error=%v", stdout, stderr, err)
-		return false, fmt.Errorf("command execution failed: %v", err)
+		// 记录失败历史
+		err = recordExecutionHistory(tx, existingTask, existingMachine, 1, stdout, stderr, startTime)
+		if err != nil {
+			// 更新并发送 WebSocket 消息
+			wsMessage.Type = "error"
+			utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
+			return false, fmt.Errorf("command execution failed: %v", err)
+		}
+		return false, err
 	}
 
 	fmt.Printf("任务执行成功: stdout=%v, stderr=%v\n", stdout, stderr)
 
+	// 记录成功历史
+	err = recordExecutionHistory(tx, existingTask, existingMachine, 0, stdout, stderr, startTime)
+	if err != nil {
+		return false, err
+	}
+	// 更新并发送成功的 WebSocket 消息
+	wsMessage.Type = "complete"
+	utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
+	fmt.Println("wsMessage=", wsMessage)
+
 	return true, nil
+}
+
+// 记录任务执行记录
+func recordExecutionHistory(tx *gorm.DB, task models.OrderTask, machine models.ExecMachine, status int, stdout string, stderr string, startTime time.Time) error {
+	// 计算执行时长
+	duration := time.Since(startTime).Seconds()
+
+	history := models.ExecutionHistory{
+		TaskID:        task.ID,
+		TaskName:      task.Name,
+		MachineID:     machine.ID,
+		HostName:      machine.HostName,
+		Ip:            machine.Ip,
+		ExecutionTime: int64(duration),
+		Status:        status,
+		Stdout:        stdout,
+		Stderr:        stderr,
+		ExecutedAt:    models2.JSONTime(time.Now()),
+		Creator:       "system", // Or fetch the creator from context
+	}
+
+	if err := tx.Create(&history).Error; err != nil {
+		return fmt.Errorf("failed to record execution history: %v", err)
+	}
+	return nil
+}
+
+// setupSSHConfig sets up the SSH configuration based on the machine's authentication type.
+func (e OrderWorksService) setupSSHConfig(machine models.ExecMachine) (*ssh.ClientConfig, error) {
+	var sshConfig *ssh.ClientConfig
+	var password string
+	var err error
+
+	// 如果为密码认证，需要解密密码
+	if machine.AuthType == "1" {
+		password, err = utils.Decrypt(machine.PassWord, config.ExtConfig.AesSecrets.Key)
+		if err != nil {
+			e.Log.Errorf("password decryption failed: %v", err)
+			return nil, fmt.Errorf("password decryption failed: %v", err)
+		}
+		sshConfig = &ssh.ClientConfig{
+			User: machine.UserName,
+			Auth: []ssh.AuthMethod{
+				ssh.Password(password),
+			},
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+			Timeout:         5 * time.Second,
+		}
+		// 私钥认证方式
+	} else if machine.AuthType == "2" {
+		signer, err := ssh.ParsePrivateKey([]byte(machine.PrivateKey))
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse private key: %v", err)
+		}
+		sshConfig = &ssh.ClientConfig{
+			User: machine.UserName,
+			Auth: []ssh.AuthMethod{
+				ssh.PublicKeys(signer),
+			},
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+			Timeout:         5 * time.Second,
+		}
+	} else {
+		return nil, fmt.Errorf("unsupported AuthType: %v", machine.AuthType)
+	}
+
+	return sshConfig, nil
 }

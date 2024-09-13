@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-admin-team/go-admin-core/sdk/config"
 	"github.com/pkg/errors"
+	"go-admin/common/utils"
 	"log"
 	"net/http"
 	"os"
@@ -68,6 +69,11 @@ func setup() {
 		database.Setup,
 		storage.Setup,
 	)
+
+	// 启动WebSocket管理器
+	go utils.Manager.Start()
+	log.Println("WebSocket Manager has been started...")
+
 	//注册监听函数
 	queue := sdk.Runtime.GetMemoryQueue("")
 	queue.Register(global.LoginLog, models.SaveLoginLog)

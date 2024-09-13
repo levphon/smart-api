@@ -18,6 +18,10 @@ type ExecMachine struct {
 	api.Api
 }
 
+type ExecutionHistory struct {
+	api.Api
+}
+
 // GetPage 获取ExecMachine列表
 // @Summary 获取ExecMachine列表
 // @Description 获取ExecMachine列表
@@ -211,10 +215,9 @@ func (e *ExecMachine) TestConnection(c *gin.Context) {
 		e.Error(500, err, err.Error())
 		return
 	}
-	var object models.ExecMachine
 
 	// &object 因为是传递的地址，object 地址对应的内存值会被修改，所以就不需要接收返回值了
-	err = s.TestConn(&req, &object)
+	err = s.TestConn(&req)
 	// 根据测试结果返回状态信息
 	if err != nil {
 		e.Error(500, err, fmt.Sprintf("连接失败 err:%v", err.Error()))
@@ -222,4 +225,42 @@ func (e *ExecMachine) TestConnection(c *gin.Context) {
 		e.OK(req.GetId(), fmt.Sprintf("测试连接成功"))
 	}
 
+}
+
+// GetHistoryTaskPage ExecutionHistory
+// @Summary 获取ExecutionHistory列表
+// @Description 获取ExecutionHistory列表
+// @Tags 执行节点管理
+// @Param pageSize query int false "页条数"
+// @Param pageIndex query int false "页码"
+// @Success 200 {object} response.Response{data=response.Page{list=[]models.ExecutionHistory}} "{"code": 200, "data": [...]}"
+// @Router /api/v1/exec-machine/history [get]
+// @Security Bearer
+func (h ExecutionHistory) GetHistoryTaskPage(c *gin.Context) {
+	// 分页查询返回pageNum和limit
+	pageNum, limit := global.PagingQuery(c)
+	s := service.ExecutionHistory{}
+	// 创建数据库连接和绑定请求
+	err := h.MakeContext(c).
+		MakeOrm().
+		Bind(binding.JSON, nil).
+		MakeService(&s.Service).
+		Errors
+	if err != nil {
+		h.Logger.Error(err)
+		h.Error(500, err, err.Error())
+		return
+	}
+
+	// 定义一个存储所有历史任务数据的切片
+	var objects []models.ExecutionHistory
+	var total int64
+
+	err = s.GetHistoryTask(pageNum, limit, &objects, &total)
+	if err != nil {
+		h.Error(500, err, fmt.Sprintf("查询失败: %v", err))
+		return
+	}
+
+	h.PageOK(objects, int(total), pageNum, limit, "查询成功")
 }
