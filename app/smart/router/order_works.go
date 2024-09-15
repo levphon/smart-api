@@ -22,7 +22,7 @@ func registerOrderWorksAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJW
 
 	r := v1.Group("/order-works").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 
-	wss := v1.Group("").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
+	ws := v1.Group("").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 
 	{
 		// 查询所有的工单
@@ -62,7 +62,7 @@ func registerOrderWorksAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJW
 
 	{
 		// 自定义WebSocket处理程序
-		wss.GET("/ws/:id/task", utils.WsHandler)
+		ws.GET("/ws/task/:id", utils.WsHandler)
 	}
 
 }

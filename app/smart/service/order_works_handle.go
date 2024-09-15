@@ -453,30 +453,27 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	endTime := time.Now()
 	duration := endTime.Sub(startTime).String()
 
-	// 创建并发送 WebSocket 消息
+	// 创建基础的 WebSocket 消息
 	wsMessage := utils.Message{
-		TaskID:      existingTask.ID,
-		TaskName:    existingTask.Name,
-		Username:    existingMachine.UserName,
-		Host:        existingMachine.Ip,
-		Port:        existingMachine.Port,
-		Command:     existingTask.Content,
-		Output:      stdout,
-		ErrorOutput: stderr,
-		StartTime:   startTime.Format(time.RFC3339),
-		EndTime:     endTime.Format(time.RFC3339),
-		Duration:    duration,
+		TaskID:    existingTask.ID,
+		TaskName:  existingTask.Name,
+		StartTime: startTime.Format(time.RFC3339),
+		EndTime:   endTime.Format(time.RFC3339),
+		Duration:  duration,
+		Output:    stdout,
 	}
 
 	if err != nil {
+		// 如果任务执行失败，记录错误并发送错误消息（包含 ErrorOutput 字段）
 		e.Log.Errorf("Command execution failed: stdout=%v, stderr=%v, error=%v", stdout, stderr, err)
+		wsMessage.Type = "error"
+		wsMessage.ErrorOutput = stderr // 包含错误输出
+		utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
+
 		// 记录失败历史
 		err = recordExecutionHistory(tx, existingTask, existingMachine, 1, stdout, stderr, startTime)
 		if err != nil {
-			// 更新并发送 WebSocket 消息
-			wsMessage.Type = "error"
-			utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
-			return false, fmt.Errorf("command execution failed: %v", err)
+			return false, fmt.Errorf("记录执行历史失败: %v", err)
 		}
 		return false, err
 	}
@@ -488,10 +485,9 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	if err != nil {
 		return false, err
 	}
-	// 更新并发送成功的 WebSocket 消息
+	// 发送成功的 WebSocket 消息，不包含 errorOutput，也不重复其他字段
 	wsMessage.Type = "complete"
 	utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
-	fmt.Println("wsMessage=", wsMessage)
 
 	return true, nil
 }

@@ -252,13 +252,19 @@ func (e *ExecMachine) TestConn(d *dto.ExecMachineGetReq) error {
 
 	// 复用之前的连接测试代码
 	connTest := utils.MachineConn{}
+	connErrChan := make(chan error) // Create a channel to capture the error
+
 	go func() {
-		err = connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.PrivateKey)
+		err := connTest.TestConnection(machine.AuthType, machine.Ip, machine.Port, machine.UserName, password, machine.PrivateKey)
+		connErrChan <- err // Send the error to the channel
 	}()
 
-	if err != nil {
-		e.Log.Errorf("connection test failed: %v", err)
-		return err
+	// Wait for the goroutine to return an error
+	connErr := <-connErrChan
+
+	if connErr != nil {
+		e.Log.Errorf("connection test failed: %v", connErr)
+		return connErr
 	}
 
 	// 更新数据库中的心跳时间

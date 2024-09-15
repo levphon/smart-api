@@ -13,16 +13,24 @@ import (
 type MachineConn struct{}
 
 func (c *MachineConn) TestConnection(authType string, ip string, port int, username, password, privateKey string) error {
+	var err error
 	switch authType {
 	case "1":
 		// 通过用户名和密码进行SSH连接测试
-		return c.testPasswordAuth(ip, port, username, password)
+		err = c.testPasswordAuth(ip, port, username, password)
 	case "2":
 		// 通过公私钥进行SSH连接测试
-		return c.testKeyAuth(ip, port, username, privateKey)
+		err = c.testKeyAuth(ip, port, username, privateKey)
 	default:
-		return fmt.Errorf("invalid authentication type")
+		err = fmt.Errorf("invalid authentication type")
 	}
+
+	// 返回上层处理的错误
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *MachineConn) testPasswordAuth(ip string, port int, username, password string) error {
@@ -32,17 +40,25 @@ func (c *MachineConn) testPasswordAuth(ip string, port int, username, password s
 			ssh.Password(password),
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-		Timeout:         5 * time.Second,
+		Timeout:         5 * time.Second, // 设置超时
 	}
 
-	// 拼接ip和端口
+	// 拼接IP和端口
 	host := fmt.Sprintf("%s:%d", ip, port)
+
+	// 尝试连接SSH
 	client, err := ssh.Dial("tcp", host, sshConfig)
 	if err != nil {
+		// 打印错误并返回
+		fmt.Printf("Failed to dial SSH: %v\n", err)
 		return err
 	}
+
+	// 只有当 client 不为 nil 时，才会进入 defer 语句
 	defer client.Close()
 
+	// 连接成功，返回 nil 表示没有错误
+	fmt.Println("SSH connection established")
 	return nil
 }
 

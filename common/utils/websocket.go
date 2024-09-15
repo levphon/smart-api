@@ -115,6 +115,7 @@ func (wm *WebSocketManager) BroadcastMessage(taskID int, message Message) {
 // WsHandler 处理WebSocket连接
 func WsHandler(c *gin.Context) {
 	taskIDStr := c.Param("id")
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 
 	taskID, err := strconv.Atoi(taskIDStr)
 	if err != nil {
