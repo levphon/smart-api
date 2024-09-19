@@ -34,6 +34,7 @@ func registerExecMachineAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJ
 
 		// 查询历史任务
 		r.GET("/history", th.GetHistoryTaskPage)
+		r.DELETE("/history", th.Delete)
 
 	}
 }

@@ -299,37 +299,30 @@ func (h *ExecutionHistory) GetHistoryTask(pageNum, limit int, objects *[]models.
 	return nil
 }
 
-//var upgrader = websocket.Upgrader{
-//	CheckOrigin: func(r *http.Request) bool {
-//		return true
-//	},
-//}
-//
-//func UpgradeToWebSocket(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
-//	conn, err := upgrader.Upgrade(w, r, nil)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return conn, nil
-//}
-//
-//func StreamCommandOutput(wsConn *websocket.Conn) {
-//	// 启动命令输出流
-//	// 模拟命令输出
-//	for {
-//		// 模拟命令输出
-//		msg := []byte("模拟命令输出")
-//		err := wsConn.WriteMessage(websocket.TextMessage, msg)
-//		if err != nil {
-//			log.Println("写入消息失败:", err)
-//			return
-//		}
-//	}
-//}
-//
-//func HandleWebSocketMessage(wsConn *websocket.Conn, msg []byte) {
-//	// 处理 WebSocket 消息
-//	log.Printf("收到消息: %s", msg)
-//
-//	// 根据消息内容触发相应操作
-//}
+// Remove 删除历史任务
+func (h *ExecutionHistory) Remove(d *dto.ExecutionHistoryDeleteReq) error {
+	var err error
+
+	var data models.ExecutionHistory
+	// 查询要删除的任务
+	if err = h.Orm.Model(&data).First(&data, d.GetId()).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("machine with ID '%v' not found", d.GetId())
+		}
+		h.Log.Errorf("Error querying machine with ID '%v': %s", d.GetId(), err)
+		return fmt.Errorf("error querying machine with ID '%v': %s", d.GetId(), err)
+	}
+
+	// 执行删除操作
+	db := h.Orm.Model(&data).Delete(&data, d.GetId())
+	if err = db.Error; err != nil {
+		err = db.Error
+		h.Log.Errorf("Delete error: %s", err)
+		return err
+	}
+	if db.RowsAffected == 0 {
+		err = errors.New("无权删除该数据")
+		return err
+	}
+	return nil
+}

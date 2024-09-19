@@ -6,9 +6,8 @@ import (
 )
 
 type FlowManageInsertReq struct {
-	ID          int                 `uri:"id" comment:"编码"`        // 编码
+	ID          int                 `uri:"id" comment:"编码"`      // 编码
 	Name        string              `json:"name" comment:"流程名称"` // 流程名称
-	Icon        string              `json:"icon" comment:"图标"`     // 订单项图标
 	CategoryID  uint                `json:"categoryId" comment:"类别"`
 	Notice      models.FlowSliceInt `json:"notice" comment:"通知方式"`
 	Comments    bool                `json:"comments" comment:"是否开启留言"`
@@ -25,7 +24,6 @@ func (s *FlowManageInsertReq) Generate(model *models.FlowManage) {
 		model.ID = s.ID
 	}
 	model.Name = s.Name
-	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
 	model.Comments = s.Comments
 	model.Ratings = s.Ratings
@@ -42,9 +40,8 @@ func (s *FlowManageInsertReq) GetId() interface{} {
 }
 
 type FlowManageUpdateReq struct {
-	ID          int                 `uri:"id" comment:"编码"`        // 编码
+	ID          int                 `uri:"id" comment:"编码"`      // 编码
 	Name        string              `json:"name" comment:"流程名称"` // 流程名称
-	Icon        string              `json:"icon" comment:"图标"`     // 订单项图标
 	CategoryID  uint                `json:"categoryId" comment:"类别"`
 	Notice      models.FlowSliceInt `json:"notice" comment:"通知方式"`
 	Comments    bool                `json:"comments" comment:"是否开启留言"`
@@ -62,7 +59,6 @@ func (s *FlowManageUpdateReq) Generate(model *models.FlowManage) {
 		model.ID = s.ID
 	}
 	model.Name = s.Name
-	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
 	model.Comments = s.Comments
 	model.Ratings = s.Ratings

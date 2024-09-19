@@ -16,7 +16,6 @@ type FlowSliceInt []int
 type FlowManage struct {
 	ID          int          `gorm:"primaryKey;autoIncrement" json:"id"`
 	Name        string       `gorm:"column:name;type:varchar(100)" json:"name"` // 流程名称
-	Icon        string       `gorm:"column:icon;type:varchar(50)" json:"icon"`  // 订单项图标
 	CategoryID  uint         `gorm:"column:categoryId" json:"categoryId"`
 	Notice      FlowSliceInt `gorm:"column:notice;type:json" json:"notice"` // 变为json切片
 	Comments    bool         `gorm:"column:comments;default:false" json:"comments"`

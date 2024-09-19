@@ -107,6 +107,8 @@ func (e *FlowTemplates) Update(c *dto.FlowTemplatesUpdateReq) error {
 		return fmt.Errorf("error querying flow templates with ID '%v': %s", c.GetId(), err)
 	}
 
+	// 检查 name 字段是否改变
+	oldName := model.Name
 	c.Generate(&model)
 
 	// 执行更新操作
@@ -119,6 +121,15 @@ func (e *FlowTemplates) Update(c *dto.FlowTemplatesUpdateReq) error {
 	if db.RowsAffected == 0 {
 		return errors.New("无权更新该数据")
 	}
+	// 检查模板名称是否有变化
+	if oldName != model.Name {
+		// 如果绑定模板的名称发生变化，更新 order_items 表中的 bindTempLate 和 Link 字段
+		if err = updateOrderItemsBindTempLate(tx, oldName, model.Name); err != nil {
+			e.Log.Errorf("Failed to update order_items after flow template update: %s", err)
+			return fmt.Errorf("failed to update order_items after flow template update: %s", err)
+		}
+	}
+
 	return nil
 }
 
@@ -149,6 +160,23 @@ func (e *FlowTemplates) Remove(d *dto.FlowTemplatesDeleteReq) error {
 	if db.RowsAffected == 0 {
 		err = errors.New("无权删除该数据")
 		return err
+	}
+	return nil
+}
+
+// 更新 order_items 表中的 bindTempLate 和 Link 字段
+func updateOrderItemsBindTempLate(tx *gorm.DB, oldName, newName string) error {
+	// 更新 order_items 表中绑定了旧模板名称的记录
+	fmt.Println("@@@@@@@@@@")
+	fmt.Println("oldName", oldName)
+	err := tx.Model(&models.OrderItems{}).
+		Where("bindTempLate = ?", oldName).
+		Updates(map[string]interface{}{
+			"bindTempLate": newName,
+			"Link":         fmt.Sprintf("/order/classify/%s", newName),
+		}).Error
+	if err != nil {
+		return fmt.Errorf("failed to update order_items: %v", err)
 	}
 	return nil
 }

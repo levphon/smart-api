@@ -198,7 +198,7 @@ func (e ExecMachine) Delete(c *gin.Context) {
 // TestConnection ExecMachine
 // @Summary 测试连接ExecMachine
 // @Description 测试连接ExecMachine
-// @Tags 执行节点管理
+// @Tags 历史任务
 // @Param data body dto.ExecMachineGetReq true "body"
 // @Success 200 {object} response.Response	"{"code": 200, "message": "连接成功"}"
 // @Router /api/v1/exec-machine/testConnection [post]
@@ -263,4 +263,34 @@ func (h ExecutionHistory) GetHistoryTaskPage(c *gin.Context) {
 	}
 
 	h.PageOK(objects, int(total), pageNum, limit, "查询成功")
+}
+
+// Delete 删除ExecutionHistory
+// @Summary 删除ExecutionHistory
+// @Description 删除ExecutionHistory
+// @Tags 历史任务
+// @Param data body dto.ExecMachineDeleteReq true "body"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
+// @Router /api/v1/exec-machine/history [delete]
+// @Security Bearer
+func (h ExecutionHistory) Delete(c *gin.Context) {
+	s := service.ExecutionHistory{}
+
+	req := dto.ExecutionHistoryDeleteReq{}
+	err := h.MakeContext(c).
+		MakeOrm().
+		Bind(&req, binding.JSON, nil).
+		MakeService(&s.Service).
+		Errors
+	if err != nil {
+		h.Logger.Error(err)
+		h.Error(500, err, err.Error())
+		return
+	}
+	err = s.Remove(&req)
+	if err != nil {
+		h.Error(500, err, fmt.Sprintf("删除失败 err:%v", err))
+		return
+	}
+	h.OK(req.GetId(), "删除成功")
 }
