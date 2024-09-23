@@ -167,8 +167,6 @@ func (e *FlowTemplates) Remove(d *dto.FlowTemplatesDeleteReq) error {
 // 更新 order_items 表中的 bindTempLate 和 Link 字段
 func updateOrderItemsBindTempLate(tx *gorm.DB, oldName, newName string) error {
 	// 更新 order_items 表中绑定了旧模板名称的记录
-	fmt.Println("@@@@@@@@@@")
-	fmt.Println("oldName", oldName)
 	err := tx.Model(&models.OrderItems{}).
 		Where("bindTempLate = ?", oldName).
 		Updates(map[string]interface{}{
