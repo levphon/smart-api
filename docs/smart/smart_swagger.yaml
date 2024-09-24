@@ -13,7 +13,7 @@ definitions:
     properties:
       authType:
         description: 认证方式：1=用户名密码，2=公私钥
-        type: integer
+        type: string
       createBy:
         type: integer
       creator:
@@ -34,15 +34,15 @@ definitions:
       ip:
         description: IP地址
         type: string
-      keyPath:
-        description: 公私钥路径
-        type: string
       passWord:
         description: 密码
         type: string
       port:
         description: 端口号
         type: integer
+      privateKey:
+        description: 私钥内容
+        type: string
       status:
         description: 状态
         type: integer
@@ -56,7 +56,7 @@ definitions:
     properties:
       authType:
         description: 认证方式：1=用户名密码，2=公私钥
-        type: integer
+        type: string
       createBy:
         type: integer
       description:
@@ -74,15 +74,15 @@ definitions:
       ip:
         description: IP地址
         type: string
-      keyPath:
-        description: 公私钥路径
-        type: string
       passWord:
         description: 密码
         type: string
       port:
         description: 端口号
         type: integer
+      privateKey:
+        description: 私钥内容
+        type: string
       regenerator:
         description: 更新人
         type: string
@@ -115,9 +115,6 @@ definitions:
         type: string
       description:
         type: string
-      icon:
-        description: 订单项图标
-        type: string
       id:
         description: 编码
         type: integer
@@ -148,9 +145,6 @@ definitions:
       createdAt:
         type: string
       description:
-        type: string
-      icon:
-        description: 订单项图标
         type: string
       id:
         description: 编码
@@ -285,6 +279,56 @@ definitions:
       updateBy:
         type: integer
     type: object
+  dto.OrderCommentDeleteReq:
+    properties:
+      id:
+        description: 留言ID
+        type: integer
+    type: object
+  dto.OrderCommentGetReq:
+    properties:
+      orderID:
+        description: 工单ID
+        type: integer
+    type: object
+  dto.OrderCommentInsertReq:
+    properties:
+      comments:
+        description: 留言
+        type: string
+      createBy:
+        type: integer
+      orderID:
+        description: 工单ID
+        type: integer
+      parentID:
+        description: 父留言ID
+        type: integer
+      updateBy:
+        type: integer
+    type: object
+  dto.OrderCommentUpdateReq:
+    properties:
+      comments:
+        description: 留言内容
+        type: string
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      id:
+        description: 留言ID
+        type: integer
+      orderID:
+        description: 工单ID
+        type: integer
+      parentID:
+        type: integer
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
   dto.OrderItemsDeleteReq:
     properties:
       id:
@@ -360,6 +404,51 @@ definitions:
       title:
         description: 标题
         type: string
+      updateBy:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  dto.OrderRatingDeleteReq:
+    properties:
+      id:
+        description: 评分ID
+        type: integer
+    type: object
+  dto.OrderRatingGetReq:
+    properties:
+      orderId:
+        description: 评分ID
+        type: integer
+    type: object
+  dto.OrderRatingInsertReq:
+    properties:
+      createBy:
+        type: integer
+      orderID:
+        description: 工单ID
+        type: integer
+      ratings:
+        description: 评分
+        type: integer
+      updateBy:
+        type: integer
+    type: object
+  dto.OrderRatingUpdateReq:
+    properties:
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      id:
+        description: 评分ID
+        type: integer
+      orderID:
+        description: 工单ID
+        type: integer
+      ratings:
+        description: 评分
+        type: integer
       updateBy:
         type: integer
       updatedAt:
@@ -1267,7 +1356,7 @@ definitions:
     properties:
       authType:
         description: 认证方式：1=用户名密码，2=公私钥
-        type: integer
+        type: string
       createBy:
         type: integer
       createdAt:
@@ -1289,15 +1378,15 @@ definitions:
       ip:
         description: IP地址
         type: string
-      keyPath:
-        description: 公私钥路径
-        type: string
       passWord:
         description: 密码
         type: string
       port:
         description: 端口
         type: integer
+      privateKey:
+        description: 私钥内容
+        type: string
       regenerator:
         description: 更新人
         type: string
@@ -1310,6 +1399,52 @@ definitions:
         type: string
       userName:
         description: 用户名
+        type: string
+    type: object
+  go-admin_app_smart_models.ExecutionHistory:
+    properties:
+      createBy:
+        type: integer
+      createdAt:
+        type: string
+      creator:
+        description: 执行发起人
+        type: string
+      executedAt:
+        description: 执行时间
+        type: string
+      executionTime:
+        description: 执行时长
+        type: integer
+      hostName:
+        description: 机器主机名
+        type: string
+      id:
+        type: integer
+      ip:
+        description: 机器IP地址
+        type: string
+      machineID:
+        description: 执行机器的ID
+        type: integer
+      status:
+        description: 执行状态 0 为成功 1 为失败 2为未知
+        type: integer
+      stderr:
+        description: 标准错误输出
+        type: string
+      stdout:
+        description: 标准输出
+        type: string
+      taskID:
+        description: 对应执行任务的ID
+        type: integer
+      taskName:
+        description: 任务名称
+        type: string
+      updateBy:
+        type: integer
+      updatedAt:
         type: string
     type: object
   go-admin_app_smart_models.FlowManage:
@@ -1326,9 +1461,6 @@ definitions:
         description: 创建人
         type: string
       description:
-        type: string
-      icon:
-        description: 订单项图标
         type: string
       id:
         type: integer
@@ -2563,6 +2695,59 @@ paths:
       summary: 修改ExecMachine
       tags:
       - 执行节点管理
+  /api/v1/exec-machine/history:
+    delete:
+      description: 删除ExecutionHistory
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExecMachineDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除ExecutionHistory
+      tags:
+      - 历史任务
+    get:
+      description: 获取ExecutionHistory列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/go-admin_app_smart_models.ExecutionHistory'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取ExecutionHistory列表
+      tags:
+      - 执行节点管理
   /api/v1/exec-machine/testConnection:
     post:
       description: 测试连接ExecMachine
@@ -2582,7 +2767,7 @@ paths:
       - Bearer: []
       summary: 测试连接ExecMachine
       tags:
-      - 执行节点管理
+      - 历史任务
   /api/v1/flow-manage:
     delete:
       description: 删除FlowManage
@@ -3158,6 +3343,100 @@ paths:
       summary: 修改OrderCategory
       tags:
       - 工单分类
+  /api/v1/order-comment:
+    delete:
+      description: 根据留言ID删除留言
+      parameters:
+      - description: 删除请求
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderCommentDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除留言
+      tags:
+      - 工单留言
+    post:
+      consumes:
+      - application/json
+      description: 为指定工单添加留言
+      parameters:
+      - description: 留言数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderCommentInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "添加成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 添加留言
+      tags:
+      - 工单留言
+  /api/v1/order-comment/{id}:
+    put:
+      consumes:
+      - application/json
+      description: 根据留言ID更新留言内容
+      parameters:
+      - description: 留言ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderCommentUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "更新成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 更新留言
+      tags:
+      - 工单留言
+  /api/v1/order-comment/{orderId}:
+    get:
+      description: 根据工单ID获取所有留言
+      parameters:
+      - description: 工单ID
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.OrderCommentGetReq'
+                  type: array
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取工单留言
+      tags:
+      - 工单留言
   /api/v1/order-items:
     delete:
       description: 删除OrderItems
@@ -3281,6 +3560,100 @@ paths:
       summary: 修改OrderItems
       tags:
       - 工单项目
+  /api/v1/order-rating:
+    delete:
+      description: 根据评分ID删除评分
+      parameters:
+      - description: 删除请求
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderRatingDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除评分
+      tags:
+      - 工单评分
+    post:
+      consumes:
+      - application/json
+      description: 为指定工单添加评分
+      parameters:
+      - description: 评分数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderRatingInsertReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "评分成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 添加评分
+      tags:
+      - 工单评分
+  /api/v1/order-rating/{id}:
+    put:
+      consumes:
+      - application/json
+      description: 根据评分ID更新评分信息
+      parameters:
+      - description: 评分ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderRatingUpdateReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "更新成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 更新评分
+      tags:
+      - 工单评分
+  /api/v1/order-rating/{orderId}:
+    get:
+      description: 根据工单ID获取所有评分
+      parameters:
+      - description: 工单ID
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.OrderRatingGetReq'
+                  type: array
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取工单评分
+      tags:
+      - 工单评分
   /api/v1/order-task:
     delete:
       description: 删除OrderTask

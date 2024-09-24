@@ -916,6 +916,100 @@
                 }
             }
         },
+        "/api/v1/exec-machine/history": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取ExecutionHistory列表",
+                "tags": [
+                    "执行节点管理"
+                ],
+                "summary": "获取ExecutionHistory列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页条数",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "pageIndex",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/response.Page"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "list": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/definitions/go-admin_app_smart_models.ExecutionHistory"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "删除ExecutionHistory",
+                "tags": [
+                    "历史任务"
+                ],
+                "summary": "删除ExecutionHistory",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ExecMachineDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/exec-machine/testConnection": {
             "post": {
                 "security": [
@@ -925,7 +1019,7 @@
                 ],
                 "description": "测试连接ExecMachine",
                 "tags": [
-                    "执行节点管理"
+                    "历史任务"
                 ],
                 "summary": "测试连接ExecMachine",
                 "parameters": [
@@ -1987,6 +2081,162 @@
                 }
             }
         },
+        "/api/v1/order-comment": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "为指定工单添加留言",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "工单留言"
+                ],
+                "summary": "添加留言",
+                "parameters": [
+                    {
+                        "description": "留言数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderCommentInsertReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"添加成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据留言ID删除留言",
+                "tags": [
+                    "工单留言"
+                ],
+                "summary": "删除留言",
+                "parameters": [
+                    {
+                        "description": "删除请求",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderCommentDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order-comment/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据留言ID更新留言内容",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "工单留言"
+                ],
+                "summary": "更新留言",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "留言ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "更新数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderCommentUpdateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"更新成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order-comment/{orderId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据工单ID获取所有留言",
+                "tags": [
+                    "工单留言"
+                ],
+                "summary": "获取工单留言",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "工单ID",
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.OrderCommentGetReq"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/order-items": {
             "get": {
                 "security": [
@@ -2193,6 +2443,162 @@
                         "description": "{\"code\": 200, \"message\": \"修改成功\"}",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order-rating": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "为指定工单添加评分",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "工单评分"
+                ],
+                "summary": "添加评分",
+                "parameters": [
+                    {
+                        "description": "评分数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderRatingInsertReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"评分成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据评分ID删除评分",
+                "tags": [
+                    "工单评分"
+                ],
+                "summary": "删除评分",
+                "parameters": [
+                    {
+                        "description": "删除请求",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderRatingDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order-rating/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据评分ID更新评分信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "工单评分"
+                ],
+                "summary": "更新评分",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "评分ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "更新数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderRatingUpdateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"更新成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order-rating/{orderId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据工单ID获取所有评分",
+                "tags": [
+                    "工单评分"
+                ],
+                "summary": "获取工单评分",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "工单ID",
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.OrderRatingGetReq"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -4710,7 +5116,7 @@
             "properties": {
                 "authType": {
                     "description": "认证方式：1=用户名密码，2=公私钥",
-                    "type": "integer"
+                    "type": "string"
                 },
                 "createBy": {
                     "type": "integer"
@@ -4739,10 +5145,6 @@
                     "description": "IP地址",
                     "type": "string"
                 },
-                "keyPath": {
-                    "description": "公私钥路径",
-                    "type": "string"
-                },
                 "passWord": {
                     "description": "密码",
                     "type": "string"
@@ -4750,6 +5152,10 @@
                 "port": {
                     "description": "端口号",
                     "type": "integer"
+                },
+                "privateKey": {
+                    "description": "私钥内容",
+                    "type": "string"
                 },
                 "status": {
                     "description": "状态",
@@ -4769,7 +5175,7 @@
             "properties": {
                 "authType": {
                     "description": "认证方式：1=用户名密码，2=公私钥",
-                    "type": "integer"
+                    "type": "string"
                 },
                 "createBy": {
                     "type": "integer"
@@ -4794,10 +5200,6 @@
                     "description": "IP地址",
                     "type": "string"
                 },
-                "keyPath": {
-                    "description": "公私钥路径",
-                    "type": "string"
-                },
                 "passWord": {
                     "description": "密码",
                     "type": "string"
@@ -4805,6 +5207,10 @@
                 "port": {
                     "description": "端口号",
                     "type": "integer"
+                },
+                "privateKey": {
+                    "description": "私钥内容",
+                    "type": "string"
                 },
                 "regenerator": {
                     "description": "更新人",
@@ -4853,10 +5259,6 @@
                 "description": {
                     "type": "string"
                 },
-                "icon": {
-                    "description": "订单项图标",
-                    "type": "string"
-                },
                 "id": {
                     "description": "编码",
                     "type": "integer"
@@ -4901,10 +5303,6 @@
                     "type": "string"
                 },
                 "description": {
-                    "type": "string"
-                },
-                "icon": {
-                    "description": "订单项图标",
                     "type": "string"
                 },
                 "id": {
@@ -5104,6 +5502,79 @@
                 }
             }
         },
+        "dto.OrderCommentDeleteReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "留言ID",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OrderCommentGetReq": {
+            "type": "object",
+            "properties": {
+                "orderID": {
+                    "description": "工单ID",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OrderCommentInsertReq": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "description": "留言",
+                    "type": "string"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "orderID": {
+                    "description": "工单ID",
+                    "type": "integer"
+                },
+                "parentID": {
+                    "description": "父留言ID",
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OrderCommentUpdateReq": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "description": "留言内容",
+                    "type": "string"
+                },
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "留言ID",
+                    "type": "integer"
+                },
+                "orderID": {
+                    "description": "工单ID",
+                    "type": "integer"
+                },
+                "parentID": {
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.OrderItemsDeleteReq": {
             "type": "object",
             "properties": {
@@ -5208,6 +5679,72 @@
                 "title": {
                     "description": "标题",
                     "type": "string"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.OrderRatingDeleteReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "评分ID",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OrderRatingGetReq": {
+            "type": "object",
+            "properties": {
+                "orderId": {
+                    "description": "评分ID",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OrderRatingInsertReq": {
+            "type": "object",
+            "properties": {
+                "createBy": {
+                    "type": "integer"
+                },
+                "orderID": {
+                    "description": "工单ID",
+                    "type": "integer"
+                },
+                "ratings": {
+                    "description": "评分",
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OrderRatingUpdateReq": {
+            "type": "object",
+            "properties": {
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "评分ID",
+                    "type": "integer"
+                },
+                "orderID": {
+                    "description": "工单ID",
+                    "type": "integer"
+                },
+                "ratings": {
+                    "description": "评分",
+                    "type": "integer"
                 },
                 "updateBy": {
                     "type": "integer"
@@ -6537,7 +7074,7 @@
             "properties": {
                 "authType": {
                     "description": "认证方式：1=用户名密码，2=公私钥",
-                    "type": "integer"
+                    "type": "string"
                 },
                 "createBy": {
                     "type": "integer"
@@ -6568,10 +7105,6 @@
                     "description": "IP地址",
                     "type": "string"
                 },
-                "keyPath": {
-                    "description": "公私钥路径",
-                    "type": "string"
-                },
                 "passWord": {
                     "description": "密码",
                     "type": "string"
@@ -6579,6 +7112,10 @@
                 "port": {
                     "description": "端口",
                     "type": "integer"
+                },
+                "privateKey": {
+                    "description": "私钥内容",
+                    "type": "string"
                 },
                 "regenerator": {
                     "description": "更新人",
@@ -6596,6 +7133,70 @@
                 },
                 "userName": {
                     "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "go-admin_app_smart_models.ExecutionHistory": {
+            "type": "object",
+            "properties": {
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "creator": {
+                    "description": "执行发起人",
+                    "type": "string"
+                },
+                "executedAt": {
+                    "description": "执行时间",
+                    "type": "string"
+                },
+                "executionTime": {
+                    "description": "执行时长",
+                    "type": "integer"
+                },
+                "hostName": {
+                    "description": "机器主机名",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "机器IP地址",
+                    "type": "string"
+                },
+                "machineID": {
+                    "description": "执行机器的ID",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "执行状态 0 为成功 1 为失败 2为未知",
+                    "type": "integer"
+                },
+                "stderr": {
+                    "description": "标准错误输出",
+                    "type": "string"
+                },
+                "stdout": {
+                    "description": "标准输出",
+                    "type": "string"
+                },
+                "taskID": {
+                    "description": "对应执行任务的ID",
+                    "type": "integer"
+                },
+                "taskName": {
+                    "description": "任务名称",
+                    "type": "string"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }
@@ -6620,10 +7221,6 @@
                     "type": "string"
                 },
                 "description": {
-                    "type": "string"
-                },
-                "icon": {
-                    "description": "订单项图标",
                     "type": "string"
                 },
                 "id": {

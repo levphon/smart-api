@@ -18,7 +18,7 @@ type OrderCommentAPI struct {
 // @Description 根据工单ID获取所有留言
 // @Tags 工单留言
 // @Param orderId path int true "工单ID"
-// @Success 200 {object} response.Response{data=[]models.OrderComment} "{"code": 200, "data": [...]}"
+// @Success 200 {object} response.Response{data=[]dto.OrderCommentGetReq} "{"code": 200, "data": [...]}"
 // @Router /api/v1/order-comment/{orderId} [get]
 // @Security Bearer
 func (e OrderCommentAPI) Get(c *gin.Context) {

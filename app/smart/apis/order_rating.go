@@ -18,7 +18,7 @@ type OrderRatingAPI struct {
 // @Description 根据工单ID获取所有评分
 // @Tags 工单评分
 // @Param orderId path int true "工单ID"
-// @Success 200 {object} response.Response{data=[]models.OrderRating} "{"code": 200, "data": [...]}"
+// @Success 200 {object} response.Response{data=[]dto.OrderRatingGetReq} "{"code": 200, "data": [...]}"
 // @Router /api/v1/order-rating/{orderId} [get]
 // @Security Bearer
 func (e OrderRatingAPI) Get(c *gin.Context) {
