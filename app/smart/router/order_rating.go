@@ -19,6 +19,8 @@ func registerOrderRatingAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJ
 
 	rating := v1.Group("/order-ratings").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
+		// 获取工单评分
+		rating.GET("/:orderID", ratingApi.Get) // 添加评分的路由
 		// 添加评分
 		rating.POST("", ratingApi.Insert) // 添加评分的路由
 		// 更新评分

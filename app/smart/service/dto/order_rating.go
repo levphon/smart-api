@@ -45,12 +45,12 @@ func (s *OrderRatingUpdateReq) GetId() interface{} {
 }
 
 type OrderRatingGetReq struct {
-	ID int `uri:"id" comment:"ID"` // 评分ID
+	OrderId int `uri:"orderID" comment:"工单ID"` // 评分ID
 }
 
 // GetId 获取数据对应的 ID
 func (s *OrderRatingGetReq) GetId() interface{} {
-	return s.ID
+	return s.OrderId
 }
 
 type OrderRatingDeleteReq struct {

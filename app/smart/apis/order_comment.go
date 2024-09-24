@@ -13,6 +13,14 @@ type OrderCommentAPI struct {
 	api.Api
 }
 
+// Get 获取工单留言
+// @Summary 获取工单留言
+// @Description 根据工单ID获取所有留言
+// @Tags 工单留言
+// @Param orderId path int true "工单ID"
+// @Success 200 {object} response.Response{data=[]models.OrderComment} "{"code": 200, "data": [...]}"
+// @Router /api/v1/order-comment/{orderId} [get]
+// @Security Bearer
 func (e OrderCommentAPI) Get(c *gin.Context) {
 	s := service.OrderComment{}
 	req := dto.OrderCommentGetReq{}
@@ -38,6 +46,15 @@ func (e OrderCommentAPI) Get(c *gin.Context) {
 }
 
 // Insert 添加留言
+// @Summary 添加留言
+// @Description 为指定工单添加留言
+// @Tags 工单留言
+// @Accept application/json
+// @Product application/json
+// @Param data body dto.OrderCommentInsertReq true "留言数据"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "添加成功"}"
+// @Router /api/v1/order-comment [post]
+// @Security Bearer
 func (e OrderCommentAPI) Insert(c *gin.Context) {
 	s := service.OrderComment{}
 	req := dto.OrderCommentInsertReq{}
@@ -61,7 +78,16 @@ func (e OrderCommentAPI) Insert(c *gin.Context) {
 }
 
 // Update 更新留言
-// Update 更新留言
+// @Summary 更新留言
+// @Description 根据留言ID更新留言内容
+// @Tags 工单留言
+// @Accept application/json
+// @Product application/json
+// @Param id path int true "留言ID"
+// @Param data body dto.OrderCommentUpdateReq true "更新数据"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "更新成功"}"
+// @Router /api/v1/order-comment/{id} [put]
+// @Security Bearer
 func (e OrderCommentAPI) Update(c *gin.Context) {
 	s := service.OrderComment{}
 	req := dto.OrderCommentUpdateReq{}
@@ -88,6 +114,13 @@ func (e OrderCommentAPI) Update(c *gin.Context) {
 }
 
 // Delete 删除留言
+// @Summary 删除留言
+// @Description 根据留言ID删除留言
+// @Tags 工单留言
+// @Param data body dto.OrderCommentDeleteReq true "删除请求"
+// @Success 200 {object} response.Response	"{"code": 200, "message": "删除成功"}"
+// @Router /api/v1/order-comment [delete]
+// @Security Bearer
 func (e OrderCommentAPI) Delete(c *gin.Context) {
 	s := service.OrderComment{}
 	req := dto.OrderCommentDeleteReq{}

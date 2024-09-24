@@ -15,6 +15,20 @@ type OrderRating struct {
 	service.Service
 }
 
+// GetRatingByOrderID 根据工单ID获取评分
+func (e *OrderRating) GetRatingByOrderID(orderID int) (*models.OrderRating, error) {
+	var rating models.OrderRating
+	err := e.Orm.Where("order_id = ?", orderID).First(&rating).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// 如果没有找到记录，返回 nil 和一个自定义的错误
+			return nil, nil // 返回 nil 以指示没有评分
+		}
+		return nil, err // 返回其他错误
+	}
+	return &rating, nil // 返回找到的评分
+}
+
 // Insert 插入评分
 func (e *OrderRating) Insert(req *dto.OrderRatingInsertReq) error {
 	var err error
