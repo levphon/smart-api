@@ -94,7 +94,7 @@ func (e *OrderWorksService) CreatedByMe(pageNum, limit int, objects *[]models.Or
 func (e *OrderWorksService) RelatedToMe(pageNum, limit int, objects *[]models.OrderWorks, userid int) error {
 	// 计算偏移量
 	offset := (pageNum - 1) * limit
-	// 查询并分页获取订单项数据
+	// 查询并分页获取订单项数据 todo 与我相关的包含审核节点，需要从order_works的bindFlowData字段比较当前userid
 	db := e.Orm.Where("create_by = ? OR currentHandlerId = ?", userid, userid).Limit(limit).Offset(offset).Find(objects)
 
 	if err := db.Error; err != nil {
