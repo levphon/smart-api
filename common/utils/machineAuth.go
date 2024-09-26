@@ -5,6 +5,7 @@ package utils
 import (
 	"bytes"
 	"fmt"
+	log "github.com/go-admin-team/go-admin-core/logger"
 	"golang.org/x/crypto/ssh"
 	"net"
 	"time"
@@ -56,9 +57,8 @@ func (c *MachineConn) testPasswordAuth(ip string, port int, username, password s
 
 	// 只有当 client 不为 nil 时，才会进入 defer 语句
 	defer client.Close()
-
+	log.Info("SSH connection established")
 	// 连接成功，返回 nil 表示没有错误
-	fmt.Println("SSH connection established")
 	return nil
 }
 

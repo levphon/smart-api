@@ -20,8 +20,10 @@ type OrderCountByPeriodResponse struct {
 }
 
 type OrderCountStat struct {
-	Date  string `json:"date"`  // 日期
-	Count int    `json:"count"` // 数量
+	Date      string `json:"date"`      // 日期
+	Total     int    `json:"total"`     // 所有
+	Completed int    `json:"completed"` // 已完成的
+	UnderWay  int    `json:"underWay"`  // 进行中的
 }
 
 type SubmissionRanking struct {
@@ -40,6 +42,6 @@ type RatingStat struct {
 }
 
 type RatingRanking struct {
-	Name  string `json:"name"`  // 评价人
-	Total int    `json:"total"` // 统计
+	Name  string  `json:"name"`  // 评价人
+	Score float64 `json:"score"` // 平均评分
 }

@@ -5,6 +5,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	log "github.com/go-admin-team/go-admin-core/logger"
 	"go-admin/app/smart/models"
 	"go-admin/app/smart/service/dto"
 	models2 "go-admin/common/models"
@@ -285,7 +286,7 @@ func findNodeInfoById(nodes models.StrucTure, nodeId string) *NodeInfo {
 	// 如果nodeId等于 start，则将工单创建人赋值给当前处理人，同时将id赋值给assignValue
 	nodeList, ok := nodes["nodes"].([]interface{})
 	if !ok {
-		fmt.Println("nodes is not a slice of interface{}")
+		log.Error("nodes is not a slice of interface{}")
 		return nil
 	}
 

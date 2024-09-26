@@ -7,6 +7,8 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 	"go-admin/app/smart/models"
 	"go-admin/app/smart/service/dto"
+	"math"
+	"sort"
 	"time"
 )
 
@@ -62,17 +64,18 @@ func (e *OrderStatistics) GetStatistics() (map[string]interface{}, error) {
 	daysPassed := now.Day()
 
 	// 计算日均工单数
-	var dailyAverage float64
+	dailyAverage := 0.0
 	if daysPassed > 0 {
 		dailyAverage = float64(monthlyOrders) / float64(daysPassed)
-	} else {
-		dailyAverage = 0
 	}
 
+	// 保留两位小数
+	dailyAverage = math.Round(dailyAverage*100) / 100
+
 	// 计算完成率
-	completionRate := 0.0
+	completionRate := 0
 	if totalOrders > 0 {
-		completionRate = float64(completedOrders) / float64(totalOrders) * 100
+		completionRate = int(float64(completedOrders) / float64(totalOrders) * 100)
 	}
 
 	// 计算总工单数和当前处理工单数的周同比、日同比
@@ -143,8 +146,10 @@ func (e *OrderStatistics) calculateComparisons(totalOrders, currentProcessingOrd
 // GetOrderCountByPeriod 按周或按月统计工单数量
 func (e *OrderStatistics) GetOrderCountByPeriod(period string) (dto.OrderCountByPeriodResponse, error) {
 	var orders []struct {
-		Date  string
-		Count int
+		Date      string
+		Total     int
+		Completed int
+		UnderWay  int
 	}
 	var personalRankings []struct {
 		Creator string
@@ -156,15 +161,21 @@ func (e *OrderStatistics) GetOrderCountByPeriod(period string) (dto.OrderCountBy
 	var err error
 	if period == "week" {
 		err = e.Orm.Model(&models.OrderWorks{}).
-			Select("DATE_FORMAT(created_at, '%Y-%u') as date, COUNT(*) as count").
+			Select(`DATE_FORMAT(created_at, '%Y-%u') as date,
+		         COUNT(*) as total,
+		         SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
+		         SUM(CASE WHEN status = 'under-way' THEN 1 ELSE 0 END) as under_way`).
 			Group("DATE_FORMAT(created_at, '%Y-%u')").
-			Order("date ASC"). // 添加排序
+			Order("date ASC").
 			Find(&orders).Error
 	} else if period == "month" {
 		err = e.Orm.Model(&models.OrderWorks{}).
-			Select("DATE_FORMAT(created_at, '%Y-%m') as date, COUNT(*) as count").
+			Select(`DATE_FORMAT(created_at, '%Y-%m') as date,
+		         COUNT(*) as total,
+		         SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
+		         SUM(CASE WHEN status = 'under-way' THEN 1 ELSE 0 END) as under_way`).
 			Group("DATE_FORMAT(created_at, '%Y-%m')").
-			Order("date ASC"). // 添加排序
+			Order("date ASC").
 			Find(&orders).Error
 	} else {
 		return response, errors.New("invalid period")
@@ -189,10 +200,13 @@ func (e *OrderStatistics) GetOrderCountByPeriod(period string) (dto.OrderCountBy
 	response.OrderStats = make([]dto.OrderCountStat, len(orders))
 	for i, order := range orders {
 		response.OrderStats[i] = dto.OrderCountStat{
-			Date:  order.Date,  // 确保这里使用正确的字段
-			Count: order.Count, // 确保这里使用正确的字段
+			Date:      order.Date,
+			Total:     order.Total,
+			Completed: order.Completed,
+			UnderWay:  order.UnderWay,
 		}
 	}
+
 	response.SubmissionRanking = make([]dto.SubmissionRanking, len(personalRankings))
 	for i, ranking := range personalRankings {
 		response.SubmissionRanking[i] = dto.SubmissionRanking{
@@ -213,44 +227,37 @@ func (e *OrderStatistics) GetOrderRatings(period string) (dto.OrderRatingsRespon
 	var personalRankings []struct {
 		Creator string
 		Count   int
+		Total   int
+		Average float64 // 确保这个字段被定义
 	}
 
 	response := dto.OrderRatingsResponse{}
 
+	// 获取评分统计数据
 	var err error
 	if period == "week" {
 		err = e.Orm.Model(&models.OrderRating{}).
 			Select("DATE_FORMAT(order_works.created_at, '%Y-%u') as date, AVG(order_rating.rating) as average").
 			Joins("JOIN order_works ON order_works.id = order_rating.order_id").
 			Group("DATE_FORMAT(order_works.created_at, '%Y-%u')").
+			Order("date ASC").
 			Find(&ratings).Error
 	} else if period == "month" {
 		err = e.Orm.Model(&models.OrderRating{}).
 			Select("DATE_FORMAT(order_works.created_at, '%Y-%m') as date, AVG(order_rating.rating) as average").
 			Joins("JOIN order_works ON order_works.id = order_rating.order_id").
 			Group("DATE_FORMAT(order_works.created_at, '%Y-%m')").
+			Order("date ASC").
 			Find(&ratings).Error
 	} else {
-		return response, errors.New("invalid period")
+		return response, errors.New("无效的时间周期")
 	}
 
 	if err != nil {
 		return response, err
 	}
 
-	// 统计个人评分数量，获取用户姓名
-	err = e.Orm.Model(&models.OrderRating{}).
-		Select("sys_user.nick_name as creator, COUNT(*) as count").
-		Joins("JOIN order_works ON order_works.id = order_rating.order_id").
-		Joins("JOIN sys_user ON sys_user.user_id = order_works.create_by"). // 根据需要调整连接条件
-		Group("sys_user.user_id").                                          // 依据用户ID分组
-		Order("count DESC").
-		Find(&personalRankings).Error
-	if err != nil {
-		return response, err
-	}
-
-	// 将结果赋值给响应
+	// 处理评分统计数据并赋值
 	response.RatingsStats = make([]dto.RatingStat, len(ratings))
 	for i, rating := range ratings {
 		response.RatingsStats[i] = dto.RatingStat{
@@ -259,13 +266,41 @@ func (e *OrderStatistics) GetOrderRatings(period string) (dto.OrderRatingsRespon
 		}
 	}
 
+	const k = 5.0 // 调节参数
+
+	// 获取处理人的评分统计，包括工单数量和平均评分
+	err = e.Orm.Model(&models.OrderRating{}).
+		Select("sys_user.nick_name as creator, COUNT(order_rating.order_id) as total, AVG(order_rating.rating) as average").
+		Joins("JOIN sys_user ON sys_user.user_id = order_rating.task_handler"). // 使用直接关联的 task_handler 字段
+		Group("sys_user.user_id").
+		Order("total ASC, average ASC"). // 优先按工单数量排序，再按平均评分排序
+		Find(&personalRankings).Error
+	if err != nil {
+		return response, err
+	}
+
+	// 计算得分并赋值给响应
 	response.RatingRanking = make([]dto.RatingRanking, len(personalRankings))
 	for i, ranking := range personalRankings {
+		// 使用加权得分公式计算最终得分
+		score := (ranking.Average * float64(ranking.Total)) / (float64(ranking.Total) + k)
+
+		// 将分数乘以 100 并保留两位小数
+		score = math.Round(score * 100)
+
+		// 如果需要将分数保留两位小数作为字符串展示，可以使用 strconv.FormatFloat
+		// scoreStr := strconv.FormatFloat(score, 'f', 2, 64)  // 可选
+
 		response.RatingRanking[i] = dto.RatingRanking{
-			Name:  ranking.Creator, // 现在是昵称
-			Total: ranking.Count,
+			Name:  ranking.Creator,
+			Score: score, // 使用加权得分
 		}
 	}
+
+	// 排序排行榜（如果数据库已经按工单数量和平均分排序，可以省略）
+	sort.Slice(response.RatingRanking, func(i, j int) bool {
+		return response.RatingRanking[i].Score > response.RatingRanking[j].Score
+	})
 
 	return response, nil
 }

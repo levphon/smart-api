@@ -55,6 +55,41 @@ func (e *OrderRating) Insert(req *dto.OrderRatingInsertReq) error {
 		return err
 	}
 
+	// 查询 order_works 表获取 bindFlowData
+	var orderWork models.OrderWorks // 假设你的 OrderWork 模型已定义
+	err = tx.Where("id = ?", data.OrderID).First(&orderWork).Error
+	if err != nil {
+		return err // 处理查询错误
+	}
+
+	// 默认将 Taskhandler 赋为空值
+	data.Taskhandler = 0
+
+	// 获取 bindFlowData 中的 nodes 列表
+	if nodes, ok := orderWork.BindFlowData.StrucTure["nodes"].([]interface{}); ok {
+		// 遍历所有节点
+		for _, node := range nodes {
+			nodeMap, ok := node.(map[string]interface{})
+			if !ok {
+				continue
+			}
+
+			// 检查节点类型是否为 "receiveTask"
+			if nodeMap["clazz"] == "receiveTask" {
+				// 提取 assignValue
+				if assignValues, ok := nodeMap["assignValue"].([]interface{}); ok && len(assignValues) > 0 {
+					if handler, ok := assignValues[0].(float64); ok { // 假设 assignValue 是数字
+						data.Taskhandler = int(handler) // 设置 Taskhandler 值
+					}
+				} else {
+					return errors.New("未找到 assignValue 值")
+				}
+			}
+		}
+	} else {
+		return errors.New("未找到 nodes 列表")
+	}
+
 	// 插入新的评分记录
 	err = tx.Create(&data).Error
 	if err != nil {

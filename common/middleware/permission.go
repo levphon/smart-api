@@ -18,7 +18,7 @@ func AuthCheckRole() gin.HandlerFunc {
 		data, _ := c.Get(jwtauth.JwtPayloadKey)
 		v := data.(jwtauth.MapClaims)
 		e := sdk.Runtime.GetCasbinKey(c.Request.Host)
-
+		// 不用鉴权的接口信息 settings.go
 		var res, casbinExclude bool
 		var err error
 		//检查权限
