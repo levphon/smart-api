@@ -7,6 +7,7 @@ type OrderStatisticsResponse struct {
 	TotalOrdersWeekOverWeek    float64 `json:"totalOrdersWeekOverWeek"`    // 总工单数周同比
 	TotalOrdersDayOverDay      float64 `json:"totalOrdersDayOverDay"`      // 总工单数日同比
 	CompletedOrders            int     `json:"completedOrders"`            // 已完结工单
+	CompletionRate             int     `json:"completionRate"`             // 完成率
 	PendingOrders              int     `json:"pendingOrders"`              // 待办工单
 	CurrentHandlerOrders       int     `json:"currentHandlerOrders"`       // 当前处理的工单
 	CurrentHandlerWeekOverWeek float64 `json:"currentHandlerWeekOverWeek"` // 当前处理工单周同比

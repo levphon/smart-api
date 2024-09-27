@@ -23,9 +23,7 @@ type OrderStatistics struct {
 // @Security Bearer
 func (e OrderStatistics) GetOrderStatistics(c *gin.Context) {
 	s := service.OrderStatistics{}
-	req := dto.OrderStatisticsResponse{}
 	err := e.MakeContext(c).
-		Bind(&req, binding.JSON, nil).
 		MakeOrm().
 		MakeService(&s.Service).
 		Errors

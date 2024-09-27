@@ -19,10 +19,7 @@ type OrderStatistics struct {
 
 // GetStatistics 获取工单统计数据
 func (e *OrderStatistics) GetStatistics() (map[string]interface{}, error) {
-	var totalOrders int64
-	var completedOrders int64
-	var pendingOrders int64
-	var currentProcessingOrders int64
+	var totalOrders, completedOrders, pendingOrders, currentProcessingOrders int64
 	var monthlyOrders int64
 
 	// 查询总工单数
@@ -100,47 +97,58 @@ func (e *OrderStatistics) GetStatistics() (map[string]interface{}, error) {
 	return data, nil
 }
 
-// calculateComparisons 计算总工单数和当前处理工单数的周同比、日同比
+// calculateComparisons 计算总工单数和当前处理工单数的周同比和日同比
 func (e *OrderStatistics) calculateComparisons(totalOrders, currentProcessingOrders int64) (float64, float64, float64, float64, error) {
 	var yesterdayTotal int64
 	var lastWeekTotal int64
 	var yesterdayCurrentProcessing int64
 	var lastWeekCurrentProcessing int64
 
-	// 查询前一天和前一周的总工单数
+	// 查询前一天的总工单数
 	err := e.Orm.Model(&models.OrderWorks{}).
 		Where("created_at >= CURDATE() - INTERVAL 1 DAY").Count(&yesterdayTotal).Error
 	if err != nil {
 		return 0, 0, 0, 0, err
 	}
 
+	// 查询前一周的总工单数
 	err = e.Orm.Model(&models.OrderWorks{}).
 		Where("created_at >= CURDATE() - INTERVAL 7 DAY").Count(&lastWeekTotal).Error
 	if err != nil {
 		return 0, 0, 0, 0, err
 	}
 
-	// 查询前一天和前一周的当前处理工单数
+	// 查询前一天的当前处理工单数
 	err = e.Orm.Model(&models.OrderWorks{}).
 		Where("status = ? AND created_at >= CURDATE() - INTERVAL 1 DAY", "under-way").Count(&yesterdayCurrentProcessing).Error
 	if err != nil {
 		return 0, 0, 0, 0, err
 	}
 
+	// 查询前一周的当前处理工单数
 	err = e.Orm.Model(&models.OrderWorks{}).
 		Where("status = ? AND created_at >= CURDATE() - INTERVAL 7 DAY", "under-way").Count(&lastWeekCurrentProcessing).Error
 	if err != nil {
 		return 0, 0, 0, 0, err
 	}
 
-	// 计算周同比和日同比
-	totalOrdersWeekOverWeek := float64(totalOrders) / float64(lastWeekTotal) * 100
-	totalOrdersDayOverDay := float64(totalOrders) / float64(yesterdayTotal) * 100
+	// 计算周同比
+	totalOrdersWeekOverWeek := calculatePercentage(totalOrders, lastWeekTotal)
+	currentHandlerOrdersWeekOverWeek := calculatePercentage(currentProcessingOrders, lastWeekCurrentProcessing)
 
-	currentHandlerOrdersWeekOverWeek := float64(currentProcessingOrders) / float64(lastWeekCurrentProcessing) * 100
-	currentHandlerOrdersDayOverDay := float64(currentProcessingOrders) / float64(yesterdayCurrentProcessing) * 100
+	// 计算日同比
+	totalOrdersDayOverDay := calculatePercentage(totalOrders, yesterdayTotal)
+	currentHandlerOrdersDayOverDay := calculatePercentage(currentProcessingOrders, yesterdayCurrentProcessing)
 
 	return totalOrdersWeekOverWeek, totalOrdersDayOverDay, currentHandlerOrdersWeekOverWeek, currentHandlerOrdersDayOverDay, nil
+}
+
+// calculatePercentage 计算百分比，避免除以零
+func calculatePercentage(numerator, denominator int64) float64 {
+	if denominator == 0 {
+		return 0.0 // 避免除以零
+	}
+	return float64(numerator) / float64(denominator) * 100
 }
 
 // GetOrderCountByPeriod 按周或按月统计工单数量
