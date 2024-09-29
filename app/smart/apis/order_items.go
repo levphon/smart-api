@@ -69,6 +69,7 @@ func (e OrderItems) GetPage(c *gin.Context) {
 func (e OrderItems) Get(c *gin.Context) {
 	s := service.OrderItems{}
 	req := dto.OrderItemsGetReq{}
+
 	err := e.MakeContext(c).
 		MakeOrm().
 		Bind(&req, binding.JSON, nil).
@@ -81,6 +82,7 @@ func (e OrderItems) Get(c *gin.Context) {
 	}
 	var object models.OrderItems
 
+	// 调用修改后的 Get 方法
 	err = s.Get(&req, &object)
 	if err != nil {
 		e.Error(500, err, "查询失败")

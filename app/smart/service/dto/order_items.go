@@ -10,7 +10,6 @@ type OrderItemsInsertReq struct {
 	Title        string `json:"title" comment:"标题"`          // 标题
 	BindTempLate string `json:"bindTempLate" comment:"绑定模板"` // 绑定模板
 	Description  string `json:"description" comment:"描述信息"`  // 订单项描述
-	Favorite     bool   `json:"favorite" comment:"是否收藏"`     // 是否为收藏项
 	Icon         string `json:"icon" comment:"图标"`           // 订单项图标
 	CategoryID   uint   `json:"categoryId" comment:"类别ID"`   //类别ID
 	Link         string `json:"link" comment:"链接"`           // 连接到网页
@@ -26,7 +25,6 @@ func (s *OrderItemsInsertReq) Generate(model *models.OrderItems) {
 	model.Title = s.Title
 	model.BindTempLate = s.BindTempLate
 	model.Description = s.Description
-	model.Favorite = s.Favorite
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
 	model.Creator = s.Creator
@@ -44,7 +42,6 @@ type OrderItemsUpdateReq struct {
 	Title        string `json:"title" comment:"标题"`          // 标题
 	BindTempLate string `json:"bindTempLate" comment:"绑定模板"` // 绑定模板
 	Description  string `json:"description" comment:"描述信息"`  // 订单项描述
-	Favorite     bool   `json:"favorite" comment:"是否收藏"`     // 是否为收藏项
 	Icon         string `json:"icon" comment:"图标"`           // 订单项图标
 	CategoryID   uint   `json:"categoryId" comment:"类别ID"`   //类别ID
 	Link         string `json:"link" comment:"链接"`           // 连接到网页
@@ -61,7 +58,6 @@ func (s *OrderItemsUpdateReq) Generate(model *models.OrderItems) {
 	model.Title = s.Title
 	model.BindTempLate = s.BindTempLate
 	model.Description = s.Description
-	model.Favorite = s.Favorite
 	model.Icon = s.Icon
 	model.CategoryID = s.CategoryID
 	model.Regenerator = s.Regenerator

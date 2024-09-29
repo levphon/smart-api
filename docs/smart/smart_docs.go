@@ -1134,6 +1134,120 @@ const docTemplatesmart = `{
                 }
             }
         },
+        "/api/v1/favorites": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取用户收藏的工单项",
+                "tags": [
+                    "收藏"
+                ],
+                "summary": "获取用户收藏的工单项",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "userId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/go-admin_app_smart_models.UserFavorites"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "添加收藏",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "收藏"
+                ],
+                "summary": "添加收藏",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserFavoriteInsertReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"添加成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "取消收藏",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "收藏"
+                ],
+                "summary": "取消收藏",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserFavoriteDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"取消成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/flow-manage": {
             "get": {
                 "security": [
@@ -3920,6 +4034,87 @@ const docTemplatesmart = `{
                 }
             }
         },
+        "/api/v1/statistics": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取工单统计数据",
+                "tags": [
+                    "工单统计"
+                ],
+                "summary": "获取工单统计数据",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": {...}}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.OrderStatisticsResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/statistics/orders/count": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据周或月统计工单数量",
+                "tags": [
+                    "工单统计"
+                ],
+                "summary": "获取工单数量统计数据",
+                "parameters": [
+                    {
+                        "enum": [
+                            "week",
+                            "month"
+                        ],
+                        "type": "string",
+                        "description": "period",
+                        "name": "period",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": {...}}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.OrderCountByPeriodResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sys-api": {
             "get": {
                 "security": [
@@ -5100,6 +5295,44 @@ const docTemplatesmart = `{
                     }
                 }
             }
+        },
+        "/ratings": {
+            "get": {
+                "description": "根据周或月统计评分数据",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderStatistics"
+                ],
+                "summary": "获取评分统计",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "统计周期，支持 week 或 month",
+                        "name": "period",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回评分统计数据",
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderRatingsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "查询评分统计数据失败",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -5583,6 +5816,46 @@ const docTemplatesmart = `{
                 }
             }
         },
+        "dto.OrderCountByPeriodResponse": {
+            "type": "object",
+            "properties": {
+                "orderStats": {
+                    "description": "工单统计",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.OrderCountStat"
+                    }
+                },
+                "submissionRanking": {
+                    "description": "个人提交排行榜",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SubmissionRanking"
+                    }
+                }
+            }
+        },
+        "dto.OrderCountStat": {
+            "type": "object",
+            "properties": {
+                "completed": {
+                    "description": "已完成的",
+                    "type": "integer"
+                },
+                "date": {
+                    "description": "日期",
+                    "type": "string"
+                },
+                "total": {
+                    "description": "所有",
+                    "type": "integer"
+                },
+                "underWay": {
+                    "description": "进行中的",
+                    "type": "integer"
+                }
+            }
+        },
         "dto.OrderItemsDeleteReq": {
             "type": "object",
             "properties": {
@@ -5614,10 +5887,6 @@ const docTemplatesmart = `{
                 "description": {
                     "description": "订单项描述",
                     "type": "string"
-                },
-                "favorite": {
-                    "description": "是否为收藏项",
-                    "type": "boolean"
                 },
                 "icon": {
                     "description": "订单项图标",
@@ -5663,10 +5932,6 @@ const docTemplatesmart = `{
                 "description": {
                     "description": "订单项描述",
                     "type": "string"
-                },
-                "favorite": {
-                    "description": "是否为收藏项",
-                    "type": "boolean"
                 },
                 "icon": {
                     "description": "订单项图标",
@@ -5759,6 +6024,70 @@ const docTemplatesmart = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.OrderRatingsResponse": {
+            "type": "object",
+            "properties": {
+                "ratingRanking": {
+                    "description": "个人评分排行榜",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.RatingRanking"
+                    }
+                },
+                "ratingsStats": {
+                    "description": "评分统计",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.RatingStat"
+                    }
+                }
+            }
+        },
+        "dto.OrderStatisticsResponse": {
+            "type": "object",
+            "properties": {
+                "completedOrders": {
+                    "description": "已完结工单",
+                    "type": "integer"
+                },
+                "completionRate": {
+                    "description": "完成率",
+                    "type": "integer"
+                },
+                "currentHandlerDayOverDay": {
+                    "description": "当前处理工单日同比",
+                    "type": "number"
+                },
+                "currentHandlerOrders": {
+                    "description": "当前处理的工单",
+                    "type": "integer"
+                },
+                "currentHandlerWeekOverWeek": {
+                    "description": "当前处理工单周同比",
+                    "type": "number"
+                },
+                "dailyAverage": {
+                    "description": "日均工单数",
+                    "type": "integer"
+                },
+                "pendingOrders": {
+                    "description": "待办工单",
+                    "type": "integer"
+                },
+                "totalOrders": {
+                    "description": "总工单数",
+                    "type": "integer"
+                },
+                "totalOrdersDayOverDay": {
+                    "description": "总工单数日同比",
+                    "type": "number"
+                },
+                "totalOrdersWeekOverWeek": {
+                    "description": "总工单数周同比",
+                    "type": "number"
                 }
             }
         },
@@ -6022,6 +6351,32 @@ const docTemplatesmart = `{
                 }
             }
         },
+        "dto.RatingRanking": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "评价人",
+                    "type": "string"
+                },
+                "score": {
+                    "description": "平均评分",
+                    "type": "number"
+                }
+            }
+        },
+        "dto.RatingStat": {
+            "type": "object",
+            "properties": {
+                "average": {
+                    "description": "平均评分",
+                    "type": "number"
+                },
+                "date": {
+                    "description": "日期",
+                    "type": "string"
+                }
+            }
+        },
         "dto.ResetSysUserPwdReq": {
             "type": "object",
             "properties": {
@@ -6057,6 +6412,19 @@ const docTemplatesmart = `{
                     }
                 },
                 "roleId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.SubmissionRanking": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "创建人",
+                    "type": "string"
+                },
+                "total": {
+                    "description": "提交数量",
                     "type": "integer"
                 }
             }
@@ -7003,6 +7371,40 @@ const docTemplatesmart = `{
                 }
             }
         },
+        "dto.UserFavoriteDeleteReq": {
+            "type": "object",
+            "required": [
+                "orderItemId"
+            ],
+            "properties": {
+                "orderItemId": {
+                    "description": "工单项ID",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.UserFavoriteInsertReq": {
+            "type": "object",
+            "required": [
+                "orderItemId"
+            ],
+            "properties": {
+                "createBy": {
+                    "type": "integer"
+                },
+                "orderItemId": {
+                    "description": "工单项ID",
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "userID": {
+                    "description": "用户id",
+                    "type": "integer"
+                }
+            }
+        },
         "dto.WorksNotifyReq": {
             "type": "object",
             "properties": {
@@ -7428,10 +7830,6 @@ const docTemplatesmart = `{
                     "description": "订单项描述",
                     "type": "string"
                 },
-                "favorite": {
-                    "description": "是否为收藏项",
-                    "type": "boolean"
-                },
                 "icon": {
                     "description": "订单项图标",
                     "type": "string"
@@ -7583,6 +7981,33 @@ const docTemplatesmart = `{
         "go-admin_app_smart_models.StrucTure": {
             "type": "object",
             "additionalProperties": true
+        },
+        "go-admin_app_smart_models.UserFavorites": {
+            "type": "object",
+            "properties": {
+                "createBy": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orderItemId": {
+                    "description": "确保类型一致",
+                    "type": "integer"
+                },
+                "updateBy": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
         },
         "go-admin_app_system_models.SysApi": {
             "type": "object",

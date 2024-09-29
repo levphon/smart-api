@@ -44,4 +44,5 @@ var CasbinExclude = []UrlInfo{
 	{Url: "/api/v1/statistics/orders", Method: "GET"},
 	{Url: "/api/v1/statistics/orders/count", Method: "GET"},
 	{Url: "/api/v1/statistics/ratings", Method: "GET"},
+	{Url: "/api/v1/favorite", Method: "GET"},
 }

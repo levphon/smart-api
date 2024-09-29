@@ -18,7 +18,7 @@ type OrderStatistics struct {
 // @Summary 获取工单统计数据
 // @Description 获取工单统计数据
 // @Tags 工单统计
-// @Success 200 {object} response.Response{data=service.OrderStatisticsResponse} "{"code": 200, "data": {...}}"
+// @Success 200 {object} response.Response{data=dto.OrderStatisticsResponse} "{"code": 200, "data": {...}}"
 // @Router /api/v1/statistics [get]
 // @Security Bearer
 func (e OrderStatistics) GetOrderStatistics(c *gin.Context) {
@@ -47,7 +47,7 @@ func (e OrderStatistics) GetOrderStatistics(c *gin.Context) {
 // @Description 根据周或月统计工单数量
 // @Tags 工单统计
 // @Param period query string true "period" enums(week, month)
-// @Success 200 {object} response.Response{data=service.OrderCountResponse} "{"code": 200, "data": {...}}"
+// @Success 200 {object} response.Response{data=dto.OrderCountByPeriodResponse} "{"code": 200, "data": {...}}"
 // @Router /api/v1/statistics/orders/count [get]
 // @Security Bearer
 func (e OrderStatistics) GetOrderCountByPeriod(c *gin.Context) {
@@ -75,7 +75,7 @@ func (e OrderStatistics) GetOrderCountByPeriod(c *gin.Context) {
 	e.OK(data, "查询成功")
 }
 
-// GetOrderRatings godoc
+// GetOrderRatingsByPeriod godoc
 // @Summary      获取评分统计
 // @Description  根据周或月统计评分数据
 // @Tags         OrderStatistics

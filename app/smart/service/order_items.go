@@ -42,14 +42,15 @@ func (e *OrderItems) Get(d *dto.OrderItemsGetReq, model *models.OrderItems) erro
 	var err error
 	var data models.OrderItems
 
-	db := e.Orm.Model(&data).
-		First(model, d.GetId())
+	// 使用 Preload 来加载 UserFavorites
+	db := e.Orm.Model(&data).First(model, d.GetId())
+
 	err = db.Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		e.Log.Errorf("db error:%s", err)
 		return fmt.Errorf("查看对象不存在或无权查看")
 	}
-	if err = db.Error; err != nil {
+	if err != nil {
 		e.Log.Errorf("db error:%s", err)
 		return err
 	}
