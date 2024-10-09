@@ -5,11 +5,11 @@ package service
 import (
 	"errors"
 	"fmt"
-	"go-admin/app/smart/models"
 	"gorm.io/gorm"
+	"smart-api/app/smart/models"
 
 	"github.com/go-admin-team/go-admin-core/sdk/service"
-	"go-admin/app/smart/service/dto"
+	"smart-api/app/smart/service/dto"
 )
 
 type OrderTask struct {

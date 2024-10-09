@@ -3,11 +3,11 @@ package handler
 import (
 	"github.com/go-admin-team/go-admin-core/logger"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/captcha"
-	"go-admin/app/system/models"
-	"go-admin/app/system/service"
-	"go-admin/app/system/service/dto"
-	"go-admin/common"
 	"net/http"
+	"smart-api/app/system/models"
+	"smart-api/app/system/service"
+	"smart-api/app/system/service/dto"
+	"smart-api/common"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-admin-team/go-admin-core/sdk"
@@ -18,7 +18,7 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/response"
 	"github.com/mssola/user_agent"
-	"go-admin/common/global"
+	"smart-api/common/global"
 )
 
 func PayloadFunc(data interface{}) jwt.MapClaims {

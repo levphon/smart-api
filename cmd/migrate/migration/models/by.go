@@ -1,8 +1,8 @@
 package models
 
 import (
-	"go-admin/common/models"
 	"gorm.io/gorm"
+	"smart-api/common/models"
 )
 
 type ControlBy struct {

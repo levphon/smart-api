@@ -6,7 +6,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
-	"go-admin/common/models"
+	"smart-api/common/models"
 )
 
 type FormData map[string]interface{}

@@ -3,7 +3,7 @@
 package models
 
 import (
-	models2 "go-admin/cmd/migrate/migration/models"
+	models2 "smart-api/cmd/migrate/migration/models"
 )
 
 type OrderCategory struct {

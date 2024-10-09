@@ -4,7 +4,7 @@ package api
 
 import (
 	"fmt"
-	"go-admin/app/smart/router"
+	"smart-api/app/smart/router"
 )
 
 func init() {

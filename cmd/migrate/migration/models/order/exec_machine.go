@@ -3,8 +3,8 @@
 package models
 
 import (
-	"go-admin/cmd/migrate/migration/models"
-	models2 "go-admin/common/models"
+	"smart-api/cmd/migrate/migration/models"
+	models2 "smart-api/common/models"
 )
 
 type ExecMachine struct {

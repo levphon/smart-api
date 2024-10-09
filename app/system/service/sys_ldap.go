@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"github.com/go-admin-team/go-admin-core/logger"
 	"github.com/go-ldap/ldap/v3"
-	"go-admin/app/system/models"
-	"go-admin/app/system/service/dto"
-	"go-admin/config"
 	"gorm.io/gorm"
 	"net"
+	"smart-api/app/system/models"
+	"smart-api/app/system/service/dto"
+	"smart-api/config"
 	"time"
 )
 

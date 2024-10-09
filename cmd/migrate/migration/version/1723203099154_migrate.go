@@ -1,12 +1,12 @@
 package version
 
 import (
-	"go-admin/cmd/migrate/migration/models"
 	"gorm.io/gorm"
 	"runtime"
+	"smart-api/cmd/migrate/migration/models"
 
-	"go-admin/cmd/migrate/migration"
-	common "go-admin/common/models"
+	"smart-api/cmd/migrate/migration"
+	common "smart-api/common/models"
 )
 
 func init() {

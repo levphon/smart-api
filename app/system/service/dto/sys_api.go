@@ -1,9 +1,9 @@
 package dto
 
 import (
-	"go-admin/app/system/models"
-	"go-admin/common/dto"
-	common "go-admin/common/models"
+	"smart-api/app/system/models"
+	"smart-api/common/dto"
+	common "smart-api/common/models"
 )
 
 // SysApiGetPageReq 功能列表请求参数

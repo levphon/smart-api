@@ -1,8 +1,8 @@
 package router
 
 import (
-	"go-admin/app/system/apis"
 	"mime"
+	"smart-api/app/system/apis"
 
 	"github.com/go-admin-team/go-admin-core/sdk/config"
 
@@ -13,9 +13,9 @@ import (
 
 	swaggerfiles "github.com/swaggo/files"
 
-	"go-admin/common/middleware"
-	"go-admin/common/middleware/handler"
-	_ "go-admin/docs/smart"
+	"smart-api/common/middleware"
+	"smart-api/common/middleware/handler"
+	_ "smart-api/docs/smart"
 )
 
 func InitSysRouter(r *gin.Engine, authMiddleware *jwt.GinJWTMiddleware) *gin.RouterGroup {

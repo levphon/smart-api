@@ -3,7 +3,7 @@ package jobs
 import (
 	"fmt"
 	"github.com/go-admin-team/go-admin-core/sdk"
-	"go-admin/common/utils"
+	"smart-api/common/utils"
 	"time"
 )
 

@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"go-admin/app/system/models"
-	common "go-admin/common/models"
+	"smart-api/app/system/models"
+	common "smart-api/common/models"
 )
 
 // SysDeptGetPageReq 列表或者搜索使用结构体

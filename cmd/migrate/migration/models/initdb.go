@@ -2,9 +2,9 @@ package models
 
 import (
 	"fmt"
-	"go-admin/common/global"
 	"io/ioutil"
 	"log"
+	"smart-api/common/global"
 	"strings"
 
 	"gorm.io/gorm"

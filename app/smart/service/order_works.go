@@ -5,15 +5,15 @@ package service
 import (
 	"errors"
 	"fmt"
-	"go-admin/app/smart/models"
-	models2 "go-admin/common/models"
+	"smart-api/app/smart/models"
+	models2 "smart-api/common/models"
 	"strconv"
 	"time"
 
 	"gorm.io/gorm"
 
 	"github.com/go-admin-team/go-admin-core/sdk/service"
-	"go-admin/app/smart/service/dto"
+	"smart-api/app/smart/service/dto"
 )
 
 // 定义映射英文到中文的优先级全局变量

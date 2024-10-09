@@ -4,11 +4,11 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"go-admin/app/system/service/dto"
-	"go-admin/common"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"smart-api/app/system/service/dto"
+	"smart-api/common"
 	"strings"
 	"time"
 
@@ -18,7 +18,7 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/config"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
 
-	"go-admin/common/global"
+	"smart-api/common/global"
 )
 
 // LoggerToFile 日志记录到文件

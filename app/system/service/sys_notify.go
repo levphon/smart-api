@@ -8,10 +8,10 @@ import (
 	lark "github.com/larksuite/oapi-sdk-go/v3"
 	"github.com/larksuite/oapi-sdk-go/v3/service/contact/v3"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
-	"go-admin/app/system/models"
-	"go-admin/app/system/service/dto"
-	"go-admin/config"
 	"gorm.io/gorm"
+	"smart-api/app/system/models"
+	"smart-api/app/system/service/dto"
+	"smart-api/config"
 )
 
 type SysNotify struct {
@@ -76,7 +76,7 @@ func (e *SysNotify) findUserIDByReceiveName(receivePhone string, client *lark.Cl
 		UserIdType(`open_id`). // 获取用户的 OpenID
 		Body(larkcontact.NewBatchGetIdUserReqBodyBuilder().
 			Mobiles([]string{receivePhone}). // 使用传入的手机号
-			IncludeResigned(true).           // 包括已离职的用户
+			IncludeResigned(true). // 包括已离职的用户
 			Build()).
 		Build()
 

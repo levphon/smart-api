@@ -5,15 +5,15 @@ package service
 import (
 	"errors"
 	"fmt"
-	"go-admin/app/smart/models"
-	common "go-admin/common/models"
-	"go-admin/common/utils"
-	"go-admin/config"
 	"gorm.io/gorm"
+	"smart-api/app/smart/models"
+	common "smart-api/common/models"
+	"smart-api/common/utils"
+	"smart-api/config"
 	"time"
 
 	"github.com/go-admin-team/go-admin-core/sdk/service"
-	"go-admin/app/smart/service/dto"
+	"smart-api/app/smart/service/dto"
 )
 
 type ExecMachine struct {

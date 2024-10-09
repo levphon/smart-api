@@ -1,8 +1,8 @@
 package tools
 
 import (
-	"go-admin/app/system/models"
 	"gorm.io/gorm"
+	"smart-api/app/system/models"
 )
 
 type SysColumns struct {

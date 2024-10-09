@@ -1,12 +1,12 @@
 package tools
 
 import (
-	common "go-admin/common/models"
+	common "smart-api/common/models"
 	"strings"
 
 	"gorm.io/gorm"
 
-	"go-admin/app/system/models"
+	"smart-api/app/system/models"
 )
 
 type SysTables struct {

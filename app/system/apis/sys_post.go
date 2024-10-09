@@ -9,9 +9,9 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
 	_ "github.com/go-admin-team/go-admin-core/sdk/pkg/response"
 
-	"go-admin/app/system/models"
-	"go-admin/app/system/service"
-	"go-admin/app/system/service/dto"
+	"smart-api/app/system/models"
+	"smart-api/app/system/service"
+	"smart-api/app/system/service/dto"
 )
 
 type SysPost struct {

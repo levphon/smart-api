@@ -3,8 +3,8 @@ package tools
 import (
 	"bytes"
 	"fmt"
-	"go-admin/app/system/service"
-	"go-admin/app/system/service/dto"
+	"smart-api/app/system/service"
+	"smart-api/app/system/service/dto"
 	"strconv"
 	"strings"
 	"text/template"
@@ -15,7 +15,7 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/config"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg"
 
-	"go-admin/app/other/models/tools"
+	"smart-api/app/other/models/tools"
 )
 
 type Gen struct {

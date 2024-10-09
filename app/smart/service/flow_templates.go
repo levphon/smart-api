@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-admin-team/go-admin-core/sdk/service"
-	"go-admin/app/smart/models"
-	"go-admin/app/smart/service/dto"
 	"gorm.io/gorm"
+	"smart-api/app/smart/models"
+	"smart-api/app/smart/service/dto"
 )
 
 type FlowTemplates struct {

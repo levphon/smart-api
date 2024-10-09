@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-admin/cmd"
+	"smart-api/cmd"
 )
 
 //go:generate swag init --parseDependency --parseDepth=6 --instanceName smart -o ./docs/smart

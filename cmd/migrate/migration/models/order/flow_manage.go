@@ -3,7 +3,7 @@
 package models
 
 import (
-	"go-admin/common/models"
+	"smart-api/common/models"
 )
 
 type StrucTure map[string]interface{}

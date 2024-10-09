@@ -1,8 +1,8 @@
 package models
 
 import (
-orm "go-admin/global"
-"go-admin/utils"
+orm "smart-api/global"
+"smart-api/utils"
 "time"
 )
 

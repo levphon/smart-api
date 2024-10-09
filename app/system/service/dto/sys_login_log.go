@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	"go-admin/common/dto"
+	"smart-api/common/dto"
 )
 
 type SysLoginLogGetPageReq struct {

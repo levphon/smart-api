@@ -1,9 +1,9 @@
 package models
 
 import (
-	"go-admin/common/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"smart-api/common/models"
 )
 
 type SysUser struct {

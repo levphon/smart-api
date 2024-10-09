@@ -5,9 +5,9 @@ package service
 import (
 	"errors"
 	"github.com/go-admin-team/go-admin-core/sdk/service"
-	"go-admin/app/smart/models"
-	"go-admin/app/smart/service/dto"
 	"gorm.io/gorm"
+	"smart-api/app/smart/models"
+	"smart-api/app/smart/service/dto"
 )
 
 // OrderRating 服务结构体

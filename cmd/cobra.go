@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg"
-	"go-admin/cmd/api"
-	"go-admin/cmd/migrate"
-	"go-admin/common/global"
 	"os"
+	"smart-api/cmd/api"
+	"smart-api/cmd/migrate"
+	"smart-api/common/global"
 
 	"github.com/spf13/cobra"
 )

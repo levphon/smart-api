@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/go-admin-team/go-admin-core/logger"
 	"github.com/go-admin-team/go-admin-core/sdk"
-	common "go-admin/common/middleware"
+	common "smart-api/common/middleware"
 )
 
 // Smart Api自定义路由

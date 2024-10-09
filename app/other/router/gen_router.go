@@ -3,8 +3,8 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
-	"go-admin/app/other/apis/tools"
-	"go-admin/app/system/apis"
+	"smart-api/app/other/apis/tools"
+	"smart-api/app/system/apis"
 )
 
 func init() {

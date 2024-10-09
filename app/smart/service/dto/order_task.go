@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"go-admin/app/smart/models"
-	common "go-admin/common/models"
+	"smart-api/app/smart/models"
+	common "smart-api/common/models"
 )
 
 type OrderTaskInsertReq struct {

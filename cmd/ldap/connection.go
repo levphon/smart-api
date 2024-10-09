@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/go-ldap/ldap/v3"
-	"go-admin/config"
+	"smart-api/config"
 	"time"
 )
 

@@ -1,7 +1,7 @@
 package test
 
 import (
-	//"go-admin/models/tools"
+	//"smart-api/models/tools"
 	//"os"
 	"testing"
 	//"text/template"

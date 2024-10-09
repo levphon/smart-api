@@ -13,11 +13,11 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/go-admin-team/go-admin-core/sdk/config"
-	"go-admin/cmd/migrate/migration"
-	_ "go-admin/cmd/migrate/migration/version"
-	_ "go-admin/cmd/migrate/migration/version-local"
-	"go-admin/common/database"
-	"go-admin/common/models"
+	"smart-api/cmd/migrate/migration"
+	_ "smart-api/cmd/migrate/migration/version"
+	_ "smart-api/cmd/migrate/migration/version-local"
+	"smart-api/common/database"
+	"smart-api/common/models"
 )
 
 var (

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"github.com/go-admin-team/go-admin-core/sdk/config"
 	"github.com/pkg/errors"
-	"go-admin/common/utils"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"smart-api/common/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -19,15 +19,15 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/pkg"
 	"github.com/spf13/cobra"
 
-	"go-admin/app/jobs"
-	"go-admin/app/system/models"
-	"go-admin/app/system/router"
-	"go-admin/common/database"
-	"go-admin/common/global"
-	common "go-admin/common/middleware"
-	"go-admin/common/middleware/handler"
-	"go-admin/common/storage"
-	ext "go-admin/config"
+	"smart-api/app/jobs"
+	"smart-api/app/system/models"
+	"smart-api/app/system/router"
+	"smart-api/common/database"
+	"smart-api/common/global"
+	common "smart-api/common/middleware"
+	"smart-api/common/middleware/handler"
+	"smart-api/common/storage"
+	ext "smart-api/config"
 )
 
 var (

@@ -5,8 +5,8 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
-	"go-admin/app/smart/apis"
-	"go-admin/common/middleware"
+	"smart-api/app/smart/apis"
+	"smart-api/common/middleware"
 )
 
 func init() {

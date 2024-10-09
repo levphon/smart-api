@@ -3,10 +3,10 @@ package router
 import (
     "github.com/gin-gonic/gin"
 
-    "go-admin/app/{{.PackageName}}/middleware"
-    "go-admin/app/{{.PackageName}}/models"
-    "go-admin/app/{{.PackageName}}/service/dto"
-    "go-admin/common/actions"
+    "smart-api/app/{{.PackageName}}/middleware"
+    "smart-api/app/{{.PackageName}}/models"
+    "smart-api/app/{{.PackageName}}/service/dto"
+    "smart-api/common/actions"
 )
 
 func init()  {

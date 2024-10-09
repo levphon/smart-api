@@ -4,8 +4,8 @@ import (
 	"fmt"
 	log "github.com/go-admin-team/go-admin-core/logger"
 	"github.com/go-admin-team/go-admin-core/sdk"
-	models2 "go-admin/app/jobs/models"
 	"gorm.io/gorm"
+	models2 "smart-api/app/jobs/models"
 	"time"
 
 	"github.com/robfig/cron/v3"

@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-admin-team/go-admin-core/sdk/api"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
-	"go-admin/app/smart/service"
-	"go-admin/app/smart/service/dto"
+	"smart-api/app/smart/service"
+	"smart-api/app/smart/service/dto"
 )
 
 type OrderCommentAPI struct {

@@ -2,9 +2,9 @@ package utils
 
 import (
 	"fmt"
-	"go-admin/app/smart/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"smart-api/app/smart/models"
 	"time"
 )
 

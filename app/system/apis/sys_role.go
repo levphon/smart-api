@@ -2,20 +2,20 @@ package apis
 
 import (
 	"fmt"
-	"go-admin/common/global"
 	"net/http"
+	"smart-api/common/global"
 
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-admin-team/go-admin-core/sdk"
-	"go-admin/app/system/models"
+	"smart-api/app/system/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-admin-team/go-admin-core/sdk/api"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
 	_ "github.com/go-admin-team/go-admin-core/sdk/pkg/response"
 
-	"go-admin/app/system/service"
-	"go-admin/app/system/service/dto"
+	"smart-api/app/system/service"
+	"smart-api/app/system/service/dto"
 )
 
 type SysRole struct {

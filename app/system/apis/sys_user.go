@@ -3,9 +3,9 @@ package apis
 import (
 	"fmt"
 	"github.com/gin-gonic/gin/binding"
-	"go-admin/app/system/models"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"smart-api/app/system/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-admin-team/go-admin-core/sdk/api"
@@ -13,9 +13,9 @@ import (
 	_ "github.com/go-admin-team/go-admin-core/sdk/pkg/response"
 	"github.com/google/uuid"
 
-	"go-admin/app/system/service"
-	"go-admin/app/system/service/dto"
-	"go-admin/common/actions"
+	"smart-api/app/system/service"
+	"smart-api/app/system/service/dto"
+	"smart-api/common/actions"
 )
 
 type SysUser struct {

@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-admin-team/go-admin-core/sdk/api"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth/user"
-	"go-admin/app/system/models"
+	"smart-api/app/system/models"
 
-	"go-admin/app/system/service"
-	"go-admin/app/system/service/dto"
+	"smart-api/app/system/service"
+	"smart-api/app/system/service/dto"
 )
 
 type SysMenu struct {

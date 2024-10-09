@@ -6,9 +6,9 @@ import (
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 	"gorm.io/gorm"
 
-	"go-admin/app/system/models"
-	"go-admin/app/system/service/dto"
-	cDto "go-admin/common/dto"
+	"smart-api/app/system/models"
+	"smart-api/app/system/service/dto"
+	cDto "smart-api/common/dto"
 )
 
 type SysLoginLog struct {

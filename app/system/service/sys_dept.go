@@ -2,15 +2,15 @@ package service
 
 import (
 	"errors"
-	"go-admin/app/system/models"
+	"smart-api/app/system/models"
 
 	log "github.com/go-admin-team/go-admin-core/logger"
 	"github.com/go-admin-team/go-admin-core/sdk/pkg"
 
 	"gorm.io/gorm"
 
-	"go-admin/app/system/service/dto"
-	cDto "go-admin/common/dto"
+	"smart-api/app/system/service/dto"
+	cDto "smart-api/common/dto"
 
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 )

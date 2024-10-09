@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-admin-team/go-admin-core/sdk/api"
-	"go-admin/app/system/models"
-	"go-admin/app/system/service"
-	"go-admin/app/system/service/dto"
+	"smart-api/app/system/models"
+	"smart-api/app/system/service"
+	"smart-api/app/system/service/dto"
 )
 
 type SysOperaLog struct {

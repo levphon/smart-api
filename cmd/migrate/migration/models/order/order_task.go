@@ -2,7 +2,7 @@
 // 2024/8/17 19:48
 package models
 
-import "go-admin/cmd/migrate/migration/models"
+import "smart-api/cmd/migrate/migration/models"
 
 type OrderTask struct {
 	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
