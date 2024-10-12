@@ -81,6 +81,12 @@ func (e *OrderStatistics) GetStatistics() (map[string]interface{}, error) {
 		return nil, err
 	}
 
+	// 查询最近10天的已完结工单数和待办工单数
+	completedOrdersLast10Days, pendingOrdersLast10Days, err := e.getLast10DaysOrders()
+	if err != nil {
+		return nil, err
+	}
+
 	// 统计数据整合
 	data := map[string]interface{}{
 		"totalOrders":                      totalOrders,
@@ -92,7 +98,9 @@ func (e *OrderStatistics) GetStatistics() (map[string]interface{}, error) {
 		"totalOrdersDayOverDay":            totalOrdersDayOverDay,
 		"currentHandlerOrdersWeekOverWeek": currentHandlerOrdersWeekOverWeek,
 		"currentHandlerOrdersDayOverDay":   currentHandlerOrdersDayOverDay,
-		"dailyAverage":                     dailyAverage, // 添加日均工单数
+		"dailyAverage":                     dailyAverage,              // 添加日均工单数
+		"completedOrdersLast10Days":        completedOrdersLast10Days, // 添加最近10天已完结工单数
+		"pendingOrdersLast10Days":          pendingOrdersLast10Days,   // 添加最近10天待办工单数
 	}
 	return data, nil
 }
@@ -311,4 +319,66 @@ func (e *OrderStatistics) GetOrderRatings(period string) (dto.OrderRatingsRespon
 	})
 
 	return response, nil
+}
+
+// getLast10DaysOrders 统计近10天已完结和待办的工单数据
+func (e *OrderStatistics) getLast10DaysOrders() ([]map[string]interface{}, []map[string]interface{}, error) {
+	// 获取今天的日期，并计算10天前的日期
+	now := time.Now()
+	startDate := now.AddDate(0, 0, -9) // 10天前
+
+	// 定义已完结和待办状态
+	completedStatuses := []string{"termination", "manual-termination"}
+	pendingStatuses := []string{"under-way", "reopen", "reject"}
+
+	// 获取已完结工单
+	completedOrders, err := e.getOrdersCountByDate(completedStatuses, startDate)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// 获取待办工单
+	pendingOrders, err := e.getOrdersCountByDate(pendingStatuses, startDate)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return completedOrders, pendingOrders, nil
+}
+
+// 统一获取订单数并填充10天内没有工单的日期
+func (e *OrderStatistics) getOrdersCountByDate(statuses []string, startDate time.Time) ([]map[string]interface{}, error) {
+	var orders []map[string]interface{}
+
+	// 查询订单数量
+	err := e.Orm.Model(&models.OrderWorks{}).
+		Select("DATE(created_at) as date, COUNT(*) as count").
+		Where("status IN ?", statuses).
+		Where("created_at >= ?", startDate).
+		Group("DATE(created_at)").
+		Order("DATE(created_at) ASC").
+		Find(&orders).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// 初始化日期和数量的映射表
+	dateCounts := make(map[string]int)
+	for _, order := range orders {
+		dateStr := order["date"].(time.Time).Format("2006-01-02")
+		dateCounts[dateStr] = int(order["count"].(int64))
+	}
+
+	// 确保返回10天内所有日期，若没有则补充为0
+	var result []map[string]interface{}
+	for i := 0; i < 10; i++ {
+		date := startDate.AddDate(0, 0, i).Format("2006-01-02")
+		count := dateCounts[date]
+		result = append(result, map[string]interface{}{
+			"date":  date,
+			"count": count,
+		})
+	}
+
+	return result, nil
 }
