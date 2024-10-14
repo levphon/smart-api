@@ -1,6 +1,7 @@
 package migration
 
 import (
+	"fmt"
 	"log"
 	"path/filepath"
 	"sort"
@@ -38,6 +39,7 @@ func (e *Migration) Migrate() {
 	for k := range e.version {
 		versions = append(versions, k)
 	}
+	fmt.Println("versions=", versions)
 	if !sort.StringsAreSorted(versions) {
 		sort.Strings(versions)
 	}

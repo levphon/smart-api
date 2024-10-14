@@ -146,15 +146,20 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
     2. 注意: settings.database 下对应的配置数据
     3. 确认log路径
 
-4. 初始化数据库：
+4. 编译
+    ```bash 
+    go build -o smart-api main.go
+    ```
+   
+5. 初始化数据库：
 
     ``` bash
     # 首次配置需要初始化数据库资源信息
     # macOS or linux 下使用
-    $ ./smart-api migrate -c config/settings.dev.yml
+    $ ./smart-api migrate -c config/settings.yml
    
     # ⚠️注意:windows 下使用
-    $ smart-api.exe migrate -c config/settings.dev.yml
+    $ smart-api.exe migrate -c config/settings.yml
    
     
     # 启动项目，也可以用IDE进行调试
@@ -166,25 +171,25 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
     $ smart-api.exe server -c config/settings.yml
     ```
 
-5. sys_api 表的数据如何添加
+6. sys_api 表的数据如何添加
 
    在项目启动时，使用`-a true` 系统会自动添加缺少的接口数据
    ```bash
    ./smart-api server -c config/settings.yml -a true
    ```
-6. 更新Swagger文档生成
+7. 更新Swagger文档生成
 
    ```bash
    go generate
    ```
 
-7. 启动服务：
+8. 启动服务：
 
     ```bash
     ./smart-api server -c config/settings.yml
     ```
 
-8. 本地开发
+9. 本地开发
    ```
    生成迁移文件
    go run main.go migrate -g true -c config/settings.yml

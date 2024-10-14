@@ -1,16 +1,3 @@
-# ************************************************************
-# Sequel Ace SQL dump
-# 版本号： 20070
-#
-# https://sequel-ace.com/
-# https://github.com/Sequel-Ace/Sequel-Ace
-#
-# 主机: 127.0.0.1 (MySQL 8.3.0)
-# 数据库: smart-api
-# 生成时间: 2024-10-14 08:14:48 +0000
-# ************************************************************
-
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -23,13 +10,40 @@ SET NAMES utf8mb4;
 # 转储表 exec_machine
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `exec_machine`;
+
+CREATE TABLE `exec_machine` (
+                                `id` bigint NOT NULL AUTO_INCREMENT,
+                                `ip` varchar(15) DEFAULT NULL,
+                                `hostname` varchar(255) DEFAULT NULL,
+                                `username` varchar(45) DEFAULT NULL,
+                                `password` varchar(100) DEFAULT NULL,
+                                `port` bigint DEFAULT NULL,
+                                `heartbeat` timestamp NULL DEFAULT NULL,
+                                `status` bigint DEFAULT NULL,
+                                `auth_type` varchar(10) DEFAULT NULL,
+                                `private_key` varchar(4096) DEFAULT NULL,
+                                `creator` varchar(45) DEFAULT NULL,
+                                `regenerator` varchar(20) DEFAULT NULL,
+                                `description` longtext,
+                                `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                PRIMARY KEY (`id`),
+                                KEY `idx_exec_machine_create_by` (`create_by`),
+                                KEY `idx_exec_machine_update_by` (`update_by`),
+                                KEY `idx_exec_machine_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 LOCK TABLES `exec_machine` WRITE;
 /*!40000 ALTER TABLE `exec_machine` DISABLE KEYS */;
 
 INSERT INTO `exec_machine` (`id`, `ip`, `hostname`, `username`, `password`, `port`, `heartbeat`, `status`, `auth_type`, `private_key`, `creator`, `regenerator`, `description`, `create_by`, `update_by`, `created_at`, `updated_at`, `deleted_at`)
 VALUES
-    (1,'10.50.183.112','10.50.183.112','root','MYw22lpe07PpATygnFByQhVd1nuQRA==',52829,'2024-10-14 16:00:00',1,'2','-----BEGIN OPENSSH PRIVATE KEY-----\n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\n-----END OPENSSH PRIVATE KEY-----','admin','admin','This is a test machine',1,0,'2024-08-30 19:29:33.388','2024-09-03 19:49:30.643',NULL),
-    (2,'10.50.209.150','10.50.209.150','root','jM256ifdbVb8jAfTyXaWxk0lEEk0lg==',52829,'2024-10-14 16:00:00',1,'1','','admin','admin','',1,0,'2024-09-02 19:54:17.001','2024-09-10 20:57:44.276',NULL);
+    (1,'10.50.183.112','10.50.183.112','root','MYw22lpe07PpATygnFByQhVd1nuQRA==',52829,'2024-10-14 18:00:00',1,'2','-----BEGIN OPENSSH PRIVATE KEY-----\n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\n-----END OPENSSH PRIVATE KEY-----','admin','admin','This is a test machine',1,0,'2024-08-30 19:29:33.388','2024-09-03 19:49:30.643',NULL),
+    (2,'10.50.209.150','10.50.209.150','root','jM256ifdbVb8jAfTyXaWxk0lEEk0lg==',52829,'2024-10-14 18:00:00',1,'1','','admin','admin','',1,0,'2024-09-02 19:54:17.001','2024-09-10 20:57:44.276',NULL);
 
 /*!40000 ALTER TABLE `exec_machine` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -37,6 +51,32 @@ UNLOCK TABLES;
 
 # 转储表 exec_machine_history
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `exec_machine_history`;
+
+CREATE TABLE `exec_machine_history` (
+                                        `id` bigint NOT NULL AUTO_INCREMENT,
+                                        `task_id` bigint DEFAULT NULL,
+                                        `task_name` varchar(255) DEFAULT NULL,
+                                        `machine_id` bigint DEFAULT NULL,
+                                        `hostname` varchar(45) DEFAULT NULL,
+                                        `ip` varchar(15) DEFAULT NULL,
+                                        `status` bigint DEFAULT NULL,
+                                        `stdout` longtext,
+                                        `stderr` longtext,
+                                        `executed_at` timestamp NULL DEFAULT NULL,
+                                        `creator` varchar(45) DEFAULT NULL,
+                                        `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                        `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                        `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                        `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                        `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                        `execution_time` bigint DEFAULT NULL,
+                                        PRIMARY KEY (`id`),
+                                        KEY `idx_exec_machine_history_create_by` (`create_by`),
+                                        KEY `idx_exec_machine_history_update_by` (`update_by`),
+                                        KEY `idx_exec_machine_history_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `exec_machine_history` WRITE;
 /*!40000 ALTER TABLE `exec_machine_history` DISABLE KEYS */;
@@ -57,6 +97,30 @@ UNLOCK TABLES;
 
 # 转储表 flow_manage
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `flow_manage`;
+
+CREATE TABLE `flow_manage` (
+                               `id` bigint NOT NULL AUTO_INCREMENT,
+                               `name` varchar(100) DEFAULT NULL,
+                               `categoryId` bigint unsigned DEFAULT NULL,
+                               `notice` json DEFAULT NULL,
+                               `comments` tinyint(1) DEFAULT '0',
+                               `ratings` tinyint(1) DEFAULT '0',
+                               `description` varchar(512) DEFAULT NULL,
+                               `creator` varchar(20) DEFAULT NULL,
+                               `regenerator` varchar(20) DEFAULT NULL,
+                               `structure` json DEFAULT NULL,
+                               `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                               `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                               `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                               `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                               `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                               PRIMARY KEY (`id`),
+                               KEY `idx_flow_manage_create_by` (`create_by`),
+                               KEY `idx_flow_manage_update_by` (`update_by`),
+                               KEY `idx_flow_manage_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `flow_manage` WRITE;
 /*!40000 ALTER TABLE `flow_manage` DISABLE KEYS */;
@@ -81,6 +145,29 @@ UNLOCK TABLES;
 # 转储表 flow_templates
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `flow_templates`;
+
+CREATE TABLE `flow_templates` (
+                                  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+                                  `name` varchar(100) DEFAULT NULL,
+                                  `description` varchar(200) DEFAULT NULL,
+                                  `bindCount` bigint DEFAULT NULL,
+                                  `form_data` json DEFAULT NULL,
+                                  `categoryId` bigint unsigned DEFAULT NULL,
+                                  `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                  `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                  `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                  `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                  `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                  `creator` varchar(20) DEFAULT NULL,
+                                  `regenerator` varchar(20) DEFAULT NULL,
+                                  `bindFlow` bigint unsigned DEFAULT NULL,
+                                  PRIMARY KEY (`id`),
+                                  KEY `idx_flow_templates_create_by` (`create_by`),
+                                  KEY `idx_flow_templates_update_by` (`update_by`),
+                                  KEY `idx_flow_templates_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 LOCK TABLES `flow_templates` WRITE;
 /*!40000 ALTER TABLE `flow_templates` DISABLE KEYS */;
 
@@ -103,6 +190,26 @@ UNLOCK TABLES;
 # 转储表 operation_history
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `operation_history`;
+
+CREATE TABLE `operation_history` (
+                                     `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+                                     `title` varchar(100) DEFAULT NULL,
+                                     `node_name` varchar(255) DEFAULT NULL,
+                                     `transfer` varchar(255) DEFAULT NULL,
+                                     `remark` text,
+                                     `status` varchar(255) DEFAULT NULL,
+                                     `handlerId` bigint DEFAULT NULL,
+                                     `handlerName` varchar(125) DEFAULT NULL,
+                                     `handleTime` datetime(3) DEFAULT NULL,
+                                     `handleDuration` bigint DEFAULT NULL,
+                                     `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                     `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                     `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                     PRIMARY KEY (`id`),
+                                     KEY `idx_operation_history_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 LOCK TABLES `operation_history` WRITE;
 /*!40000 ALTER TABLE `operation_history` DISABLE KEYS */;
 
@@ -116,6 +223,25 @@ UNLOCK TABLES;
 
 # 转储表 order_category
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `order_category`;
+
+CREATE TABLE `order_category` (
+                                  `id` bigint NOT NULL AUTO_INCREMENT,
+                                  `name` varchar(50) DEFAULT NULL,
+                                  `chineseName` varchar(50) DEFAULT NULL,
+                                  `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                  `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                  `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                  `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                  `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                  `creator` varchar(20) DEFAULT NULL,
+                                  `regenerator` varchar(20) DEFAULT NULL,
+                                  PRIMARY KEY (`id`),
+                                  KEY `idx_order_category_create_by` (`create_by`),
+                                  KEY `idx_order_category_update_by` (`update_by`),
+                                  KEY `idx_order_category_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `order_category` WRITE;
 /*!40000 ALTER TABLE `order_category` DISABLE KEYS */;
@@ -135,6 +261,24 @@ UNLOCK TABLES;
 # 转储表 order_comment
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `order_comment`;
+
+CREATE TABLE `order_comment` (
+                                 `id` bigint NOT NULL AUTO_INCREMENT,
+                                 `order_id` bigint DEFAULT NULL,
+                                 `parent_id` bigint DEFAULT NULL,
+                                 `comment` varchar(255) DEFAULT NULL,
+                                 `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                 `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                 `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                 `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                 `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                 PRIMARY KEY (`id`),
+                                 KEY `idx_order_comment_create_by` (`create_by`),
+                                 KEY `idx_order_comment_update_by` (`update_by`),
+                                 KEY `idx_order_comment_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 LOCK TABLES `order_comment` WRITE;
 /*!40000 ALTER TABLE `order_comment` DISABLE KEYS */;
 
@@ -149,6 +293,29 @@ UNLOCK TABLES;
 
 # 转储表 order_items
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `order_items`;
+
+CREATE TABLE `order_items` (
+                               `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+                               `title` varchar(50) DEFAULT NULL,
+                               `bindTempLate` varchar(50) DEFAULT NULL,
+                               `description` varchar(256) DEFAULT NULL,
+                               `icon` varchar(50) DEFAULT NULL,
+                               `categoryId` bigint unsigned DEFAULT NULL,
+                               `link` varchar(256) DEFAULT NULL,
+                               `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                               `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                               `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                               `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                               `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                               `creator` longtext,
+                               `regenerator` longtext,
+                               PRIMARY KEY (`id`),
+                               KEY `idx_order_items_create_by` (`create_by`),
+                               KEY `idx_order_items_update_by` (`update_by`),
+                               KEY `idx_order_items_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `order_items` WRITE;
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
@@ -172,10 +339,50 @@ UNLOCK TABLES;
 # 转储表 order_rating
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `order_rating`;
+
+CREATE TABLE `order_rating` (
+                                `id` bigint NOT NULL AUTO_INCREMENT,
+                                `order_id` bigint DEFAULT NULL,
+                                `rating` bigint DEFAULT NULL,
+                                `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                `task_handler` bigint DEFAULT NULL,
+                                PRIMARY KEY (`id`),
+                                KEY `idx_order_rating_create_by` (`create_by`),
+                                KEY `idx_order_rating_update_by` (`update_by`),
+                                KEY `idx_order_rating_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 # 转储表 order_task
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `order_task`;
+
+CREATE TABLE `order_task` (
+                              `id` bigint NOT NULL AUTO_INCREMENT,
+                              `name` varchar(256) DEFAULT NULL,
+                              `taskType` varchar(45) DEFAULT NULL,
+                              `interpreter` varchar(100) DEFAULT NULL,
+                              `content` longtext,
+                              `creator` varchar(45) DEFAULT NULL,
+                              `description` longtext,
+                              `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                              `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                              `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                              `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                              `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                              `regenerator` varchar(20) DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `idx_order_task_create_by` (`create_by`),
+                              KEY `idx_order_task_update_by` (`update_by`),
+                              KEY `idx_order_task_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `order_task` WRITE;
 /*!40000 ALTER TABLE `order_task` DISABLE KEYS */;
@@ -196,6 +403,35 @@ UNLOCK TABLES;
 # 转储表 order_works
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `order_works`;
+
+CREATE TABLE `order_works` (
+                               `id` bigint NOT NULL AUTO_INCREMENT,
+                               `title` varchar(100) DEFAULT NULL,
+                               `currentNode` varchar(50) DEFAULT NULL,
+                               `currentHandler` varchar(50) DEFAULT NULL,
+                               `process` varchar(50) DEFAULT NULL,
+                               `priority` varchar(20) DEFAULT NULL,
+                               `status` varchar(20) DEFAULT NULL,
+                               `department` varchar(50) DEFAULT NULL,
+                               `description` varchar(512) DEFAULT NULL,
+                               `form_data` json DEFAULT NULL,
+                               `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                               `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                               `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                               `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                               `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                               `creator` varchar(20) DEFAULT NULL,
+                               `regenerator` varchar(20) DEFAULT NULL,
+                               `template` varchar(50) DEFAULT NULL,
+                               `currentHandlerId` bigint DEFAULT NULL,
+                               `bindFlowData` json DEFAULT NULL,
+                               PRIMARY KEY (`id`),
+                               KEY `idx_order_works_create_by` (`create_by`),
+                               KEY `idx_order_works_update_by` (`update_by`),
+                               KEY `idx_order_works_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 LOCK TABLES `order_works` WRITE;
 /*!40000 ALTER TABLE `order_works` DISABLE KEYS */;
 
@@ -205,13 +441,6 @@ VALUES
 
 /*!40000 ALTER TABLE `order_works` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-# 转储表 sys_api
-# ------------------------------------------------------------
-
-LOCK TABLES `sys_api` WRITE;
-/*!40000 ALTER TABLE `sys_api` DISABLE KEYS */;
 
 INSERT INTO `sys_api` (`id`, `handle`, `title`, `path`, `type`, `action`, `created_at`, `updated_at`, `deleted_at`, `create_by`, `update_by`)
 VALUES
@@ -418,13 +647,7 @@ VALUES
 /*!40000 ALTER TABLE `sys_api` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_casbin_rule
-# ------------------------------------------------------------
-
-LOCK TABLES `sys_casbin_rule` WRITE;
 /*!40000 ALTER TABLE `sys_casbin_rule` DISABLE KEYS */;
-
 INSERT INTO `sys_casbin_rule` (`id`, `ptype`, `v0`, `v1`, `v2`, `v3`, `v4`, `v5`, `v6`, `v7`)
 VALUES
     (762,'p','general','/api/v1/dept','GET','','','','',''),
@@ -464,12 +687,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_casbin_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_columns
-# ------------------------------------------------------------
-
-LOCK TABLES `sys_columns` WRITE;
-/*!40000 ALTER TABLE `sys_columns` DISABLE KEYS */;
 
 INSERT INTO `sys_columns` (`column_id`, `table_id`, `column_name`, `column_comment`, `column_type`, `go_type`, `go_field`, `json_field`, `is_pk`, `is_increment`, `is_required`, `is_insert`, `is_edit`, `is_list`, `is_query`, `query_type`, `html_type`, `dict_type`, `sort`, `list`, `pk`, `required`, `super_column`, `usable_column`, `increment`, `insert`, `edit`, `query`, `remark`, `fk_table_name`, `fk_table_name_class`, `fk_table_name_package`, `fk_label_id`, `fk_label_name`, `created_at`, `updated_at`, `deleted_at`, `create_by`, `update_by`)
 VALUES
@@ -615,15 +832,6 @@ VALUES
     (140,9,'updated_at','最后更新时间','datetime(3)','time.Time','UpdatedAt','updatedAt','0','','0','1','','','','EQ','datetime','',20,'',0,0,0,0,0,1,0,0,'','','','','','','2024-09-02 17:04:30.513','2024-09-02 17:04:30.513',NULL,0,0),
     (141,9,'deleted_at','删除时间','datetime(3)','time.Time','DeletedAt','deletedAt','0','','0','1','','','','EQ','datetime','',21,'',0,0,0,0,0,1,0,0,'','','','','','','2024-09-02 17:04:30.515','2024-09-02 17:04:30.515',NULL,0,0);
 
-/*!40000 ALTER TABLE `sys_columns` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# 转储表 sys_config
-# ------------------------------------------------------------
-
-LOCK TABLES `sys_config` WRITE;
-/*!40000 ALTER TABLE `sys_config` DISABLE KEYS */;
 
 INSERT INTO `sys_config` (`id`, `config_name`, `config_key`, `config_value`, `config_type`, `is_frontend`, `remark`, `create_by`, `update_by`, `created_at`, `updated_at`, `deleted_at`)
 VALUES
@@ -636,9 +844,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_dept
-# ------------------------------------------------------------
 
 LOCK TABLES `sys_dept` WRITE;
 /*!40000 ALTER TABLE `sys_dept` DISABLE KEYS */;
@@ -654,10 +859,6 @@ VALUES
 
 /*!40000 ALTER TABLE `sys_dept` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-# 转储表 sys_dict_data
-# ------------------------------------------------------------
 
 LOCK TABLES `sys_dict_data` WRITE;
 /*!40000 ALTER TABLE `sys_dict_data` DISABLE KEYS */;
@@ -728,10 +929,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_dict_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_dict_type
-# ------------------------------------------------------------
-
 LOCK TABLES `sys_dict_type` WRITE;
 /*!40000 ALTER TABLE `sys_dict_type` DISABLE KEYS */;
 
@@ -752,10 +949,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_dict_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_job
-# ------------------------------------------------------------
-
 LOCK TABLES `sys_job` WRITE;
 /*!40000 ALTER TABLE `sys_job` DISABLE KEYS */;
 
@@ -763,19 +956,40 @@ INSERT INTO `sys_job` (`job_id`, `job_name`, `job_group`, `job_type`, `cron_expr
 VALUES
     (1,'接口测试','DEFAULT',1,'0/5 * * * * ','http://localhost:8000','',1,1,1,0,'2021-05-13 19:56:37.914','2024-09-03 16:38:39.679',NULL,1,1),
     (2,'函数测试','DEFAULT',2,'0/5 * * * * ','ExamplesOne','参数',1,1,1,0,'2021-05-13 19:56:37.914','2021-05-31 23:55:37.221',NULL,1,1),
-    (3,'节点存活检测','DEFAULT',2,'0 */15 * * * *','CheckAllMachines',NULL,1,1,2,1,'2021-05-13 19:56:37.914','2024-10-14 14:54:53.118',NULL,1,1);
+    (3,'节点存活检测','DEFAULT',2,'0 */15 * * * *','CheckAllMachines',NULL,1,1,2,1,'2021-05-13 19:56:37.914','2024-10-14 16:57:01.382',NULL,1,1);
 
 /*!40000 ALTER TABLE `sys_job` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `sys_menu`;
 
-# 转储表 sys_login_log
-# ------------------------------------------------------------
-
-
-
-# 转储表 sys_menu
-# ------------------------------------------------------------
+CREATE TABLE `sys_menu` (
+                            `menu_id` bigint NOT NULL AUTO_INCREMENT,
+                            `menu_name` varchar(128) DEFAULT NULL,
+                            `title` varchar(128) DEFAULT NULL,
+                            `icon` varchar(128) DEFAULT NULL,
+                            `path` varchar(128) DEFAULT NULL,
+                            `paths` varchar(128) DEFAULT NULL,
+                            `menu_type` varchar(1) DEFAULT NULL,
+                            `action` varchar(16) DEFAULT NULL,
+                            `permission` varchar(255) DEFAULT NULL,
+                            `parent_id` smallint DEFAULT NULL,
+                            `no_cache` tinyint(1) DEFAULT NULL,
+                            `breadcrumb` varchar(255) DEFAULT NULL,
+                            `component` varchar(255) DEFAULT NULL,
+                            `sort` tinyint DEFAULT NULL,
+                            `visible` varchar(1) DEFAULT NULL,
+                            `is_frame` varchar(1) DEFAULT '0',
+                            `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                            `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                            `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                            `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                            `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                            PRIMARY KEY (`menu_id`),
+                            KEY `idx_sys_menu_deleted_at` (`deleted_at`),
+                            KEY `idx_sys_menu_create_by` (`create_by`),
+                            KEY `idx_sys_menu_update_by` (`update_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `sys_menu` WRITE;
 /*!40000 ALTER TABLE `sys_menu` DISABLE KEYS */;
@@ -926,10 +1140,6 @@ VALUES
 
 /*!40000 ALTER TABLE `sys_menu` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-# 转储表 sys_menu_api_rule
-# ------------------------------------------------------------
 
 LOCK TABLES `sys_menu_api_rule` WRITE;
 /*!40000 ALTER TABLE `sys_menu_api_rule` DISABLE KEYS */;
@@ -1139,116 +1349,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_menu_api_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_migration
-# ------------------------------------------------------------
-
-LOCK TABLES `sys_migration` WRITE;
-/*!40000 ALTER TABLE `sys_migration` DISABLE KEYS */;
-
-INSERT INTO `sys_migration` (`version`, `apply_time`)
-VALUES
-    ('1599190683659','2024-07-08 16:15:45.705'),
-    ('1653638869132','2024-07-08 16:15:45.745'),
-    ('1720949521087','2024-07-14 17:43:56.535'),
-    ('1720949980092','2024-07-14 17:43:56.537'),
-    ('1720950072899','2024-07-14 17:43:56.538'),
-    ('1720950211119','2024-07-14 17:43:56.540'),
-    ('1720951545419','2024-07-14 18:06:34.435'),
-    ('1721117231160','2024-07-16 16:18:25.903'),
-    ('1721117949961','2024-07-16 16:20:19.696'),
-    ('1721121320333','2024-07-16 17:16:24.739'),
-    ('1721187173775','2024-07-17 11:37:08.301'),
-    ('1721219609732','2024-07-17 20:34:18.413'),
-    ('1721284740844','2024-07-18 14:47:04.855'),
-    ('1721292697983','2024-07-18 16:53:24.187'),
-    ('1721293088163','2024-07-18 16:59:12.653'),
-    ('1721305983619','2024-07-18 20:36:24.847'),
-    ('1721379887541','2024-07-19 17:06:47.286'),
-    ('1721380543820','2024-07-19 17:16:17.756'),
-    ('1721380856447','2024-07-19 17:21:20.981'),
-    ('1721385385237','2024-07-19 18:37:33.781'),
-    ('1721389841991','2024-07-19 19:53:25.874'),
-    ('1721460933131','2024-07-20 15:37:03.152'),
-    ('1721461142396','2024-07-20 15:39:52.954'),
-    ('1721488322985','2024-07-20 23:13:03.940'),
-    ('1721638654431','2024-07-22 16:58:26.447'),
-    ('1721639066810','2024-07-22 17:05:05.240'),
-    ('1721639265590','2024-07-22 17:09:19.402'),
-    ('1721639438033','2024-07-22 17:11:06.797'),
-    ('1721651056873','2024-07-22 20:25:49.233'),
-    ('1721651459519','2024-07-22 20:31:47.211'),
-    ('1721652350650','2024-07-22 20:47:00.294'),
-    ('1721654102726','2024-07-22 21:16:41.560'),
-    ('1721825051162','2024-07-24 20:44:53.991'),
-    ('1721903278636','2024-07-25 18:33:58.252'),
-    ('1721905717241','2024-07-25 19:09:08.243'),
-    ('1721905717242','2024-07-25 19:20:05.449'),
-    ('1721908582055','2024-07-25 19:56:54.344'),
-    ('1722329105309','2024-07-30 16:46:10.267'),
-    ('1722426071288','2024-07-31 19:41:44.445'),
-    ('1722427611375','2024-07-31 20:10:25.079'),
-    ('1722485232018','2024-08-01 12:07:46.288'),
-    ('1722502398625','2024-08-01 16:53:56.371'),
-    ('1722593141912','2024-08-02 18:07:19.239'),
-    ('1722757274881','2024-08-04 15:42:23.905'),
-    ('1723088802259','2024-08-08 11:48:05.240'),
-    ('1723099523930','2024-08-08 14:46:06.390'),
-    ('1723101320547','2024-08-08 15:15:54.718'),
-    ('1723202735348','2024-08-09 19:28:56.261'),
-    ('1723202854170','2024-08-09 19:28:56.265'),
-    ('1723203099154','2024-08-09 19:32:25.314'),
-    ('1723895352381','2024-08-17 19:50:00.417'),
-    ('1723896589734','2024-08-17 20:10:49.408'),
-    ('1724152927276','2024-08-20 19:22:57.243'),
-    ('1724752415278','2024-08-27 17:54:10.226'),
-    ('1724829429601','2024-08-28 15:18:48.876'),
-    ('1724831669865','2024-08-28 15:55:16.886'),
-    ('1725272292437','2024-09-02 18:20:25.847'),
-    ('1725356412454','2024-09-03 17:41:15.763'),
-    ('1726111505151','2024-09-12 11:25:40.839'),
-    ('1726113216389','2024-09-12 11:55:06.419'),
-    ('1726128637875','2024-09-12 16:11:12.761'),
-    ('1726733988229','2024-09-19 16:20:36.502'),
-    ('1727075170387','2024-09-23 15:08:09.527'),
-    ('1727080558567','2024-09-23 16:36:39.096'),
-    ('1727084033822','2024-09-23 17:34:51.217'),
-    ('1727084219801','2024-09-23 17:37:47.041'),
-    ('1727084348112','2024-09-23 17:39:31.334'),
-    ('1727084402181','2024-09-23 17:40:43.535'),
-    ('1727171889394','2024-09-24 17:58:36.206'),
-    ('1727337395037','2024-09-26 15:57:57.096'),
-    ('1727592744822','2024-09-29 14:54:47.807'),
-    ('1727593004295','2024-09-29 14:57:28.512');
-
-/*!40000 ALTER TABLE `sys_migration` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# 转储表 sys_opera_log
-# ------------------------------------------------------------
-
-LOCK TABLES `sys_opera_log` WRITE;
-/*!40000 ALTER TABLE `sys_opera_log` DISABLE KEYS */;
-
-INSERT INTO `sys_opera_log` (`id`, `title`, `business_type`, `business_types`, `method`, `request_method`, `operator_type`, `oper_name`, `dept_name`, `oper_url`, `oper_ip`, `oper_location`, `oper_param`, `status`, `oper_time`, `json_result`, `remark`, `latency_time`, `user_agent`, `created_at`, `updated_at`, `create_by`, `update_by`)
-VALUES
-    (1,'','','','','GET','','admin','','/api/v1/exec-machine','::1','','','1','2024-09-05 15:35:09','{\"requestId\":\"a8338976-7a95-4a45-8052-ae7f642339c9\",\"code\":200,\"msg\":\"查询成功\",\"data\":{\"count\":','','8.64875ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:35:08.826','2024-09-05 15:35:08.826',1,1),
-    (2,'','','','','GET','','admin','','/api/v1/exec-machine','::1','','','1','2024-09-05 15:37:55','{\"requestId\":\"bc2af5fa-eccb-4cee-ac3f-a6cee707c45c\",\"code\":200,\"msg\":\"查询成功\",\"data\":{\"count\":','','6.864833ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:37:55.054','2024-09-05 15:37:55.054',1,1),
-    (3,'','','','','GET','','admin','','/api/v1/exec-machine','::1','','','1','2024-09-05 15:39:43','{\"requestId\":\"3df570e5-ccc2-42ff-b5f7-f277ef307140\",\"code\":200,\"msg\":\"查询成功\",\"data\":{\"count\":','','2.305375ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:39:43.015','2024-09-05 15:39:43.015',1,1),
-    (4,'','','','','GET','','admin','','/api/v1/dict-data/option-select?dictType=sys_common_status','::1','','','1','2024-09-05 15:40:10','{\"requestId\":\"abc1c916-a912-48b0-a5e2-cace304e2c44\",\"code\":200,\"msg\":\"查询成功\",\"data\":[{\"label\"','','24.612709ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:40:09.877','2024-09-05 15:40:09.877',1,1),
-    (5,'','','','','GET','','admin','','/api/v1/sys-opera-log?pageIndex=1&pageSize=10&createdAtOrder=desc','::1','','','1','2024-09-05 15:40:10','{\"requestId\":\"c0f4dcbd-475b-42be-9a27-a61a8ec0edd0\",\"code\":200,\"msg\":\"查询成功\",\"data\":{\"count\":','','19.803667ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:40:09.881','2024-09-05 15:40:09.881',1,1),
-    (6,'','','','','GET','','admin','','/api/v1/dict-data/option-select?dictType=sys_common_status','::1','','','1','2024-09-05 15:40:22','{\"requestId\":\"9f08d357-f2af-4fdd-8555-0a5e226ba186\",\"code\":200,\"msg\":\"查询成功\",\"data\":[{\"label\"','','2.612375ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:40:22.501','2024-09-05 15:40:22.501',1,1),
-    (7,'','','','','GET','','admin','','/api/v1/dict-data/option-select?dictType=sys_common_status','::1','','','1','2024-09-05 15:40:24','{\"requestId\":\"dff6bb04-7dec-41f2-89cc-7b6214092b32\",\"code\":200,\"msg\":\"查询成功\",\"data\":[{\"label\"','','5.307958ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:40:24.295','2024-09-05 15:40:24.295',1,1),
-    (8,'','','','','GET','','admin','','/api/v1/sys-opera-log?pageIndex=1&pageSize=10&createdAtOrder=desc','::1','','','1','2024-09-05 15:40:24','{\"requestId\":\"92b437bb-560d-4198-9e8d-17884c21bcd7\",\"code\":200,\"msg\":\"查询成功\",\"data\":{\"count\":','','7.892792ms','Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36','2024-09-05 15:40:24.299','2024-09-05 15:40:24.299',1,1);
-
-/*!40000 ALTER TABLE `sys_opera_log` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# 转储表 sys_post
-# ------------------------------------------------------------
-
 LOCK TABLES `sys_post` WRITE;
 /*!40000 ALTER TABLE `sys_post` DISABLE KEYS */;
 
@@ -1268,10 +1368,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_post` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_role
-# ------------------------------------------------------------
-
 LOCK TABLES `sys_role` WRITE;
 /*!40000 ALTER TABLE `sys_role` DISABLE KEYS */;
 
@@ -1282,10 +1378,6 @@ VALUES
 
 /*!40000 ALTER TABLE `sys_role` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-# 转储表 sys_role_dept
-# ------------------------------------------------------------
 
 LOCK TABLES `sys_role_dept` WRITE;
 /*!40000 ALTER TABLE `sys_role_dept` DISABLE KEYS */;
@@ -1301,10 +1393,6 @@ VALUES
 
 /*!40000 ALTER TABLE `sys_role_dept` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-# 转储表 sys_role_menu
-# ------------------------------------------------------------
 
 LOCK TABLES `sys_role_menu` WRITE;
 /*!40000 ALTER TABLE `sys_role_menu` DISABLE KEYS */;
@@ -1355,10 +1443,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_role_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_tables
-# ------------------------------------------------------------
-
 LOCK TABLES `sys_tables` WRITE;
 /*!40000 ALTER TABLE `sys_tables` DISABLE KEYS */;
 
@@ -1377,10 +1461,6 @@ VALUES
 /*!40000 ALTER TABLE `sys_tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 sys_user
-# ------------------------------------------------------------
-
 LOCK TABLES `sys_user` WRITE;
 /*!40000 ALTER TABLE `sys_user` DISABLE KEYS */;
 
@@ -1389,24 +1469,30 @@ VALUES
     (1,'admin','$2a$10$/Glr4g9Svr6O0kvjsRJCXu3f0W8/dsP3XZyVNi1019ratWpSPMyw.','admin','13311246030',1,'','','0','swb956721830@163.com',1,2,'','2',1,1,'2021-05-13 19:56:37.914','2024-08-16 17:29:33.360',NULL,'SYSTEM'),
     (2,'sunwenbo','$2a$10$ZBzBhm1Z6Rn0I.ZkECdoAeBjO/lzigy1XT3ObBt/DS6ZfRuLtfxtq','孙文波','13311246030',1,'','','0','123@qq.com',8,8,'','2',1,0,'2024-07-17 20:05:43.749','2024-08-15 19:36:25.064',NULL,'SYSTEM'),
     (3,'zhangsan','$2a$10$bttFFWqTZMyyoBzHLDE.A.hHJ5q5oqcukh16CUXyQvFTPg0bRhK8m','张三','13312312312',1,'','','0','123@qq.com',1,5,'','2',1,0,'2024-07-30 20:35:19.622','2024-08-15 19:37:01.935',NULL,'SYSTEM'),
-    (4,'lisi','$2a$10$ZN4TSBEBvxXuVIHx3sAeceu/M1T7T4t1/1dgA9clOhgAsjyjIumHy','李四','13311246030',2,'','','1','123@qq.com',7,4,'测试用户','2',1,1,'2024-08-08 21:14:03.237','2024-08-15 19:37:10.409',NULL,'SYSTEM'),
-    (6,'liusong','$2a$10$A88qT54QViAAE3QdfJAkAeqE9mkMd/89v.yEcBxjyPWsVg779GAcu','刘松','13311246030',2,'','http://example.com/avatar.jpg','Male','john.doe@example.com',1,4,'This is a remark','2',0,0,'2024-08-09 22:19:07.025','2024-08-15 19:38:13.833','2024-10-14 14:46:52.687','LDAP'),
-    (13,'cuizhengzhi','$2a$10$QfsTq7Tdn273n5HHi2SkiuZD93G/iyvcqSw0GQj2emKhteBEjAaNW','崔郑志','13311246030',2,'','','0','123@qq.com',1,10,'','2',0,0,'2024-08-11 18:17:48.882','2024-08-15 19:39:14.854','2024-10-14 14:46:55.392','LDAP'),
-    (14,'caopengcheng','$2a$10$Iyzi4jjmGZO6brJc1Zszj.evdtvpjS0UQvNLMKZHbbG9NjUvpzDUS','曹鹏程','18513581719',2,'','','0','111@qq.com',1,1,'','2',0,0,'2024-08-11 20:27:01.519','2024-10-11 19:22:27.114','2024-10-14 14:47:02.512','LDAP'),
-    (15,'wujianguo','$2a$10$ZzkM1f9uGukhBryVok1GpeSRiKlWc7/WPiJ7PieUHwct5WY.gYwNK','','',2,'','','','',0,0,'','2',0,0,'2024-08-14 19:43:16.991','2024-08-14 19:43:16.991','2024-10-14 14:46:43.585','LDAP'),
-    (16,'haowangai','$2a$10$qZOl9WY/fBaONhNCZj.QFe601Z6Nu81MIF7llcFcRmPhUZvs1EmSe','郝万盖','15114877870',2,'','','0','111@qq.com',1,4,'','2',0,0,'2024-08-16 19:11:02.100','2024-08-16 19:11:37.553','2024-10-14 14:47:04.186','LDAP');
-
+    (4,'lisi','$2a$10$ZN4TSBEBvxXuVIHx3sAeceu/M1T7T4t1/1dgA9clOhgAsjyjIumHy','李四','13311246030',2,'','','1','123@qq.com',7,4,'测试用户','2',1,1,'2024-08-08 21:14:03.237','2024-08-15 19:37:10.409',NULL,'SYSTEM');
 /*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# 转储表 tb_demo
-# ------------------------------------------------------------
-
-
-
 # 转储表 user_favorites
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `user_favorites`;
+
+CREATE TABLE `user_favorites` (
+                                  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+                                  `user_id` int DEFAULT NULL,
+                                  `order_item_id` bigint unsigned DEFAULT NULL,
+                                  `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                  `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                  `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                  `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                  `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                  PRIMARY KEY (`id`),
+                                  KEY `idx_user_favorites_create_by` (`create_by`),
+                                  KEY `idx_user_favorites_update_by` (`update_by`),
+                                  KEY `idx_user_favorites_deleted_at` (`deleted_at`),
+                                  KEY `fk_order_items` (`order_item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 LOCK TABLES `user_favorites` WRITE;
 /*!40000 ALTER TABLE `user_favorites` DISABLE KEYS */;
@@ -1421,6 +1507,29 @@ UNLOCK TABLES;
 
 # 转储表 works_notify
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `works_notify`;
+
+CREATE TABLE `works_notify` (
+                                `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+                                `title` varchar(100) DEFAULT NULL,
+                                `department` varchar(50) DEFAULT NULL,
+                                `priority` varchar(20) DEFAULT NULL,
+                                `status` varchar(20) DEFAULT NULL,
+                                `currentHandler` longtext,
+                                `message` text,
+                                `read_status` bigint DEFAULT NULL,
+                                `order_id` bigint unsigned DEFAULT NULL,
+                                `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间',
+                                `updated_at` datetime(3) DEFAULT NULL COMMENT '最后更新时间',
+                                `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间',
+                                `create_by` bigint DEFAULT NULL COMMENT '创建者',
+                                `update_by` bigint DEFAULT NULL COMMENT '更新者',
+                                PRIMARY KEY (`id`),
+                                KEY `idx_works_notify_update_by` (`update_by`),
+                                KEY `idx_works_notify_deleted_at` (`deleted_at`),
+                                KEY `idx_works_notify_create_by` (`create_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 

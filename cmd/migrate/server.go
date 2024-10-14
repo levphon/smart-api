@@ -28,7 +28,7 @@ var (
 	StartCmd  = &cobra.Command{
 		Use:     "migrate",
 		Short:   "Initialize the database",
-		Example: "smart migrate -c config/settings.yml",
+		Example: "smart-api migrate -c config/settings.yml",
 		Run: func(cmd *cobra.Command, args []string) {
 			run()
 		},
