@@ -8,7 +8,7 @@ The Smart-API Work Order System is a backend management system developed in Go, 
 [![Release](https://img.shields.io/github/release/go-admin-team/go-admin.svg?style=flat-square)](https://github.com/go-admin-team/go-admin/releases)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/go-admin-team/go-admin)
 
-[English](https://github.com/sunwenbo/smart-api/blob/main/README.md) | 简体中文
+简体中文|[English](https://github.com/sunwenbo/smart-api/blob/main/README.Zh-cn.md)
 
 This is a front-end and back-end separated permission management system based on Gin + Vue + Element UI OR Arco Design OR Ant Design. The system setup is extremely simple, requiring only the configuration of the database connection in the settings file. The system supports multiple commands for operations, and migration commands make it easier to initialize database information. Service commands simplify starting the API service.
 
