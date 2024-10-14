@@ -2,56 +2,56 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: go-admin
+  name: smart-api
   labels:
-    app: go-admin
-    service: go-admin
+    app: smart-api
+    service: smart-api
 spec:
   ports:
   - port: 8000
     name: http
     protocol: TCP
   selector:
-    app: go-admin
+    app: smart-api
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-admin-v1
+  name: smart-api-v1
   labels:
-    app: go-admin
+    app: smart-api
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: go-admin
+      app: smart-api
       version: v1
   template:
     metadata:
       labels:
-        app: go-admin
+        app: smart-api
         version: v1
     spec:
       containers:
-      - name: go-admin
-        image: registry.cn-shanghai.aliyuncs.com/go-admin-team/go-admin
+      - name: smart-api
+        image: registry.cn-shanghai.aliyuncs.com/smart-api-team/smart-api
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         volumeMounts:
-        - name: go-admin
+        - name: smart-api
           mountPath: /temp
-        - name: go-admin
+        - name: smart-api
           mountPath: /static
-        - name: go-admin-config
+        - name: smart-api-config
           mountPath: /config/
           readOnly: true
       volumes:
-      - name: go-admin
+      - name: smart-api
         persistentVolumeClaim:
-          claimName: go-admin
-      - name: go-admin-config
+          claimName: smart-api
+      - name: smart-api-config
         configMap:
           name: settings-admin
 ---

@@ -141,7 +141,10 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
    ```bash
    cp config/settings.full.yml config/settings.yml
    ```
-   修改 `config/settings.yml` 中的数据库连接信息，确保数据库配置正确。
+   #### 修改 `config/settings.yml` 中的数据库连接信息，确保数据库配置正确。
+    1. 配置文件中修改数据库信息
+    2. 注意: settings.database 下对应的配置数据
+    3. 确认log路径
 
 4. 初始化数据库：
 
