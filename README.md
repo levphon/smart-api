@@ -1,6 +1,6 @@
 # Smart-API Work Order System
 
-The Smart-API Work Order System is a backend management system developed in Go, featuring a decoupled architecture with Gin as the backend framework, and Vue.js and Element UI for the frontend. The system aims to efficiently handle work order management, supporting task allocation, execution monitoring, real-time updates, and more.
+The Smart-API Work Order System is a backend management system developed in Go, with a frontend-backend separation architecture. It uses the Gin framework for the backend and Vue.js with Element UI for the frontend. The system aims to efficiently manage work orders, supporting task assignment, execution monitoring, real-time updates, and more.
 
 <img align="right" width="320" src="https://github.com/sunwenbo/golang/raw/master/logo.png">
 
@@ -8,105 +8,98 @@ The Smart-API Work Order System is a backend management system developed in Go, 
 [![Release](https://img.shields.io/github/release/go-admin-team/go-admin.svg?style=flat-square)](https://github.com/go-admin-team/go-admin/releases)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/go-admin-team/go-admin)
 
-[English](https://github.com/go-admin-team/go-admin/blob/master/README.md) | 简体中文
+[English](https://github.com/sunwenbo/smart-api/blob/main/README.md) | 简体中文
 
-Based on Gin + Vue + Element UI OR Arco Design OR Ant Design, the front-end and back-end separated permission management system is extremely simple to initialize, requiring only configuration file modification for database connection. The system supports multi-command operations, and migration commands can simplify the initialization of database information, while service commands can easily start the API service.
+This is a front-end and back-end separated permission management system based on Gin + Vue + Element UI OR Arco Design OR Ant Design. The system setup is extremely simple, requiring only the configuration of the database connection in the settings file. The system supports multiple commands for operations, and migration commands make it easier to initialize database information. Service commands simplify starting the API service.
 
 [Frontend Project](https://github.com/sunwenbo/smart-ui-new)
 
 [Backend Project](https://github.com/sunwenbo/smart-api)
 
-## 🎬 Online Experience
+## 🎬 Live Demo
 
-[Click to access the online demo](https://smart-api.example.com)
+[Click here to visit the live demo](https://smart-api.example.com)
 
 > Default login account: `admin` / `123456`
 
-## ✨ Architectural Features
+## ✨ Features
 
-- Follows RESTful API design specifications
-
-- Based on the GIN WEB API framework, providing rich middleware support (user authentication, CORS, access logs, trace IDs, etc.)
-
+- Follows RESTful API design principles
+- Based on the GIN web API framework with rich middleware support (user authentication, CORS, access logs, trace ID, etc.)
 - RBAC access control model based on Casbin
-
 - JWT authentication
-
-- Supports Swagger documentation (based on swaggo)
-
-- Database storage based on GORM, supporting various types of databases
-
-- Simple model mapping in configuration files for quick access to desired configurations
-
+- Supports Swagger documentation (via swaggo)
+- Database storage based on GORM, with support for various database types
+- Simple configuration file model mapping for quick setup
 - Code generation tools
-
 - Form building tools
-
-- Multi-command mode
-
 - Multi-tenant support
+- TODO: Unit testing
 
-- TODO: Unit tests
+## 🤩 Key Features
 
-## 🤩 Functional Features
-
-- **Custom Volunteer Order form** : Customize various types of work order form structures according to actual needs
-- **Customized approval process** : You can flexibly set the processing personnel of the approval node and multiple people to assist in approval
-- **Task Work Order Management**: Comprehensive management of task creation, allocation, tracking, and execution status.
-- **Real-Time Task Monitoring**: Real-time updates and feedback on task execution status via WebSocket.
-- **Role Permission Control**: Fine-grained role and permission management based on the Casbin RBAC model.
-- **Rating and Comment Functionality**: Users can rate work orders upon completion and support multiple comment records.
-- **Log Recording**: Detailed operational and task execution logs for subsequent auditing and analysis.
-- **Chart Statistics**: Intuitive presentation of statistical data on work orders, including weekly and monthly statistics, and personal submission rankings.
+- **Custom Work Order Forms**: Customize work order form structures as needed.
+- **Custom Approval Workflows**: Flexibly set the approvers for each node and allow multiple approvers to assist.
+- **LDAP Login Support**: Integrates with enterprise LDAP accounts for authentication.
+- **Work Order Bookmarking**: Supports bookmarking frequently used work orders.
+- **Task and Work Order Management**: Provides comprehensive management of task creation, assignment, tracking, and execution status.
+- **Work Order Reminder**: Sends reminder notifications, including third-party notifications (e.g., Feishu, DingTalk), requiring LDAP account integration.
+- **Real-time Task Monitoring**: Real-time updates and feedback on task execution status via WebSocket.
+- **Role-based Access Control**: Fine-grained role and permission management based on the Casbin RBAC model.
+- **Rating and Comments**: After task completion, users can rate the work order and leave multiple comments.
+- **Log Management**: Detailed operational and task execution logs for auditing and analysis.
+- **Charts and Statistics**: Visualize work order statistics with charts, including weekly/monthly work order stats and personal submission rankings.
 
 ## 🎁 Built-in Features
 
-1. Multi-Tenant: The system supports multi-tenancy by default, with separation by database—one database per tenant.
-2. User Management: Users are system operators; this function primarily handles user configuration in the system.
-3. Department Management: Configure the organization's structure (company, department, group) with tree structure support for data permissions.
-4. Position Management: Configure the positions held by system users.
-5. Menu Management: Configure system menus, operation permissions, button permission identifiers, and interface permissions.
-6. Role Management: Role menu permission distribution, setting role data scope permissions according to organizations.
-7. Dictionary Management: Maintenance of fixed data commonly used in the system.
-8. Parameter Management: Dynamic configuration of commonly used parameters in the system.
-9. Operation Logs: Normal operation log recording and querying; abnormal information log recording and querying.
-10. Login Logs: System login log recording and querying, including login exceptions.
-11. API Documentation: Automatically generate relevant API documentation based on business code.
-12. Code Generation: Generate corresponding CRUD business operations based on table structures, fully visualized, allowing basic business implementation without coding.
-13. Form Building: Custom page styling, drag-and-drop page layout.
-14. Service Monitoring: View basic information about servers.
-15. Content Management: Demo feature with category management and content management. Refer to it for quick entry.
-16. Scheduled Tasks: Automated tasks, currently supporting interface calls and function calls.
+1. **Multi-tenant Support**: The system supports multi-tenant architecture with database separation (one database per tenant).
+2. **User Management**: Configures system user information and permissions.
+3. **Department Management**: Configures system organizational structure (company, department, team) with support for data permissions.
+4. **Position Management**: Configures the positions held by system users.
+5. **Menu Management**: Configures system menus, operation permissions, button permissions, and API permissions.
+6. **Role Management**: Assigns role menu permissions and defines data range permissions by organization.
+7. **Dictionary Management**: Maintains frequently used fixed data within the system.
+8. **Parameter Management**: Dynamically configures common parameters for the system.
+9. **Operation Logs**: Records and queries normal operation logs as well as abnormal system logs.
+10. **Login Logs**: Logs and queries login information, including abnormal login attempts.
+11. **API Documentation**: Automatically generates API documentation based on business code.
+12. **Code Generation**: Generates business logic (CRUD) based on table structure with visual operations.
+13. **Form Builder**: Drag-and-drop interface for customizing page layouts.
+14. **Service Monitoring**: Monitors basic server information.
+15. **Content Management**: Demo feature with category and content management, providing a quick entry point.
+16. **Scheduled Tasks**: Supports automated tasks, including API and function calls.
 
 ## 🛰️ System Modules
 
-1. **User Management**: Supports management of user information and permission allocation.
-2. **Task Management**: Provides allocation, tracking, and status monitoring of work orders.
-3. **Role Management**: Implements fine-grained permission control through roles.
-4. **Log Management**: Includes system operation logs and task execution logs.
-5. **Service Monitoring**: Real-time viewing of server performance and operational status.
-6. **Rating and Comment**: Supports user ratings and comments on work orders upon task completion.
+1. **User Management**: Manages user information and assigns permissions.
+2. **Task Center**: Provides assignment, tracking, and status monitoring of work orders.
+3. **Work Order Center**: Allows work order requests and views of work order lists.
+4. **Workflow Center**: Customizable work order types, forms, and approval workflows for multiple business scenarios.
+5. **Role Management**: Fine-grained role-based permission control.
+6. **Log Management**: Includes system operation logs and task execution logs.
+7. **Service Monitoring**: Real-time monitoring of server performance and status.
+8. **Rating and Comments**: Allows users to rate and comment after task completion.
 
-## 🔧 Technology Stack
+## 🔧 Tech Stack
 
 - **Backend**: Go, Gin, GORM, JWT, Casbin
 - **Frontend**: Vue.js, Element UI, Axios, WebSocket
 - **Database**: MySQL / PostgreSQL / SQLite
 - **Other Tools**: Docker, Swagger, GIT
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-### Preparation
+### Prerequisites
 
-You need to install [go] [gin] [node](http://nodejs.org/) and [git](https://git-scm.com/) locally.
+You need to install [Go], [Gin], [Node.js](http://nodejs.org/), and [Git](https://git-scm.com/) locally.
 
-## 📦 Environment Requirements
+## 📦 System Requirements
 
-- Go 1.18 or higher
-- Node.js v14.16.0 or higher
+- Go 1.18 or later
+- Node.js v14.16.0 or later
 - npm version: 6.14.11
 - MySQL or other compatible databases
-- Docker (optional)
+- Docker, Kubernetes (optional)
 
 ### Backend Installation Steps
 
@@ -123,34 +116,37 @@ You need to install [go] [gin] [node](http://nodejs.org/) and [git](https://git-
     go mod tidy
     ```
 
-3. Configure database connection information:
+3. Configure the database connection:
 
-   Modify the database connection information in `config/settings.yml`, ensuring the database configuration is correct.
+   ```bash
+   cp config/settings.full.yml config/settings.yml
+   ```
+
+   Modify the database connection information in `config/settings.yml` and ensure the configuration is correct.
 
 4. Initialize the database:
 
     ```bash
-    # Initial configuration requires database resource information initialization
-    # Use on macOS or Linux
+    # For macOS or Linux:
     $ ./smart-api migrate -c config/settings.dev.yml
    
-    # ⚠️ Note: Use on Windows
+    # ⚠️ For Windows:
     $ smart-api.exe migrate -c config/settings.dev.yml
-
-    # Start the project, can also use IDE for debugging
-    # Use on macOS or Linux
+   
+    # Start the project (or use an IDE to debug):
     $ ./smart-api server -c config/settings.yml
-    
-    # ⚠️ Note: Use on Windows
+   
+    # ⚠️ For Windows:
     $ smart-api.exe server -c config/settings.yml
     ```
 
-5. How to add data to the sys_api table
+5. Add data to the `sys_api` table:
 
-   When starting the project, using `-a true` will automatically add missing interface data.
+   Use the `-a true` flag to automatically add missing API data when starting the project:
+
    ```bash
    ./smart-api server -c config/settings.yml -a true
-   ```
+
 6. Document generation:
    ```bash
    go generate
@@ -289,13 +285,12 @@ Thanks to the following developers for their contributions to this project:
 
 > If you have any questions or suggestions, please submit an [issue](https://github.com/your-repo/smart-api-backend/issues).
 
-## JetBrains Open Source License Support
+## 🤝 Special Thanks
+###  JetBrains Open Source License Support
 
 The `smart-api` project has always been developed using JetBrains' GoLand IDE, based on **free JetBrains Open Source license(s)**, expressing my gratitude for their support.
 
 <a href="https://www.jetbrains.com/?from=kubeadm-ha" target="_blank"><img src="https://raw.githubusercontent.com/panjf2000/illustrations/master/jetbrains/jetbrains-variant-4.png" width="250" align="middle"/></a>
-
-## 🤝 Special Thanks
 
 1. [ant-design](https://github.com/ant-design/ant-design)
 2. [ant-design-pro](https://github.com/ant-design/ant-design-pro)

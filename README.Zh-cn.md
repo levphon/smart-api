@@ -11,7 +11,7 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 [![Release](https://img.shields.io/github/release/go-admin-team/go-admin.svg?style=flat-square)](https://github.com/go-admin-team/go-admin/releases)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/go-admin-team/go-admin)
 
-[English](https://github.com/go-admin-team/go-admin/blob/master/README.md) | 简体中文
+[English](https://github.com/sunwenbo/smart-api/blob/main/README.md) | 简体中文
 
 基于Gin + Vue + Element UI OR Arco Design OR Ant Design的前后端分离权限管理系统,系统初始化极度简单，只需要配置文件中，修改数据库连接，系统支持多指令操作，迁移指令可以让初始化数据库信息变得更简单，服务指令可以很简单的启动api服务
 
@@ -57,7 +57,10 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 
 - **自定义工单表单**：根据实际需求自定义各种类型的工单表单结构
 - **自定义审批流程**：可以灵活的设置审批节点的处理人以及多人协助审批
+- **支持LDAP登陆**：兼容企业内部LDAP账号认证登陆
+- **支持工单收藏**：支持多用户收藏常用的工单
 - **任务工单管理**：提供任务的创建、分配、跟踪及执行状态的全面管理。
+- **工单催办**：支持发送通知消息和第三方（飞书、钉钉等）消息通知。使用第三方通知时需要联动LDAP账号信息
 - **实时任务监控**：通过 WebSocket 实现任务执行状态的实时更新与反馈。
 - **角色权限控制**：基于 Casbin 的 RBAC 权限模型，提供细粒度的角色与权限管理。
 - **评分与留言功能**：任务完成后可对工单进行评分，并支持多次留言记录。
@@ -88,11 +91,13 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 ## 🛰️ 系统模块
 
 1. **用户管理**：支持用户信息的管理及权限分配。
-2. **任务管理**：提供工单的分配、追踪和状态监控。
-3. **角色管理**：通过角色实现细粒度的权限控制。
-4. **日志管理**：包括系统操作日志和任务执行日志。
-5. **服务监控**：实时查看服务器性能与运行状态。
-6. **评分与留言**：任务结束后支持用户对工单评分并提交评价。
+2. **任务中心**：提供工单的分配、追踪和状态监控。
+3. **工单中心**：工单申请和查看工单列表。
+4. **流程中心**：自定义工单类型、工单表单、审批流程支持多个业务场景。
+5. **角色管理**：通过角色实现细粒度的权限控制。
+6. **日志管理**：包括系统操作日志和任务执行日志。
+7. **服务监控**：实时查看服务器性能与运行状态。
+8. **评分与留言**：任务结束后支持用户对工单评分并提交评价。
 
 ## 🔧 技术栈
 
@@ -114,7 +119,7 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 - Node.js v14.16.0 及以上版本
 - npm版本: 6.14.11
 - MySQL 或其他兼容数据库
-- Docker (可选)
+- Docker 、Kubernetes(可选)
 
 
 ### 后端安装步骤
@@ -133,7 +138,9 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
     ```
 
 3. 配置数据库连接信息：
-
+   ```bash
+   cp config/settings.full.yml config/settings.yml
+   ```
    修改 `config/settings.yml` 中的数据库连接信息，确保数据库配置正确。
 
 4. 初始化数据库：
@@ -162,7 +169,7 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
    ```bash
    ./smart-api server -c config/settings.yml -a true
    ```
-6. 文档生成
+6. 更新Swagger文档生成
 
    ```bash
    go generate
@@ -173,6 +180,21 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
     ```bash
     ./smart-api server -c config/settings.yml
     ```
+
+8. 本地开发
+   ```
+   生成迁移文件
+   go run main.go migrate -g true -c config/settings.yml
+   
+   修改完迁移文件后，执行下面命令开始变更
+   go run main.go migrate -c config/settings.yml
+   
+   生成迁移文件--系统相关
+   go run main.go migrate -g true -a true  -c config/settings.yml
+   
+   接口管理生成
+   go run main.go server -c config/settings.yml -a false
+   ```
 
 #### 使用docker 编译启动
 
@@ -285,10 +307,13 @@ Smart-API 工单系统使用 [MIT 许可证](LICENSE) 开源，欢迎个人和�
 <table>
    <tr>
     <td><img src="https://github.com/sunwenbo/golang/raw/master/wx.jpeg" width="180px"></td>
-  </tr>
+    <td><img src="https://github.com/sunwenbo/golang/raw/master/wx.jpeg" width="180px"></td>
+</tr>
   <tr>
-    <td>微信</td>
+    <td>个人微信</td>
+    <td>微信群🔥🔥🔥</td>
   </tr>
+
 </table>
 
 ## 💎 贡献者
@@ -302,32 +327,37 @@ Smart-API 工单系统使用 [MIT 许可证](LICENSE) 开源，欢迎个人和�
 
 > 如果你有任何问题或建议，请通过 [issue](https://github.com/your-repo/smart-api-backend/issues) 提交。
 
-## JetBrains 开源证书支持
+
+## 🤝 特别感谢
+
+### JetBrains 开源证书支持
 
 `smart-api` 项目一直以来都是在 JetBrains 公司旗下的 GoLand 集成开发环境中进行开发，基于 **free JetBrains Open Source license(s)** 正版免费授权，在此表达我的谢意。
 
 <a href="https://www.jetbrains.com/?from=kubeadm-ha" target="_blank"><img src="https://raw.githubusercontent.com/panjf2000/illustrations/master/jetbrains/jetbrains-variant-4.png" width="250" align="middle"/></a>
 
-## 🤝 特别感谢
-
-1. [ant-design](https://github.com/ant-design/ant-design)
-2. [ant-design-pro](https://github.com/ant-design/ant-design-pro)
-2. [arco-design](https://github.com/arco-design/arco-design)
-2. [arco-design-pro](https://github.com/arco-design/arco-design-pro)
-4. [gin](https://github.com/gin-gonic/gin)
-5. [casbin](https://github.com/casbin/casbin)
-6. [spf13/viper](https://github.com/spf13/viper)
-7. [gorm](https://github.com/jinzhu/gorm)
-8. [gin-swagger](https://github.com/swaggo/gin-swagger)
-9. [jwt-go](https://github.com/dgrijalva/jwt-go)
-10. [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
-11. [ruoyi-vue](https://gitee.com/y_project/RuoYi-Vue)
-12. [form-generator](https://github.com/JakHuang/form-generator)
+### 开源框架组件
+1. [go-admin # 非常强大的后端开发框架、内置功能非常丰富](https://github.com/go-admin-team/go-admin)
+2. [wfd-vue # 流程设计器](https://github.com/guozhaolong/wfd-vue)
+3. [VForm 一款高效的Vue 2 / Vue3 的低代码表单可视化设计，一键生成源码，享受更多摸鱼时间](https://vform666.com/vform3.html)
+3. [ant-design](https://github.com/ant-design/ant-design)
+4. [ant-design-pro](https://github.com/ant-design/ant-design-pro)
+5. [arco-design](https://github.com/arco-design/arco-design)
+6. [arco-design-pro](https://github.com/arco-design/arco-design-pro)
+7. [gin](https://github.com/gin-gonic/gin)
+8. [casbin](https://github.com/casbin/casbin)
+9. [spf13/viper](https://github.com/spf13/viper)
+10. [gorm](https://github.com/jinzhu/gorm)
+11. [gin-swagger](https://github.com/swaggo/gin-swagger)
+12. [jwt-go](https://github.com/dgrijalva/jwt-go)
+13. [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
+14. [ruoyi-vue](https://gitee.com/y_project/RuoYi-Vue)
+15. [form-generator](https://github.com/JakHuang/form-generator)
 
 
 ## 🤟 打赏
 
-> 如果你觉得这个项目帮助到了你，你可以帮作者买一杯果汁表示鼓励 :tropical_drink:
+> 如果你觉得这个项目帮助到了你，你可以帮作者买一杯☕️表示鼓励 :
 
 <img class="no-margin" src="https://github.com/sunwenbo/golang/raw/master/wxPay.jpeg"  height="200px" >
 
