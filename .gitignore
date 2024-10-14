@@ -1,5 +1,9 @@
 .idea
 .vscode
+config/settings.yml
+config/settings.dev.yml
+config/settings.dev.*.yml
+config/settings.dev.*.yml.log
 */.DS_Store
 static/uploadfile
 main.exe
@@ -8,10 +12,7 @@ go-admin
 go-admin.exe
 temp/
 logs/
-config/settings.yml
-config/settings.dev.yml
-config/settings.dev.*.yml
-config/settings.dev.*.yml.log
+
 
 !temp
 vendor
