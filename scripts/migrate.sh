@@ -2,7 +2,7 @@
  ./smart migrate -c config/settings.yml
 
 生成迁移文件
-  go run main.go migrate -g true -c config/settings.yml
+go run main.go migrate -g true -c config/settings.yml
 
 修改完迁移文件后，执行下面命令开始变更
 go run main.go migrate -c config/settings.yml

@@ -7,15 +7,15 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 <img align="right" width="320" src="https://github.com/sunwenbo/golang/raw/master/logo.png">
 
 
-[![Build Status](https://github.com/wenjianzhang/go-admin/workflows/build/badge.svg)](https://github.com/go-admin-team/go-admin)
-[![Release](https://img.shields.io/github/release/go-admin-team/go-admin.svg?style=flat-square)](https://github.com/go-admin-team/go-admin/releases)
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/go-admin-team/go-admin)
+[![Build Status](https://github.com/wenjianzhang/go-admin/workflows/build/badge.svg)](https://github.com/sunwenbo/smart-api)
+[![Release](https://img.shields.io/github/release/go-admin-team/go-admin.svg?style=flat-square)](https://github.com/sunwenbo/smart-api/releases)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/sunwenbo/smart-api)
 
 English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh-cn.md)
 
 基于Gin + Vue + Element UI OR Arco Design OR Ant Design的前后端分离权限管理系统,系统初始化极度简单，只需要配置文件中，修改数据库连接，系统支持多指令操作，迁移指令可以让初始化数据库信息变得更简单，服务指令可以很简单的启动api服务
 
-[前端项目](https://github.com/sunwenbo/smart-ui-new)
+[前端项目](https://github.com/sunwenbo/smart-ui)
 
 [后端项目](https://github.com/sunwenbo/smart-api)
 
@@ -189,7 +189,7 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
     ./smart-api server -c config/settings.yml
     ```
 
-9. 本地开发
+9. 本地开发数据库迁移
    ```
    生成迁移文件
    go run main.go migrate -g true -c config/settings.yml
@@ -203,9 +203,6 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
    接口管理生成
    go run main.go server -c config/settings.yml -a false
    ```
-
-#### 使用docker 编译启动
-
 
 #### 交叉编译
 
@@ -224,8 +221,8 @@ env GOOS=linux GOARCH=amd64 go build main.go
 1. 克隆前端项目：
 
     ```bash
-    git clone https://github.com/sunwenbo/smart-ui-new.git
-    cd smart-ui-new
+    git clone https://github.com/sunwenbo/smart-ui.git
+    cd smart-ui
     ```
 
 2. 安装依赖：
@@ -246,6 +243,10 @@ env GOOS=linux GOARCH=amd64 go build main.go
 
    打开浏览器并访问 `http://localhost:9527` 查看前端界面。
 
+### 使用docker启动
+
+
+### 使用kubernetes部署
 
 ## 使用说明
 
@@ -253,6 +254,7 @@ env GOOS=linux GOARCH=amd64 go build main.go
 2. **创建工单**：进入任务管理页面，点击“创建工单”，填写相关信息并分配处理人。
 3. **任务执行监控**：通过系统内的任务执行界面，可实时查看任务的执行状态、执行结果及日志。
 4. **工单评分与留言**：工单结束后，用户可以对工单进行评分，并通过留言功能记录对工单处理过程的反馈。
+
 
 ## 系统截图
 

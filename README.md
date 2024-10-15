@@ -12,7 +12,7 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
 
 This is a front-end and back-end separated permission management system based on Gin + Vue + Element UI OR Arco Design OR Ant Design. The system setup is extremely simple, requiring only the configuration of the database connection in the settings file. The system supports multiple commands for operations, and migration commands make it easier to initialize database information. Service commands simplify starting the API service.
 
-[Frontend Project](https://github.com/sunwenbo/smart-ui-new)
+[Frontend Project](https://github.com/sunwenbo/smart-ui)
 
 [Backend Project](https://github.com/sunwenbo/smart-api)
 
@@ -177,8 +177,8 @@ You need to install [Go], [Gin], [Node.js](http://nodejs.org/), and [Git](https:
 1. Clone the frontend project:
 
     ```bash
-    git clone https://github.com/sunwenbo/smart-ui-new.git
-    cd smart-ui-new
+    git clone https://github.com/sunwenbo/smart-ui.git
+    cd smart-ui
     ```
 
 2. Install dependencies:
