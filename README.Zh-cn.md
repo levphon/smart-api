@@ -243,10 +243,31 @@ env GOOS=linux GOARCH=amd64 go build main.go
 
    打开浏览器并访问 `http://localhost:9527` 查看前端界面。
 
-### 使用docker启动
 
+### 使用docker启动
+非本地部署时要先初始化数据库的数据，可以使用本地编译后的二进制文件执行如下命令
+
+⚠️⚠️⚠️要修改settings.yml 文件中的关键参数
+   ```bash 
+   ./smart-api migrate -c config/settings.yml 
+   ```
+
+#### 后端
+本地如果是arm架构，但是想构建为x86架构的镜像
+   ```bash
+   docker buildx build --platform linux/amd64 -t sunwenbo/smart-api:latest .
+   docker push sunwenbo/smart-api:latest
+   docker run -itd -p 8000:8000  --name smart-api sunwenbo/smart-api:latest
+   ```
+#### 前端
+   ```bash
+   docker buildx build --platform linux/amd64 -t sunwenbo/smart-ui:latest . --load
+   docker push sunwenbo/smart-ui:latest
+   docker run -itd -p 80:80 --name smart-ui sunwenbo/smart-ui 
+   ```
 
 ### 使用kubernetes部署
+初始化数据方法如上☝️
 
 ## 使用说明
 
@@ -257,7 +278,17 @@ env GOOS=linux GOARCH=amd64 go build main.go
 
 
 ## 系统截图
+[数据统计]![数据统计](https://example.com/screenshot/login.png)
 
+[工单申请]![工单申请](https://example.com/screenshot/login.png)
+
+[自定义流程]![自定义流程](https://example.com/screenshot/login.png)
+
+[自定义模板]![自定义模板](https://example.com/screenshot/login.png)
+
+[工单管理]![工单管理](https://example.com/screenshot/login.png)
+
+[任务类型]![任务类型](https://example.com/screenshot/login.png)
 
 ### 登录界面
 ![登录界面](https://example.com/screenshot/login.png)
