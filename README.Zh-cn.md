@@ -278,26 +278,26 @@ env GOOS=linux GOARCH=amd64 go build main.go
 
 
 ## 系统截图
-[数据统计]![数据统计](https://example.com/screenshot/login.png)
+[数据统计]![数据统计](https://github.com/sunwenbo/smart-api/blob/main/static/image/statistics.png)
 
-[工单申请]![工单申请](https://example.com/screenshot/login.png)
+[工单申请]![工单申请](https://github.com/sunwenbo/smart-api/blob/main/static/image/orderApply.png)
 
-[自定义流程]![自定义流程](https://example.com/screenshot/login.png)
+[自定义流程]![自定义流程](https://github.com/sunwenbo/smart-api/blob/main/static/image/customflow.png)
 
-[自定义模板]![自定义模板](https://example.com/screenshot/login.png)
+[自定义模板]![自定义模板](https://github.com/sunwenbo/smart-api/blob/main/static/image/customtemplate.png)
 
-[工单管理]![工单管理](https://example.com/screenshot/login.png)
+[工单管理]![工单管理](https://github.com/sunwenbo/smart-api/blob/main/static/image/ordermanage.png)
 
-[任务类型]![任务类型](https://example.com/screenshot/login.png)
+[任务类型]![任务类型](https://github.com/sunwenbo/smart-api/blob/main/static/image/tasktype.png)
 
 ### 登录界面
-![登录界面](https://example.com/screenshot/login.png)
+![登录界面](https://github.com/sunwenbo/smart-api/blob/main/static/image/login.png)
 
 ### 工单管理
-![工单管理](https://example.com/screenshot/order-management.png)
+![工单管理](https://github.com/sunwenbo/smart-api/blob/main/static/image/order.png)
 
 ### 实时任务监控
-![实时任务监控](https://example.com/screenshot/task-monitor.png)
+![实时任务监控](https://github.com/sunwenbo/smart-api/blob/main/static/image/task.png)
 
 ## 贡献指南
 
