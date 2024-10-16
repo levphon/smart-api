@@ -8,8 +8,8 @@ config/settings.dev.*.yml.log
 static/uploadfile
 main.exe
 *.exe
-go-admin
-go-admin.exe
+smart-api
+smart-api.exe
 temp/
 logs/
 

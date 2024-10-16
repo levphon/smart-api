@@ -14,7 +14,7 @@ import (
 // @contact.email swb956721830@163.com
 
 // @license.name Apache 2.0
-// @license.url https://github.com/go-admin-team/go-admin/blob/master/LICENSE.md
+// @license.url https://github.com/sunwenbo/smart-api/blob/master/LICENSE.md
 
 // @securityDefinitions.apikey Bearer
 // @in header
