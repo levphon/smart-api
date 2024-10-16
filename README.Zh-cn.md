@@ -3,11 +3,9 @@
 
 Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端分离，采用 Gin 框架作为后端，Vue.js 和 Element UI 作为前端。系统旨在实现对工单管理的高效处理，支持任务分配、执行监控、实时更新等功能。
 
-
 <img align="right" width="320" src="https://github.com/sunwenbo/golang/raw/master/logo.png">
 
-
-[![Build Status](https://github.com/wenjianzhang/go-admin/workflows/build/badge.svg)](https://github.com/sunwenbo/smart-api)
+[![Build Status](https://github.com/sunwenbo/smart/workflows/build/badge.svg)](https://github.com/sunwenbo/smart-api)
 [![Release](https://img.shields.io/github/release/go-admin-team/go-admin.svg?style=flat-square)](https://github.com/sunwenbo/smart-api/releases)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/sunwenbo/smart-api)
 
@@ -71,21 +69,21 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
 ## 🎁 内置
 
 1. 多租户：系统默认支持多租户，按库分离，一个库一个租户。
-1. 用户管理：用户是系统操作者，该功能主要完成系统用户配置。
-2. 部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
-3. 岗位管理：配置系统用户所属担任职务。
-4. 菜单管理：配置系统菜单，操作权限，按钮权限标识，接口权限等。
-5. 角色管理：角色菜单权限分配、设置角色按机构进行数据范围权限划分。
-6. 字典管理：对系统中经常使用的一些较为固定的数据进行维护。
-7. 参数管理：对系统动态配置常用参数。
-8. 操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
-9. 登录日志：系统登录日志记录查询包含登录异常。
-1. 接口文档：根据业务代码自动生成相关的api接口文档。
-1. 代码生成：根据数据表结构生成对应的增删改查相对应业务，全程可视化操作，让基本业务可以零代码实现。
-1. 表单构建：自定义页面样式，拖拉拽实现页面布局。
-1. 服务监控：查看一些服务器的基本信息。
-1. 内容管理：demo功能，下设分类管理、内容管理。可以参考使用方便快速入门。
-1. 定时任务：自动化任务，目前支持接口调用和函数调用。
+2. 用户管理：用户是系统操作者，该功能主要完成系统用户配置。
+3. 部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
+4. 岗位管理：配置系统用户所属担任职务。
+5. 菜单管理：配置系统菜单，操作权限，按钮权限标识，接口权限等。
+6. 角色管理：角色菜单权限分配、设置角色按机构进行数据范围权限划分。
+7. 字典管理：对系统中经常使用的一些较为固定的数据进行维护。
+8. 参数管理：对系统动态配置常用参数。
+9. 操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
+10. 登录日志：系统登录日志记录查询包含登录异常。
+11. 接口文档：根据业务代码自动生成相关的api接口文档。
+12. 代码生成：根据数据表结构生成对应的增删改查相对应业务，全程可视化操作，让基本业务可以零代码实现。
+13. 表单构建：自定义页面样式，拖拉拽实现页面布局。
+14. 服务监控：查看一些服务器的基本信息。
+15. 内容管理：demo功能，下设分类管理、内容管理。可以参考使用方便快速入门。
+16. 定时任务：自动化任务，目前支持接口调用和函数调用。
 
 
 ## 🛰️ 系统模块
@@ -111,7 +109,7 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
 
 ### 准备工作
 
-你需要在本地安装 [go] [gin] [node](http://nodejs.org/) 和 [git](https://git-scm.com/)
+你需要在本地安装 [go](https://go.dev/dl/) [gin](https://pkg.go.dev/github.com/gin-gonic/gin) [node](http://nodejs.org/) 和 [git](https://git-scm.com/)
 
 ## 📦 环境要求
 
@@ -141,10 +139,10 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
    ```bash
    cp config/settings.full.yml config/settings.yml
    ```
-   #### 修改 `config/settings.yml` 中的数据库连接信息，确保数据库配置正确。
-    1. 配置文件中修改数据库信息
-    2. 注意: settings.database 下对应的配置数据
-    3. 确认log路径
+   ⚠️：修改 `config/settings.yml` 中的数据库连接信息确保数据库配置正确
+   1. 配置文件中修改数据库信息
+   2. 注意: settings.database 下对应的配置数据
+   3. 确认log路径
 
 4. 编译
     ```bash 
@@ -160,7 +158,6 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
    
     # ⚠️注意:windows 下使用
     $ smart-api.exe migrate -c config/settings.yml
-   
     
     # 启动项目，也可以用IDE进行调试
     # macOS or linux 下使用
@@ -173,8 +170,8 @@ English|[简体中文](https://github.com/sunwenbo/smart-api/blob/main/README.Zh
 
 6. sys_api 表的数据如何添加
 
-   在项目启动时，使用`-a true` 系统会自动添加缺少的接口数据
    ```bash
+   # 在项目启动时，使用`-a true` 系统会自动添加缺少的接口数据
    ./smart-api server -c config/settings.yml -a true
    ```
 7. 更新Swagger文档生成
@@ -230,7 +227,7 @@ env GOOS=linux GOARCH=amd64 go build main.go
     ```bash
     npm config set registry https://registry.npmmirror.com/  
     npm config get registry
-    npm install  --legacy-peer-deps 
+    npm install --legacy-peer-deps 
     ```
 
 3. 启动开发服务器：
@@ -247,7 +244,7 @@ env GOOS=linux GOARCH=amd64 go build main.go
 ### 使用docker启动
 非本地部署时要先初始化数据库的数据，可以使用本地编译后的二进制文件执行如下命令
 
-⚠️⚠️⚠️要修改settings.yml 文件中的关键参数
+⚠️⚠️⚠️要修改settings.yml 文件中的数据库信息
    ```bash 
    ./smart-api migrate -c config/settings.yml 
    ```
@@ -255,19 +252,53 @@ env GOOS=linux GOARCH=amd64 go build main.go
 #### 后端
 本地如果是arm架构，但是想构建为x86架构的镜像
    ```bash
-   docker buildx build --platform linux/amd64 -t sunwenbo/smart-api:latest .
-   docker push sunwenbo/smart-api:latest
-   docker run -itd -p 8000:8000  --name smart-api sunwenbo/smart-api:latest
-   ```
+   # 构建镜像
+   docker buildx build --platform linux/amd64 -t registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest . --load    
+   # 推向镜像仓库
+   docker push registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest
+   # 启动后端服务，挂载settings.yml文件
+   docker run -itd  \
+     -p 8000:8000 \
+     -v /data/config/:/home/service/config/ \
+     --name smart-api \
+     registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest   
+  ```
 #### 前端
    ```bash
-   docker buildx build --platform linux/amd64 -t sunwenbo/smart-ui:latest . --load
-   docker push sunwenbo/smart-ui:latest
-   docker run -itd -p 80:80 --name smart-ui sunwenbo/smart-ui 
+   # 构建镜像
+   docker buildx build --platform linux/amd64 -t registry.cn-beijing.aliyuncs.com/sunwenbo/smart-ui:latest . --load
+   # 推向镜像仓库
+   docker push registry.cn-beijing.aliyuncs.com/sunwenbo/smart-ui:latest 
+   # 启动前端服务，挂载nginx的配置文件
+   docker run -itd  \
+     -p 80:80 \
+     -v /data/default.conf:/etc/nginx/conf.d/default.conf \
+     --name smart-ui \
+     registry.cn-beijing.aliyuncs.com/sunwenbo/smart-ui:latest  
    ```
 
 ### 使用kubernetes部署
 初始化数据方法如上☝️
+
+#### 后端
+   ```bash
+   cd smart-api/scripts/
+   bash install.sh
+   ```
+
+#### 前端
+   ```bash
+   cd smart-ui/scripts/
+   执行部署前要修改yaml中的配置，例如ingress
+   bash install.sh
+   ```
+
+#### 检查部署情况
+   ```bash
+   kubect get cm -n sre 
+   kubect get pod -n sre 
+   kubect get ingress -n sre 
+   ```
 
 ## 使用说明
 
@@ -366,7 +397,7 @@ Smart-API 工单系统使用 [MIT 许可证](LICENSE) 开源，欢迎个人和�
 - [开发者 3](https://github.com/developer3)
 
 
-> 如果你有任何问题或建议，请通过 [issue](https://github.com/your-repo/smart-api-backend/issues) 提交。
+> 如果你有任何问题或建议，请通过 [issue](https://github.com/sunwenbo/smart-api/issues) 提交。
 
 
 ## 🤝 特别感谢
@@ -380,20 +411,20 @@ Smart-API 工单系统使用 [MIT 许可证](LICENSE) 开源，欢迎个人和�
 ### 开源框架组件
 1. [go-admin # 非常强大的后端开发框架、内置功能非常丰富](https://github.com/go-admin-team/go-admin)
 2. [wfd-vue # 流程设计器](https://github.com/guozhaolong/wfd-vue)
-3. [VForm 一款高效的Vue 2 / Vue3 的低代码表单可视化设计，一键生成源码，享受更多摸鱼时间](https://vform666.com/vform3.html)
-3. [ant-design](https://github.com/ant-design/ant-design)
-4. [ant-design-pro](https://github.com/ant-design/ant-design-pro)
-5. [arco-design](https://github.com/arco-design/arco-design)
-6. [arco-design-pro](https://github.com/arco-design/arco-design-pro)
-7. [gin](https://github.com/gin-gonic/gin)
-8. [casbin](https://github.com/casbin/casbin)
-9. [spf13/viper](https://github.com/spf13/viper)
-10. [gorm](https://github.com/jinzhu/gorm)
-11. [gin-swagger](https://github.com/swaggo/gin-swagger)
-12. [jwt-go](https://github.com/dgrijalva/jwt-go)
-13. [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
-14. [ruoyi-vue](https://gitee.com/y_project/RuoYi-Vue)
-15. [form-generator](https://github.com/JakHuang/form-generator)
+3. [VForm 一款高效的Vue 2 / Vue3 的低代码表单可视化设计，一键生成源码](https://vform666.com/vform3.html)
+4. [ant-design](https://github.com/ant-design/ant-design)
+5. [ant-design-pro](https://github.com/ant-design/ant-design-pro)
+6. [arco-design](https://github.com/arco-design/arco-design)
+7. [arco-design-pro](https://github.com/arco-design/arco-design-pro)
+8. [gin](https://github.com/gin-gonic/gin)
+9. [casbin](https://github.com/casbin/casbin)
+10. [spf13/viper](https://github.com/spf13/viper)
+11. [gorm](https://github.com/jinzhu/gorm)
+12. [gin-swagger](https://github.com/swaggo/gin-swagger)
+13. [jwt-go](https://github.com/dgrijalva/jwt-go)
+14. [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
+15. [ruoyi-vue](https://gitee.com/y_project/RuoYi-Vue)
+16. [form-generator](https://github.com/JakHuang/form-generator)
 
 
 ## 🤟 打赏

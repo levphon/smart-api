@@ -19,7 +19,7 @@ COPY config  /home/service/config
 CMD ["/home/service/smart-api","server","-c", "./config/settings.yml", "-a", "true"]
 
 # 本地如果是arm架构，但是想构建为x86架构的镜像
-# docker buildx build --platform linux/amd64 -t sunwenbo/smart-api:latest .
+# docker buildx build --platform linux/amd64 -t registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest . --load
 
 # 如果本地是arm架构，但是想将打好的镜像使用在x86的linux服务器，使用下面命令构建镜像即可兼容本地和linux x86个arm环境
 # 在 docker buildx 中进行多平台构建时，默认的 Docker 驱动并不支持多平台构建。要解决这个问题，你可以切换到 docker-container 驱动，它支持多平台构建。

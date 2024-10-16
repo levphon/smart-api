@@ -32,7 +32,6 @@ var rootCmd = &cobra.Command{
 
 func tip() {
 	usageStr := `欢迎使用 ` + pkg.Green(`smart `+global.Version) + ` 可以使用 ` + pkg.Red(`-h`) + ` 查看命令`
-	// usageStr1 := `也可以参考 https://doc.go-admin.dev/guide/ksks 的相关内容`
 	usageStr1 := `https://blog.csdn.net/weixin_43798031?spm=1000.2115.3001.5343`
 	fmt.Printf("%s\n", usageStr)
 	fmt.Printf("%s\n", usageStr1)

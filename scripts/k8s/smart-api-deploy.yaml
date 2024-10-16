@@ -35,23 +35,15 @@ spec:
     spec:
       containers:
       - name: smart-api
-        image: registry.cn-shanghai.aliyuncs.com/smart-api-team/smart-api
+        image: registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         volumeMounts:
-        - name: smart-api
-          mountPath: /temp
-        - name: smart-api
-          mountPath: /static
         - name: smart-api-config
-          mountPath: /config/
+          mountPath: /home/service/config/
           readOnly: true
       volumes:
-      - name: smart-api
-        persistentVolumeClaim:
-          claimName: smart-api
       - name: smart-api-config
         configMap:
-          name: settings-admin
----
+          name: settings
