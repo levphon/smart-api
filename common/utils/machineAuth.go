@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	log "github.com/go-admin-team/go-admin-core/logger"
+	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"net"
 	"time"
@@ -105,7 +106,9 @@ func (c *MachineConn) testTCPPort(ip string, port int) error {
 	return nil
 }
 
-func (c *MachineConn) ExecuteCommand(client *ssh.Client, command string) (string, string, error) {
+// ExecuteCommandWithParams 执行命令并传递参数
+func (c *MachineConn) ExecuteCommandWithParams(client *ssh.Client, orderTitle, command, formDataJSON string) (string, string, error) {
+	// 创建一个新的 SSH 会话
 	session, err := client.NewSession()
 	if err != nil {
 		return "", "", fmt.Errorf("failed to create session: %v", err)
@@ -116,9 +119,85 @@ func (c *MachineConn) ExecuteCommand(client *ssh.Client, command string) (string
 	session.Stdout = &stdoutBuf
 	session.Stderr = &stderrBuf
 
-	if err := session.Run(command); err != nil {
+	// 根据 orderTitle 和当前时间生成唯一的临时脚本文件名
+	timeNow := time.Now().Format("20060102150405") // 格式化为 年月日时分秒
+	tempFileName := fmt.Sprintf("/tmp/%s_%s.sh", orderTitle, timeNow)
+
+	// 创建临时脚本内容
+	tempScript := fmt.Sprintf(`
+%s
+# 动态生成的脚本，接收 $1 作为 JSON 参数
+jsonData=$1
+echo "Executing task with JSON data: $jsonData"
+`, command)
+
+	// 将脚本写入远程机器的临时文件
+	if err := c.writeRemoteFile(client, tempFileName, tempScript); err != nil {
+		return "", "", fmt.Errorf("failed to write remote script: %v", err)
+	}
+
+	// 创建一个新的 SSH 会话给脚本添加执行权限
+	session, err = client.NewSession()
+	if err != nil {
+		return "", "", fmt.Errorf("failed to create session for chmod: %v", err)
+	}
+	defer session.Close()
+
+	// 给临时脚本添加执行权限
+	chmodCmd := fmt.Sprintf("chmod +x %s", tempFileName)
+	if err := session.Run(chmodCmd); err != nil {
+		return "", "", fmt.Errorf("failed to chmod script: %v", err)
+	}
+
+	// 创建一个新的 SSH 会话执行脚本
+	session, err = client.NewSession()
+	if err != nil {
+		return "", "", fmt.Errorf("failed to create session for executing script: %v", err)
+	}
+	defer session.Close()
+
+	// 执行脚本，并传递 formDataJSON 作为第一个参数 $1
+	execCmd := fmt.Sprintf("%s '%s'", tempFileName, formDataJSON)
+	fmt.Println("Executing command:", execCmd)
+	if err := session.Run(execCmd); err != nil {
 		return stdoutBuf.String(), stderrBuf.String(), fmt.Errorf("failed to execute command: %v", err)
 	}
 
+	// 创建一个新的 SSH 会话删除临时脚本
+	session, err = client.NewSession()
+	if err != nil {
+		return "", "", fmt.Errorf("failed to create session for removing script: %v", err)
+	}
+	defer session.Close()
+
+	// 删除临时脚本
+	rmCmd := fmt.Sprintf("rm -f %s", tempFileName)
+	if err := session.Run(rmCmd); err != nil {
+		return stdoutBuf.String(), stderrBuf.String(), fmt.Errorf("failed to remove temp script: %v", err)
+	}
+
 	return stdoutBuf.String(), stderrBuf.String(), nil
+}
+
+// writeRemoteFile 在远程机器上写入文件
+func (c *MachineConn) writeRemoteFile(client *ssh.Client, path string, content string) error {
+	sftpClient, err := sftp.NewClient(client)
+	if err != nil {
+		return fmt.Errorf("failed to create SFTP client: %v", err)
+	}
+	defer sftpClient.Close()
+
+	// 在远程创建文件
+	file, err := sftpClient.Create(path)
+	if err != nil {
+		return fmt.Errorf("failed to create remote file: %v", err)
+	}
+	defer file.Close()
+
+	// 写入文件内容
+	if _, err := file.Write([]byte(content)); err != nil {
+		return fmt.Errorf("failed to write content to file: %v", err)
+	}
+
+	return nil
 }

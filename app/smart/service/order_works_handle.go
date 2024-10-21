@@ -3,6 +3,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	log "github.com/go-admin-team/go-admin-core/logger"
@@ -94,7 +95,7 @@ func (e *OrderWorksService) Handle(c *dto.OrderWorksHandleReq, handle int) error
 	switch c.ActionType {
 	// 1 为同意 0为拒绝
 	case "1":
-		targetNodeId, err = e.findNextNode(edges, cutNodeId, nodes)
+		targetNodeId, err = e.findNextNode(edges, cutNodeId, nodes, model.Title)
 		if err != nil {
 			e.Log.Errorf("Error while finding next node: %v", err)
 			return fmt.Errorf("error finding next node: %v", err)
@@ -189,7 +190,7 @@ func findNodeByName(nodes []interface{}, currentNode string) string {
 }
 
 // 辅助函数：根据当前节点查找下一个节点
-func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}) (string, error) {
+func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}, orderTitle string) (string, error) {
 	// 查找当前节点的类型
 	currentNodeType := getNodeTypeById(nodes, cutNodeId)
 
@@ -233,7 +234,7 @@ func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, 
 		utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
 
 		// 将任务名称和机器 IP 传递给任务执行函数
-		success, err := e.executeTaskOnMachine(taskName, machine)
+		success, err := e.executeTaskOnMachine(taskName, machine, orderTitle)
 		if err != nil {
 			return "", fmt.Errorf("任务执行失败: %v", err)
 		}
@@ -241,16 +242,10 @@ func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, 
 		// 如果任务执行成功，返回下一个节点
 		if success {
 			nextNodeId := findNextNodeInEdges(edges, cutNodeId)
-			fmt.Printf("任务成功，跳转到下一个节点: %v\n", nextNodeId)
 			return nextNodeId, nil
 		}
 
 		return "", fmt.Errorf("任务执行失败: %v", err)
-
-		//// 如果任务执行失败，返回上一个节点
-		//fmt.Println("任务失败，返回上一个节点...")
-		//previousNodeId := findPreviousNode(edges, cutNodeId)
-		//return previousNodeId, nil
 	}
 
 	// 判断当前节点是否为结束节点
@@ -398,7 +393,7 @@ func getTaskAndMachineById(nodes []interface{}, nodeId string) (interface{}, int
 }
 
 // 工单任务执行
-func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineName interface{}) (bool, error) {
+func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineName interface{}, orderTitle string) (bool, error) {
 	var err error
 
 	tx := e.Orm.Debug().Begin()
@@ -428,6 +423,22 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 		return false, fmt.Errorf("failed to query machine: %v", err)
 	}
 
+	// 查询工单，获取 form-data 字段（假设工单表的结构体为 OrderWork，并且 form-data 字段为 FormData）
+	var existingOrder models.OrderWorks
+	if err = tx.Where("title = ?", orderTitle).First(&existingOrder).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, fmt.Errorf("order with title '%v' not found", orderTitle)
+		}
+		return false, fmt.Errorf("failed to query order: %v", err)
+	}
+
+	// 将 FormData 转换为 JSON
+	formDataJSON, err := json.Marshal(existingOrder.FormData)
+	if err != nil {
+		return false, fmt.Errorf("failed to marshal form data to JSON: %v", err)
+	}
+	fmt.Printf("Form Data (JSON): %s\n", formDataJSON)
+
 	// Set up SSH configuration
 	sshConfig, err := e.setupSSHConfig(existingMachine)
 	if err != nil {
@@ -448,7 +459,12 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	startTime := time.Now()
 
 	// 执行任务
-	stdout, stderr, err := conn.ExecuteCommand(client, existingTask.Content)
+	stdout, stderr, err := conn.ExecuteCommandWithParams(client, orderTitle, existingTask.Content, string(formDataJSON))
+
+	if err != nil {
+		// 错误处理
+		fmt.Printf("任务执行失败: %v\n", err)
+	}
 
 	// Determine end time and duration
 	endTime := time.Now()

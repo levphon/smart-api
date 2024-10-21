@@ -104,6 +104,7 @@ require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
+	github.com/kr/fs v0.1.0 // indirect
 	github.com/kyokomi/emoji/v2 v2.2.11 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
@@ -123,6 +124,7 @@ require (
 	github.com/nsqio/go-nsq v1.1.0 // indirect
 	github.com/nyaruka/phonenumbers v1.0.55 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
+	github.com/pkg/sftp v1.13.6 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.45.0 // indirect

@@ -1,7 +1,6 @@
 package apis
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin/binding"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -490,7 +489,6 @@ func (e SysUser) GetInfo(c *gin.Context) {
 	mp["sex"] = sysUser.Sex
 	mp["email"] = sysUser.Email
 	mp["postId"] = sysUser.PostId
-	fmt.Println(sysUser.Phone, sysUser.Email, sysUser.DeptId, sysUser.PostId, sysUser.NickName)
 	mp["profileComplete"] = sysUser.Phone != "" && sysUser.Email != "" && sysUser.DeptId != 0 && sysUser.PostId != 0 && sysUser.NickName != ""
 
 	e.OK(mp, "")

@@ -290,7 +290,7 @@ func (h *ExecutionHistory) GetHistoryTask(pageNum, limit int, objects *[]models.
 	}
 
 	// 查询并分页获取订单项数据
-	db := h.Orm.Limit(limit).Offset(offset).Find(objects)
+	db := h.Orm.Order("created_at DESC").Limit(limit).Offset(offset).Find(objects)
 
 	if err := db.Error; err != nil {
 		h.Log.Errorf("历史任务查询失败: %s", err)
