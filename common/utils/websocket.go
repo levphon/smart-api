@@ -39,18 +39,18 @@ var Manager = &WebSocketManager{
 
 // Message 用于传递任务信息的结构
 type Message struct {
-	Type        string `json:"type"`         // 消息类型: start, complete, error
-	TaskID      int    `json:"task_id"`      // 任务ID
-	TaskName    string `json:"task_name"`    // 任务名称
-	Username    string `json:"username"`     // 主机用户名
-	Host        string `json:"host"`         // 主机地址
-	Port        int    `json:"port"`         // 主机端口
-	Command     string `json:"command"`      // 执行的命令
-	Output      string `json:"output"`       // 标准输出
-	ErrorOutput string `json:"error_output"` // 标准错误输出
-	StartTime   string `json:"start_time"`   // 执行开始时间
-	EndTime     string `json:"end_time"`     // 执行结束时间
-	Duration    string `json:"duration"`     // 执行时长
+	Type        string `json:"type"`        // 消息类型: start, complete, error
+	TaskID      int    `json:"taskId"`      // 任务ID
+	TaskName    string `json:"taskName"`    // 任务名称
+	UserName    string `json:"userName"`    // 主机用户名
+	Host        string `json:"host"`        // 主机地址
+	Port        int    `json:"port"`        // 主机端口
+	Command     string `json:"command"`     // 执行的命令
+	Output      string `json:"output"`      // 标准输出
+	ErrorOutput string `json:"errorOutput"` // 标准错误输出
+	StartTime   string `json:"startTime"`   // 执行开始时间
+	EndTime     string `json:"endTime"`     // 执行结束时间
+	Duration    string `json:"duration"`    // 执行时长
 }
 
 // Start 方法保留作为WebSocket管理器的初始化方法，但无需参数
@@ -77,7 +77,18 @@ func (wm *WebSocketManager) ensureTaskChannel(taskID int) *TaskChannel {
 	return wm.TaskChannels[taskID]
 }
 
-// start 方法启动单个任务通道
+// 在没有客户端时，清理 TaskChannel
+func (wm *WebSocketManager) cleanUpTaskChannel(taskID int) {
+	wm.mu.Lock()
+	defer wm.mu.Unlock()
+
+	if len(wm.TaskChannels[taskID].Clients) == 0 {
+		delete(wm.TaskChannels, taskID)
+		log.Printf("Task channel cleaned up for task %d", taskID)
+	}
+}
+
+// 修改 start 方法，断开最后一个客户端时调用 cleanUpTaskChannel
 func (tc *TaskChannel) start(taskID int) {
 	for {
 		select {
@@ -91,10 +102,16 @@ func (tc *TaskChannel) start(taskID int) {
 			delete(tc.Clients, id)
 			fmt.Printf("Client %s disconnected from task %d\n", id, taskID)
 
+			if len(tc.Clients) == 0 {
+				Manager.cleanUpTaskChannel(taskID)
+				return // 停止该通道的监听
+			}
+
 		case message := <-tc.Broadcast:
 			for _, conn := range tc.Clients {
 				if err := conn.WriteJSON(message); err != nil {
 					log.Printf("WebSocket write error: %v", err)
+					delete(tc.Clients, conn.RemoteAddr().String())
 				}
 			}
 		}

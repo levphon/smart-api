@@ -95,10 +95,10 @@ func (e *OrderWorksService) Handle(c *dto.OrderWorksHandleReq, handle int) error
 	switch c.ActionType {
 	// 1 为同意 0为拒绝
 	case "1":
-		targetNodeId, err = e.findNextNode(edges, cutNodeId, nodes, model.Title)
+		targetNodeId, err = e.findNextNode(edges, cutNodeId, nodes, model)
 		if err != nil {
-			e.Log.Errorf("Error while finding next node: %v", err)
-			return fmt.Errorf("error finding next node: %v", err)
+			e.Log.Errorf("Error: %v", err)
+			return err
 		}
 	case "0":
 		targetNodeId = findPreviousNode(edges, cutNodeId)
@@ -190,7 +190,7 @@ func findNodeByName(nodes []interface{}, currentNode string) string {
 }
 
 // 辅助函数：根据当前节点查找下一个节点
-func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}, orderTitle string) (string, error) {
+func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}, orderData models.OrderWorks) (string, error) {
 	// 查找当前节点的类型
 	currentNodeType := getNodeTypeById(nodes, cutNodeId)
 
@@ -214,13 +214,13 @@ func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, 
 			return "", fmt.Errorf("failed to query machine: %v", err)
 		}
 
-		// 发送任务开始消息
+		// 发送任务开始消息 todo 同时记录在日志中
 		startTime := time.Now().Format(time.RFC3339)
 		wsMessage := utils.Message{
 			Type:        "start",
 			TaskID:      existingTask.ID,
 			TaskName:    existingTask.Name,
-			Username:    existingMachine.UserName,
+			UserName:    existingMachine.UserName,
 			Host:        existingMachine.Ip,
 			Port:        existingMachine.Port,
 			Command:     existingTask.Content,
@@ -234,7 +234,7 @@ func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, 
 		utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
 
 		// 将任务名称和机器 IP 传递给任务执行函数
-		success, err := e.executeTaskOnMachine(taskName, machine, orderTitle)
+		success, err := e.executeTaskOnMachine(taskName, machine, orderData)
 		if err != nil {
 			return "", fmt.Errorf("任务执行失败: %v", err)
 		}
@@ -393,8 +393,15 @@ func getTaskAndMachineById(nodes []interface{}, nodeId string) (interface{}, int
 }
 
 // 工单任务执行
-func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineName interface{}, orderTitle string) (bool, error) {
+func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineName interface{}, orderData models.OrderWorks) (bool, error) {
 	var err error
+
+	// 创建 TaskLogger 实例
+	taskLog, err := utils.NewTaskLogger(orderData.Title)
+	if err != nil {
+		return false, fmt.Errorf("unable to create log recorder: %v", err)
+	}
+	defer taskLog.Close()
 
 	tx := e.Orm.Debug().Begin()
 	defer func() {
@@ -409,7 +416,7 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	var existingTask models.OrderTask
 	if err = tx.Where("name = ?", taskName).First(&existingTask).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, fmt.Errorf("task with name '%v' not found", taskName)
+			return false, fmt.Errorf("task named '%v' not found", taskName)
 		}
 		return false, fmt.Errorf("failed to query task: %v", err)
 	}
@@ -418,28 +425,27 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	var existingMachine models.ExecMachine
 	if err = tx.Where("hostname = ?", machineName).First(&existingMachine).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, fmt.Errorf("machine with name '%v' not found", machineName)
+			return false, fmt.Errorf("Machine named '%v' not found", machineName)
 		}
-		return false, fmt.Errorf("failed to query machine: %v", err)
+		return false, fmt.Errorf("Failed to query machine: %v", err)
 	}
 
 	// 查询工单，获取 form-data 字段（假设工单表的结构体为 OrderWork，并且 form-data 字段为 FormData）
 	var existingOrder models.OrderWorks
-	if err = tx.Where("title = ?", orderTitle).First(&existingOrder).Error; err != nil {
+	if err = tx.Where("title = ?", orderData.Title).First(&existingOrder).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, fmt.Errorf("order with title '%v' not found", orderTitle)
+			return false, fmt.Errorf("Order with title '%v' not found", orderData.Title)
 		}
-		return false, fmt.Errorf("failed to query order: %v", err)
+		return false, fmt.Errorf("Failed to query order: %v", err)
 	}
 
 	// 将 FormData 转换为 JSON
 	formDataJSON, err := json.Marshal(existingOrder.FormData)
 	if err != nil {
-		return false, fmt.Errorf("failed to marshal form data to JSON: %v", err)
+		return false, fmt.Errorf("Failed to convert form data to JSON: %v", err)
 	}
-	fmt.Printf("Form Data (JSON): %s\n", formDataJSON)
 
-	// Set up SSH configuration
+	// 设置 SSH 配置
 	sshConfig, err := e.setupSSHConfig(existingMachine)
 	if err != nil {
 		return false, err
@@ -448,61 +454,62 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	host := fmt.Sprintf("%s:%d", existingMachine.Ip, existingMachine.Port)
 	client, err := ssh.Dial("tcp", host, sshConfig)
 	if err != nil {
-		return false, fmt.Errorf("failed to connect: %v", err)
+		return false, fmt.Errorf("Connection failed: %v", err)
 	}
 	defer client.Close()
+	taskLog.Log("SSH connection successful")
 
 	// 创建 Connection 实例
 	conn := &utils.MachineConn{}
 
 	// 记录任务开始时间
 	startTime := time.Now()
+	taskLog.Log(fmt.Sprintf("Task start time: %s", startTime.Format(time.RFC3339)))
 
 	// 执行任务
-	stdout, stderr, err := conn.ExecuteCommandWithParams(client, orderTitle, existingTask.Content, string(formDataJSON))
+	res, err := conn.ExecuteCommandWithParams(client, orderData.Title, existingTask.Content, string(formDataJSON))
+	endTime := time.Now() // 移到这里，以便始终记录结束时间
 
-	if err != nil {
-		// 错误处理
-		fmt.Printf("任务执行失败: %v\n", err)
-	}
-
-	// Determine end time and duration
-	endTime := time.Now()
+	// 记录任务结束时间和持续时间
 	duration := endTime.Sub(startTime).String()
+	taskLog.Log(fmt.Sprintf("Task end time: %s, Duration: %s", endTime.Format(time.RFC3339), duration))
 
-	// 创建基础的 WebSocket 消息
+	// 发送 WebSocket 消息
 	wsMessage := utils.Message{
 		TaskID:    existingTask.ID,
 		TaskName:  existingTask.Name,
 		StartTime: startTime.Format(time.RFC3339),
 		EndTime:   endTime.Format(time.RFC3339),
 		Duration:  duration,
-		Output:    stdout,
+		Output:    res,
 	}
 
+	// 检查命令执行是否失败 todo 同时记录在日志中
 	if err != nil {
-		// 如果任务执行失败，记录错误并发送错误消息（包含 ErrorOutput 字段）
-		e.Log.Errorf("Command execution failed: stdout=%v, stderr=%v, error=%v", stdout, stderr, err)
+		// 任务执行失败
 		wsMessage.Type = "error"
-		wsMessage.ErrorOutput = stderr // 包含错误输出
+		wsMessage.ErrorOutput = res
 		utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
 
 		// 记录失败历史
-		err = recordExecutionHistory(tx, existingTask, existingMachine, 1, stdout, stderr, startTime)
+		err = recordExecutionHistory(tx, existingTask, existingMachine, 1, res, res, startTime)
 		if err != nil {
-			return false, fmt.Errorf("记录执行历史失败: %v", err)
+			taskLog.Log(fmt.Sprintf("Failed to record execution history: %v", err))
+			return false, err
 		}
 		return false, err
 	}
 
-	fmt.Printf("任务执行成功: stdout=%v, stderr=%v\n", stdout, stderr)
+	// 任务执行成功
+	taskLog.Log("Task executed successfully!")
 
 	// 记录成功历史
-	err = recordExecutionHistory(tx, existingTask, existingMachine, 0, stdout, stderr, startTime)
+	err = recordExecutionHistory(tx, existingTask, existingMachine, 0, res, res, startTime)
 	if err != nil {
 		return false, err
 	}
-	// 发送成功的 WebSocket 消息，不包含 errorOutput，也不重复其他字段
+
+	// 发送成功的 WebSocket 消息，不包含 errorOutput，也不重复其他字段 todo 同时记录在日志中
 	wsMessage.Type = "complete"
 	utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
 
