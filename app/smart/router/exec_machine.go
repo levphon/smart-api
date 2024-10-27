@@ -16,7 +16,6 @@ func init() {
 // 执行节点管理
 func registerExecMachineAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWTMiddleware) {
 	api := apis.ExecMachine{}
-	th := apis.ExecutionHistory{}
 	r := v1.Group("/exec-machine").Use(authMiddleware.MiddlewareFunc()).Use(middleware.AuthCheckRole())
 	{
 		// 查询所有节点
@@ -31,10 +30,6 @@ func registerExecMachineAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJ
 		r.DELETE("", api.Delete)
 		// 新增连接测试接口
 		r.POST("/testConnection", api.TestConnection) // 添加连接测试接口
-
-		// 查询历史任务
-		r.GET("/history", th.GetHistoryTaskPage)
-		r.DELETE("/history", th.Delete)
 
 	}
 }

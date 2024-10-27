@@ -14,7 +14,7 @@ const docTemplatesmart = `{
         },
         "license": {
             "name": "Apache 2.0",
-            "url": "https://github.com/go-admin-team/go-admin/blob/master/LICENSE.md"
+            "url": "https://github.com/sunwenbo/smart-api/blob/master/LICENSE.md"
         },
         "version": "{{.Version}}"
     },
@@ -844,7 +844,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.ExecMachine"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.ExecMachine"
                                                             }
                                                         }
                                                     }
@@ -903,100 +903,6 @@ const docTemplatesmart = `{
                     "执行节点管理"
                 ],
                 "summary": "删除ExecMachine",
-                "parameters": [
-                    {
-                        "description": "body",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.ExecMachineDeleteReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": 200, \"message\": \"删除成功\"}",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/exec-machine/history": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "获取ExecutionHistory列表",
-                "tags": [
-                    "执行节点管理"
-                ],
-                "summary": "获取ExecutionHistory列表",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "页条数",
-                        "name": "pageSize",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "页码",
-                        "name": "pageIndex",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": 200, \"data\": [...]}",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "allOf": [
-                                                {
-                                                    "$ref": "#/definitions/response.Page"
-                                                },
-                                                {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "list": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.ExecutionHistory"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "删除ExecutionHistory",
-                "tags": [
-                    "历史任务"
-                ],
-                "summary": "删除ExecutionHistory",
                 "parameters": [
                     {
                         "description": "body",
@@ -1083,7 +989,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.ExecMachine"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.ExecMachine"
                                         }
                                     }
                                 }
@@ -1169,7 +1075,7 @@ const docTemplatesmart = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/go-admin_app_smart_models.UserFavorites"
+                                                "$ref": "#/definitions/smart-api_app_smart_models.UserFavorites"
                                             }
                                         }
                                     }
@@ -1296,7 +1202,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.FlowManage"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.FlowManage"
                                                             }
                                                         }
                                                     }
@@ -1451,7 +1357,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.FlowManage"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.FlowManage"
                                         }
                                     }
                                 }
@@ -1550,7 +1456,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.FlowTemplates"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.FlowTemplates"
                                                             }
                                                         }
                                                     }
@@ -1662,7 +1568,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.FlowTemplates"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.FlowTemplates"
                                         }
                                     }
                                 }
@@ -2105,7 +2011,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.OrderCategory"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.OrderCategory"
                                                             }
                                                         }
                                                     }
@@ -2152,7 +2058,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OrderCategory"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OrderCategory"
                                         }
                                     }
                                 }
@@ -2407,7 +2313,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.OrderItems"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.OrderItems"
                                                             }
                                                         }
                                                     }
@@ -2519,7 +2425,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OrderItems"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OrderItems"
                                         }
                                     }
                                 }
@@ -2774,7 +2680,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.OrderTask"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.OrderTask"
                                                             }
                                                         }
                                                     }
@@ -2854,6 +2760,137 @@ const docTemplatesmart = `{
                 }
             }
         },
+        "/api/v1/order-task/history": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "获取ExecutionTaskHistory列表",
+                "tags": [
+                    "执行节点管理"
+                ],
+                "summary": "获取历史任务列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页条数",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "pageIndex",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"data\": [...]}",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/response.Page"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "list": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.ExecutionHistoryTask"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "删除历史执行任务",
+                "tags": [
+                    "历史任务"
+                ],
+                "summary": "删除历史执行任务",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderHistoryTaskDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order-task/history/logs/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "根据任务 ID 获取对应的历史任务日志内容",
+                "tags": [
+                    "历史任务"
+                ],
+                "summary": "获取历史任务日志数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "任务 ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 200, \"message\": \"获取任务日志成功\", \"data\": \"日志内容\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": 500, \"message\": \"获取任务日志失败\"}",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/order-task/{id}": {
             "get": {
                 "security": [
@@ -2886,7 +2923,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OrderTask"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OrderTask"
                                         }
                                     }
                                 }
@@ -2985,7 +3022,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.OrderWorks"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.OrderWorks"
                                                             }
                                                         }
                                                     }
@@ -3097,7 +3134,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OrderWorks"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OrderWorks"
                                         }
                                     }
                                 }
@@ -3182,7 +3219,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OrderWorks"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OrderWorks"
                                         }
                                     }
                                 }
@@ -3224,7 +3261,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OrderWorks"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OrderWorks"
                                         }
                                     }
                                 }
@@ -3266,7 +3303,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OrderWorks"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OrderWorks"
                                         }
                                     }
                                 }
@@ -3365,7 +3402,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_smart_models.OperationHistory"
+                                                                "$ref": "#/definitions/smart-api_app_smart_models.OperationHistory"
                                                             }
                                                         }
                                                     }
@@ -3412,7 +3449,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_smart_models.OperationHistory"
+                                            "$ref": "#/definitions/smart-api_app_smart_models.OperationHistory"
                                         }
                                     }
                                 }
@@ -4187,7 +4224,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_system_models.SysApi"
+                                                                "$ref": "#/definitions/smart-api_app_system_models.SysApi"
                                                             }
                                                         }
                                                     }
@@ -4265,7 +4302,7 @@ const docTemplatesmart = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go-admin_app_system_models.SysApi"
+                                            "$ref": "#/definitions/smart-api_app_system_models.SysApi"
                                         }
                                     }
                                 }
@@ -4381,7 +4418,7 @@ const docTemplatesmart = `{
                                                         "list": {
                                                             "type": "array",
                                                             "items": {
-                                                                "$ref": "#/definitions/go-admin_app_system_models.SysApi"
+                                                                "$ref": "#/definitions/smart-api_app_system_models.SysApi"
                                                             }
                                                         }
                                                     }
@@ -5518,7 +5555,7 @@ const docTemplatesmart = `{
                     "type": "boolean"
                 },
                 "structure": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.StrucTure"
+                    "$ref": "#/definitions/smart-api_app_smart_models.StrucTure"
                 },
                 "updateBy": {
                     "type": "integer"
@@ -5568,7 +5605,7 @@ const docTemplatesmart = `{
                     "type": "string"
                 },
                 "structure": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.StrucTure"
+                    "$ref": "#/definitions/smart-api_app_smart_models.StrucTure"
                 },
                 "updateBy": {
                     "type": "integer"
@@ -5612,7 +5649,7 @@ const docTemplatesmart = `{
                     "type": "string"
                 },
                 "formData": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.FormData"
+                    "$ref": "#/definitions/smart-api_app_smart_models.FormData"
                 },
                 "id": {
                     "type": "integer"
@@ -5650,7 +5687,7 @@ const docTemplatesmart = `{
                     "type": "string"
                 },
                 "formData": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.FormData"
+                    "$ref": "#/definitions/smart-api_app_smart_models.FormData"
                 },
                 "id": {
                     "type": "integer"
@@ -5852,6 +5889,14 @@ const docTemplatesmart = `{
                 },
                 "underWay": {
                     "description": "进行中的",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.OrderHistoryTaskDeleteReq": {
+            "type": "object",
+            "properties": {
+                "id": {
                     "type": "integer"
                 }
             }
@@ -6192,7 +6237,7 @@ const docTemplatesmart = `{
                     "description": "工单流程数据",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/go-admin_app_smart_models.FlowManage"
+                            "$ref": "#/definitions/smart-api_app_smart_models.FlowManage"
                         }
                     ]
                 },
@@ -6226,7 +6271,7 @@ const docTemplatesmart = `{
                     "description": "工单表单数据",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/go-admin_app_smart_models.FormData"
+                            "$ref": "#/definitions/smart-api_app_smart_models.FormData"
                         }
                     ]
                 },
@@ -6266,7 +6311,7 @@ const docTemplatesmart = `{
                     "description": "工单流程数据",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/go-admin_app_smart_models.FlowManage"
+                            "$ref": "#/definitions/smart-api_app_smart_models.FlowManage"
                         }
                     ]
                 },
@@ -6300,7 +6345,7 @@ const docTemplatesmart = `{
                     "description": "工单表单数据",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/go-admin_app_smart_models.FormData"
+                            "$ref": "#/definitions/smart-api_app_smart_models.FormData"
                         }
                     ]
                 },
@@ -6891,7 +6936,7 @@ const docTemplatesmart = `{
                 "sysApi": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysApi"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysApi"
                     }
                 },
                 "title": {
@@ -6978,7 +7023,7 @@ const docTemplatesmart = `{
                 "sysApi": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysApi"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysApi"
                     }
                 },
                 "title": {
@@ -7146,13 +7191,13 @@ const docTemplatesmart = `{
                 "sysDept": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysDept"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysDept"
                     }
                 },
                 "sysMenu": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysMenu"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysMenu"
                     }
                 },
                 "updateBy": {
@@ -7215,13 +7260,13 @@ const docTemplatesmart = `{
                 "sysDept": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysDept"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysDept"
                     }
                 },
                 "sysMenu": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysMenu"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysMenu"
                     }
                 },
                 "updateBy": {
@@ -7479,7 +7524,66 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.ExecMachine": {
+        "handler.Login": {
+            "type": "object",
+            "required": [
+                "code",
+                "password",
+                "username",
+                "uuid"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Page": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "pageIndex": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "requestId": {
+                    "description": "数据集",
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "smart-api_app_smart_models.ExecMachine": {
             "type": "object",
             "properties": {
                 "authType": {
@@ -7547,7 +7651,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.ExecutionHistory": {
+        "smart-api_app_smart_models.ExecutionHistoryTask": {
             "type": "object",
             "properties": {
                 "createBy": {
@@ -7603,6 +7707,10 @@ const docTemplatesmart = `{
                     "description": "任务名称",
                     "type": "string"
                 },
+                "taskUUID": {
+                    "description": "任务uuid",
+                    "type": "string"
+                },
                 "updateBy": {
                     "type": "integer"
                 },
@@ -7611,7 +7719,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.FlowManage": {
+        "smart-api_app_smart_models.FlowManage": {
             "type": "object",
             "properties": {
                 "categoryId": {
@@ -7655,7 +7763,7 @@ const docTemplatesmart = `{
                     "type": "string"
                 },
                 "structure": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.StrucTure"
+                    "$ref": "#/definitions/smart-api_app_smart_models.StrucTure"
                 },
                 "updateBy": {
                     "type": "integer"
@@ -7665,7 +7773,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.FlowTemplates": {
+        "smart-api_app_smart_models.FlowTemplates": {
             "type": "object",
             "properties": {
                 "bindCount": {
@@ -7691,7 +7799,7 @@ const docTemplatesmart = `{
                     "type": "string"
                 },
                 "formData": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.FormData"
+                    "$ref": "#/definitions/smart-api_app_smart_models.FormData"
                 },
                 "id": {
                     "type": "integer"
@@ -7711,11 +7819,11 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.FormData": {
+        "smart-api_app_smart_models.FormData": {
             "type": "object",
             "additionalProperties": true
         },
-        "go-admin_app_smart_models.OperationHistory": {
+        "smart-api_app_smart_models.OperationHistory": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -7766,7 +7874,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.OrderCategory": {
+        "smart-api_app_smart_models.OrderCategory": {
             "type": "object",
             "properties": {
                 "chineseName": {
@@ -7785,7 +7893,7 @@ const docTemplatesmart = `{
                 "flowTemplates": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_smart_models.FlowTemplates"
+                        "$ref": "#/definitions/smart-api_app_smart_models.FlowTemplates"
                     }
                 },
                 "id": {
@@ -7806,7 +7914,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.OrderItems": {
+        "smart-api_app_smart_models.OrderItems": {
             "type": "object",
             "properties": {
                 "bindTempLate": {
@@ -7857,7 +7965,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.OrderTask": {
+        "smart-api_app_smart_models.OrderTask": {
             "type": "object",
             "properties": {
                 "content": {
@@ -7905,11 +8013,11 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.OrderWorks": {
+        "smart-api_app_smart_models.OrderWorks": {
             "type": "object",
             "properties": {
                 "bindFlowData": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.FlowManage"
+                    "$ref": "#/definitions/smart-api_app_smart_models.FlowManage"
                 },
                 "createBy": {
                     "type": "integer"
@@ -7941,7 +8049,7 @@ const docTemplatesmart = `{
                     "type": "string"
                 },
                 "formData": {
-                    "$ref": "#/definitions/go-admin_app_smart_models.FormData"
+                    "$ref": "#/definitions/smart-api_app_smart_models.FormData"
                 },
                 "id": {
                     "type": "integer"
@@ -7978,11 +8086,11 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_smart_models.StrucTure": {
+        "smart-api_app_smart_models.StrucTure": {
             "type": "object",
             "additionalProperties": true
         },
-        "go-admin_app_smart_models.UserFavorites": {
+        "smart-api_app_smart_models.UserFavorites": {
             "type": "object",
             "properties": {
                 "createBy": {
@@ -8009,7 +8117,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_system_models.SysApi": {
+        "smart-api_app_system_models.SysApi": {
             "type": "object",
             "properties": {
                 "action": {
@@ -8044,7 +8152,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_system_models.SysConfig": {
+        "smart-api_app_system_models.SysConfig": {
             "type": "object",
             "properties": {
                 "configKey": {
@@ -8082,13 +8190,13 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_system_models.SysDept": {
+        "smart-api_app_system_models.SysDept": {
             "type": "object",
             "properties": {
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysDept"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysDept"
                     }
                 },
                 "createBy": {
@@ -8146,7 +8254,7 @@ const docTemplatesmart = `{
                 }
             }
         },
-        "go-admin_app_system_models.SysMenu": {
+        "smart-api_app_system_models.SysMenu": {
             "type": "object",
             "properties": {
                 "action": {
@@ -8164,7 +8272,7 @@ const docTemplatesmart = `{
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysMenu"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysMenu"
                     }
                 },
                 "component": {
@@ -8224,7 +8332,7 @@ const docTemplatesmart = `{
                 "sysApi": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/go-admin_app_system_models.SysApi"
+                        "$ref": "#/definitions/smart-api_app_system_models.SysApi"
                     }
                 },
                 "title": {
@@ -8237,65 +8345,6 @@ const docTemplatesmart = `{
                     "type": "string"
                 },
                 "visible": {
-                    "type": "string"
-                }
-            }
-        },
-        "handler.Login": {
-            "type": "object",
-            "required": [
-                "code",
-                "password",
-                "username",
-                "uuid"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "source": {
-                    "type": "string",
-                    "default": "1"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.Page": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "pageIndex": {
-                    "type": "integer"
-                },
-                "pageSize": {
-                    "type": "integer"
-                }
-            }
-        },
-        "response.Response": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "msg": {
-                    "type": "string"
-                },
-                "requestId": {
-                    "description": "数据集",
-                    "type": "string"
-                },
-                "status": {
                     "type": "string"
                 }
             }

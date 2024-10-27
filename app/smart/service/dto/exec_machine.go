@@ -98,11 +98,3 @@ type ExecMachineDeleteReq struct {
 func (s *ExecMachineDeleteReq) GetId() interface{} {
 	return s.Id
 }
-
-type ExecutionHistoryDeleteReq struct {
-	Id int `json:"id"`
-}
-
-func (s *ExecutionHistoryDeleteReq) GetId() interface{} {
-	return s.Id
-}

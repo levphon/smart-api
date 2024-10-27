@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	log "github.com/go-admin-team/go-admin-core/logger"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/ssh"
 	"gorm.io/gorm"
 	"regexp"
@@ -191,12 +192,21 @@ func findNodeByName(nodes []interface{}, currentNode string) string {
 
 // 辅助函数：根据当前节点查找下一个节点
 func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, nodes []interface{}, orderData models.OrderWorks) (string, error) {
+	// 生成一个 UUID 并取前 8 位
+	hisTaskUUId := uuid.New().String()[:8]
+
 	// 查找当前节点的类型
 	currentNodeType := getNodeTypeById(nodes, cutNodeId)
+	// 创建 TaskLogger 实例
+	taskLog, err := utils.NewTaskLogger(orderData.Title, hisTaskUUId)
+	if err != nil {
+		return "", fmt.Errorf("无法创建日志记录器: %v", err)
+	}
+	defer taskLog.Close() // 确保在函数结束时关闭日志文件
 
 	// 判断是否为处理节点
 	if currentNodeType == "receive-task-node" {
-		fmt.Println("当前节点是处理节点，开始执行任务...")
+		taskLog.Log("当前节点是处理节点，开始执行任务...")
 		// 使用新的函数获取任务名称和机器 IP
 		taskName, machine, err := getTaskAndMachineById(nodes, cutNodeId)
 		if err != nil {
@@ -214,16 +224,16 @@ func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, 
 			return "", fmt.Errorf("failed to query machine: %v", err)
 		}
 
-		// 发送任务开始消息 todo 同时记录在日志中
+		// 发送任务开始消息
 		startTime := time.Now().Format(time.RFC3339)
 		wsMessage := utils.Message{
-			Type:        "start",
-			TaskID:      existingTask.ID,
-			TaskName:    existingTask.Name,
-			UserName:    existingMachine.UserName,
-			Host:        existingMachine.Ip,
-			Port:        existingMachine.Port,
-			Command:     existingTask.Content,
+			Type:     "start",
+			TaskID:   existingTask.ID,
+			TaskName: existingTask.Name,
+			UserName: existingMachine.UserName,
+			Host:     existingMachine.Ip,
+			Port:     existingMachine.Port,
+			// Command:     existingTask.Content,
 			Output:      "",
 			ErrorOutput: "",
 			StartTime:   startTime,
@@ -231,18 +241,24 @@ func (e *OrderWorksService) findNextNode(edges []interface{}, cutNodeId string, 
 			Duration:    "",
 		}
 
+		// 将 WebSocket 消息记录到日志
+		taskLog.Log(fmt.Sprintf("发送任务开始消息: %+v", wsMessage))
+
+		// 推送 WebSocket 消息
 		utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
 
+		// 将日志存储到文件或数据库
+		taskLog.Log("任务已开始，消息已推送至 WebSocket")
+
 		// 将任务名称和机器 IP 传递给任务执行函数
-		success, err := e.executeTaskOnMachine(taskName, machine, orderData)
+		success, err := e.executeTaskOnMachine(taskName, machine, orderData, hisTaskUUId)
 		if err != nil {
 			return "", fmt.Errorf("任务执行失败: %v", err)
 		}
 
 		// 如果任务执行成功，返回下一个节点
 		if success {
-			nextNodeId := findNextNodeInEdges(edges, cutNodeId)
-			return nextNodeId, nil
+			return findNextNodeInEdges(edges, cutNodeId), nil
 		}
 
 		return "", fmt.Errorf("任务执行失败: %v", err)
@@ -393,11 +409,11 @@ func getTaskAndMachineById(nodes []interface{}, nodeId string) (interface{}, int
 }
 
 // 工单任务执行
-func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineName interface{}, orderData models.OrderWorks) (bool, error) {
+func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineName interface{}, orderData models.OrderWorks, hisTaskUUId string) (bool, error) {
 	var err error
 
 	// 创建 TaskLogger 实例
-	taskLog, err := utils.NewTaskLogger(orderData.Title)
+	taskLog, err := utils.NewTaskLogger(orderData.Title, hisTaskUUId)
 	if err != nil {
 		return false, fmt.Errorf("unable to create log recorder: %v", err)
 	}
@@ -467,7 +483,7 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	taskLog.Log(fmt.Sprintf("Task start time: %s", startTime.Format(time.RFC3339)))
 
 	// 执行任务
-	res, err := conn.ExecuteCommandWithParams(client, orderData.Title, existingTask.Content, string(formDataJSON))
+	res, err := conn.ExecuteCommandWithParams(client, orderData.Title, hisTaskUUId, existingTask.Content, string(formDataJSON))
 	endTime := time.Now() // 移到这里，以便始终记录结束时间
 
 	// 记录任务结束时间和持续时间
@@ -484,15 +500,16 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 		Output:    res,
 	}
 
-	// 检查命令执行是否失败 todo 同时记录在日志中
+	// 检查命令执行是否失败
 	if err != nil {
 		// 任务执行失败
 		wsMessage.Type = "error"
 		wsMessage.ErrorOutput = res
 		utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
+		taskLog.Log(fmt.Sprintf("发送任务结束消息: %+v", wsMessage))
 
 		// 记录失败历史
-		err = recordExecutionHistory(tx, existingTask, existingMachine, 1, res, res, startTime)
+		err = recordExecutionHistory(tx, existingTask, existingMachine, 1, res, res, startTime, hisTaskUUId)
 		if err != nil {
 			taskLog.Log(fmt.Sprintf("Failed to record execution history: %v", err))
 			return false, err
@@ -504,25 +521,27 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 	taskLog.Log("Task executed successfully!")
 
 	// 记录成功历史
-	err = recordExecutionHistory(tx, existingTask, existingMachine, 0, res, res, startTime)
+	err = recordExecutionHistory(tx, existingTask, existingMachine, 0, res, res, startTime, hisTaskUUId)
 	if err != nil {
 		return false, err
 	}
 
-	// 发送成功的 WebSocket 消息，不包含 errorOutput，也不重复其他字段 todo 同时记录在日志中
+	// 发送成功的 WebSocket 消息，不包含 errorOutput，也不重复其他字段
 	wsMessage.Type = "complete"
+	taskLog.Log(fmt.Sprintf("发送任务结束消息: %+v", wsMessage))
 	utils.Manager.BroadcastMessage(existingTask.ID, wsMessage)
 
 	return true, nil
 }
 
 // 记录任务执行记录
-func recordExecutionHistory(tx *gorm.DB, task models.OrderTask, machine models.ExecMachine, status int, stdout string, stderr string, startTime time.Time) error {
+func recordExecutionHistory(tx *gorm.DB, task models.OrderTask, machine models.ExecMachine, status int, stdout string, stderr string, startTime time.Time, hisTaskUUId string) error {
 	// 计算执行时长
 	duration := time.Since(startTime).Seconds()
 
-	history := models.ExecutionHistory{
+	history := models.ExecutionHistoryTask{
 		TaskID:        task.ID,
+		TaskUUID:      hisTaskUUId,
 		TaskName:      task.Name,
 		MachineID:     machine.ID,
 		HostName:      machine.HostName,

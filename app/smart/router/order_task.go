@@ -30,5 +30,13 @@ func registerOrderTaskAuthRouter(v1 *gin.RouterGroup, authMiddleware *jwt.GinJWT
 		r.PUT("", api.Update)
 		// 删除任务
 		r.DELETE("", api.Delete)
+
+		// 查询历史任务
+		r.GET("/history", api.GetHistoryTaskPage)
+		// 删除历史执行后的任务
+		r.DELETE("/history", api.DeleteHistoryTask)
+
+		// 查询历史任务日志
+		r.GET("/history/:id/logs", api.GetTaskLogsByID)
 	}
 }

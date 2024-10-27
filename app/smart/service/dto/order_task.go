@@ -79,3 +79,11 @@ type OrderTaskDeleteReq struct {
 func (s *OrderTaskDeleteReq) GetId() interface{} {
 	return s.Id
 }
+
+type OrderHistoryTaskDeleteReq struct {
+	Id int `json:"id"`
+}
+
+func (s *OrderHistoryTaskDeleteReq) GetId() interface{} {
+	return s.Id
+}

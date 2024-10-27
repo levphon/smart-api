@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
+	"os"
+	"path/filepath"
 	"smart-api/app/smart/models"
 
 	"github.com/go-admin-team/go-admin-core/sdk/service"
@@ -153,4 +155,91 @@ func (e *OrderTask) Remove(d *dto.OrderTaskDeleteReq) error {
 		return err
 	}
 	return nil
+}
+
+// GetHistoryTask 分页获取ExecutionHistory 所有的数据
+func (h *OrderTask) GetHistoryTask(pageNum, limit int, objects *[]models.ExecutionHistoryTask, total *int64) error {
+	// 计算偏移量
+	offset := (pageNum - 1) * limit
+
+	// 查询总数，不应用分页限制
+	err := h.Orm.Model(&models.ExecutionHistoryTask{}).Count(total).Error
+	if err != nil {
+		h.Log.Errorf("查询历史任务总数失败: %s", err)
+		return fmt.Errorf("查询历史任务总数失败: %s", err)
+	}
+
+	// 查询并分页获取订单项数据
+	db := h.Orm.Order("created_at DESC").Limit(limit).Offset(offset).Find(objects)
+
+	if err := db.Error; err != nil {
+		h.Log.Errorf("历史任务查询失败: %s", err)
+		return fmt.Errorf("历史任务查询失败: %s", err)
+	}
+	return nil
+}
+
+// Remove 删除历史任务
+func (h *OrderTask) DeleteHistoryTask(d *dto.OrderHistoryTaskDeleteReq) error {
+	var err error
+
+	var data models.ExecutionHistoryTask
+	// 查询要删除的任务
+	if err = h.Orm.Model(&data).First(&data, d.GetId()).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fmt.Errorf("machine with ID '%v' not found", d.GetId())
+		}
+		h.Log.Errorf("Error querying machine with ID '%v': %s", d.GetId(), err)
+		return fmt.Errorf("error querying machine with ID '%v': %s", d.GetId(), err)
+	}
+
+	// 执行删除操作
+	db := h.Orm.Model(&data).Delete(&data, d.GetId())
+	if err = db.Error; err != nil {
+		err = db.Error
+		h.Log.Errorf("Delete error: %s", err)
+		return err
+	}
+	if db.RowsAffected == 0 {
+		err = errors.New("无权删除该数据")
+		return err
+	}
+	return nil
+}
+
+// 获取历史任务日志
+func (h *OrderTask) GetTaskLogFileContent(hisTaskID string) (string, error) {
+	// 查询 exec_machine_history 表以获取对应的 taskUUID
+	var history models.ExecutionHistoryTask
+	if err := h.Orm.Where("id = ?", hisTaskID).First(&history).Error; err != nil {
+		h.Log.Errorf("查询 exec_machine_history 失败: %s", err)
+		return "", fmt.Errorf("查询 exec_machine_history 失败: %s", err)
+	}
+
+	// 构造日志文件路径
+	logDir := "./logs/task-log"
+	logFilePattern := fmt.Sprintf("%s/*_%s.log", logDir, history.TaskUUID)
+
+	// 查找匹配的日志文件
+	matchingFiles, err := filepath.Glob(logFilePattern)
+	if err != nil {
+		h.Log.Errorf("匹配日志文件失败: %s", err)
+		return "", fmt.Errorf("匹配日志文件失败: %s", err)
+	}
+
+	// 检查是否找到匹配的文件
+	if len(matchingFiles) == 0 {
+		h.Log.Errorf("未找到匹配的日志文件: %s", logFilePattern)
+		return "", fmt.Errorf("未找到匹配的日志文件: %s", logFilePattern)
+	}
+
+	// 读取第一个匹配的日志文件内容
+	logContent, err := os.ReadFile(matchingFiles[0])
+	if err != nil {
+		h.Log.Errorf("读取日志文件失败: %s", err)
+		return "", fmt.Errorf("读取日志文件失败: %s", err)
+	}
+
+	// 返回日志文件内容
+	return string(logContent), nil
 }

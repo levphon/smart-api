@@ -10,10 +10,10 @@ import (
 )
 
 // ExecuteCommandWithParams 执行命令并传递参数
-func (c *MachineConn) ExecuteCommandWithParams(client *ssh.Client, orderTitle, command, formDataJSON string) (string, error) {
+func (c *MachineConn) ExecuteCommandWithParams(client *ssh.Client, orderTitle, hisTaskUUId, command, formDataJSON string) (string, error) {
 
 	// 创建 TaskLogger 实例
-	taskLog, err := NewTaskLogger(orderTitle)
+	taskLog, err := NewTaskLogger(orderTitle, hisTaskUUId)
 	if err != nil {
 		return "", err
 	}
@@ -117,7 +117,6 @@ func (c *MachineConn) writeRemoteFile(client *ssh.Client, path string, content s
 		logMessage(fmt.Sprintf("Failed to write content to remote file: %v", err))
 		return fmt.Errorf("failed to write content to file: %v", err)
 	}
-	logMessage("File written successfully.")
 
 	return nil
 }

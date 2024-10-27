@@ -14,13 +14,14 @@ type TaskLogger struct {
 }
 
 // NewTaskLogger 创建一个新的 TaskLogger 实例
-func NewTaskLogger(orderTitle string) (*TaskLogger, error) {
+func NewTaskLogger(orderTitle string, hisTaskUUId string) (*TaskLogger, error) {
 	// 指定日志文件路径
 	logDir := "./logs/task-log"
 
 	// 获取当前日期并格式化为字符串
 	currentDateTime := time.Now().Format("200601021504") // YYYYMMDDHHMM 格式
-	logFilePath := fmt.Sprintf("%s/%s-%s_exec.log", logDir, orderTitle, currentDateTime)
+
+	logFilePath := fmt.Sprintf("%s/%s-%s_%s.log", logDir, orderTitle, currentDateTime, hisTaskUUId)
 
 	// 确保日志目录存在，如果不存在则创建
 	if err := os.MkdirAll(logDir, 0755); err != nil {

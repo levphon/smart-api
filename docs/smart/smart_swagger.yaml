@@ -357,6 +357,11 @@ definitions:
         description: 进行中的
         type: integer
     type: object
+  dto.OrderHistoryTaskDeleteReq:
+    properties:
+      id:
+        type: integer
+    type: object
   dto.OrderItemsDeleteReq:
     properties:
       id:
@@ -1470,6 +1475,46 @@ definitions:
       updatedAt:
         type: string
     type: object
+  handler.Login:
+    properties:
+      code:
+        type: string
+      password:
+        type: string
+      source:
+        default: "1"
+        type: string
+      username:
+        type: string
+      uuid:
+        type: string
+    required:
+    - code
+    - password
+    - username
+    - uuid
+    type: object
+  response.Page:
+    properties:
+      count:
+        type: integer
+      pageIndex:
+        type: integer
+      pageSize:
+        type: integer
+    type: object
+  response.Response:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+      requestId:
+        description: 数据集
+        type: string
+      status:
+        type: string
+    type: object
   smart-api_app_smart_models.ExecMachine:
     properties:
       authType:
@@ -1519,7 +1564,7 @@ definitions:
         description: 用户名
         type: string
     type: object
-  smart-api_app_smart_models.ExecutionHistory:
+  smart-api_app_smart_models.ExecutionHistoryTask:
     properties:
       createBy:
         type: integer
@@ -1559,6 +1604,9 @@ definitions:
         type: integer
       taskName:
         description: 任务名称
+        type: string
+      taskUUID:
+        description: 任务uuid
         type: string
       updateBy:
         type: integer
@@ -1999,46 +2047,6 @@ definitions:
       visible:
         type: string
     type: object
-  handler.Login:
-    properties:
-      code:
-        type: string
-      password:
-        type: string
-      source:
-        default: "1"
-        type: string
-      username:
-        type: string
-      uuid:
-        type: string
-    required:
-    - code
-    - password
-    - username
-    - uuid
-    type: object
-  response.Page:
-    properties:
-      count:
-        type: integer
-      pageIndex:
-        type: integer
-      pageSize:
-        type: integer
-    type: object
-  response.Response:
-    properties:
-      code:
-        type: integer
-      msg:
-        type: string
-      requestId:
-        description: 数据集
-        type: string
-      status:
-        type: string
-    type: object
   tools.Params:
     properties:
       treeCode:
@@ -2225,7 +2233,7 @@ info:
     添加qq群: xxxx 进入技术交流群 请先star，谢谢！
   license:
     name: Apache 2.0
-    url: https://github.com/smart-api-team/smart-api/blob/master/LICENSE.md
+    url: https://github.com/sunwenbo/smart-api/blob/master/LICENSE.md
   title: smart-api API
   version: 1.0.0
 paths:
@@ -2826,59 +2834,6 @@ paths:
       security:
       - Bearer: []
       summary: 修改ExecMachine
-      tags:
-      - 执行节点管理
-  /api/v1/exec-machine/history:
-    delete:
-      description: 删除ExecutionHistory
-      parameters:
-      - description: body
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dto.ExecMachineDeleteReq'
-      responses:
-        "200":
-          description: '{"code": 200, "message": "删除成功"}'
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - Bearer: []
-      summary: 删除ExecutionHistory
-      tags:
-      - 历史任务
-    get:
-      description: 获取ExecutionHistory列表
-      parameters:
-      - description: 页条数
-        in: query
-        name: pageSize
-        type: integer
-      - description: 页码
-        in: query
-        name: pageIndex
-        type: integer
-      responses:
-        "200":
-          description: '{"code": 200, "data": [...]}'
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  allOf:
-                  - $ref: '#/definitions/response.Page'
-                  - properties:
-                      list:
-                        items:
-                          $ref: '#/definitions/smart-api_app_smart_models.ExecutionHistory'
-                        type: array
-                    type: object
-              type: object
-      security:
-      - Bearer: []
-      summary: 获取ExecutionHistory列表
       tags:
       - 执行节点管理
   /api/v1/exec-machine/testConnection:
@@ -3978,6 +3933,82 @@ paths:
       summary: 修改OrderTask
       tags:
       - 工单任务
+  /api/v1/order-task/history:
+    delete:
+      description: 删除历史执行任务
+      parameters:
+      - description: body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderHistoryTaskDeleteReq'
+      responses:
+        "200":
+          description: '{"code": 200, "message": "删除成功"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 删除历史执行任务
+      tags:
+      - 历史任务
+    get:
+      description: 获取ExecutionTaskHistory列表
+      parameters:
+      - description: 页条数
+        in: query
+        name: pageSize
+        type: integer
+      - description: 页码
+        in: query
+        name: pageIndex
+        type: integer
+      responses:
+        "200":
+          description: '{"code": 200, "data": [...]}'
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.Page'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/smart-api_app_smart_models.ExecutionHistoryTask'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - Bearer: []
+      summary: 获取历史任务列表
+      tags:
+      - 执行节点管理
+  /api/v1/order-task/history/logs/{id}:
+    get:
+      description: 根据任务 ID 获取对应的历史任务日志内容
+      parameters:
+      - description: 任务 ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"code": 200, "message": "获取任务日志成功", "data": "日志内容"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: '{"code": 500, "message": "获取任务日志失败"}'
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - Bearer: []
+      summary: 获取历史任务日志数据
+      tags:
+      - 历史任务
   /api/v1/order-works:
     delete:
       description: 删除OrderWorks

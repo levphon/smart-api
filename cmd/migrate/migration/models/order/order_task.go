@@ -2,7 +2,10 @@
 // 2024/8/17 19:48
 package models
 
-import "smart-api/cmd/migrate/migration/models"
+import (
+	"smart-api/cmd/migrate/migration/models"
+	models2 "smart-api/common/models"
+)
 
 type OrderTask struct {
 	ID          int    `gorm:"primaryKey;autoIncrement" json:"id"`
@@ -19,4 +22,26 @@ type OrderTask struct {
 
 func (*OrderTask) TableName() string {
 	return "order_task"
+}
+
+type ExecutionHistoryTask struct {
+	ID            int              `gorm:"primaryKey;autoIncrement" json:"id"`
+	TaskID        int              `gorm:"column:task_id;" json:"taskID"`                        // 对应执行任务的ID
+	TaskUUID      string           `gorm:"column:uuid; type:varchar(15)" json:"taskUUID"`        // 任务uuid
+	TaskName      string           `gorm:"column:task_name; type:varchar(255)" json:"taskName"`  // 任务名称
+	MachineID     int              `gorm:"column:machine_id;" json:"machineID"`                  // 执行机器的ID
+	HostName      string           `gorm:"column:hostname; type:varchar(45)" json:"hostName"`    // 机器主机名
+	Ip            string           `gorm:"column:ip; type:varchar(15)" json:"ip"`                // 机器IP地址
+	ExecutionTime int64            `gorm:"column:execution_time;" json:"executionTime"`          // 执行时长
+	Status        int              `gorm:"column:status;" json:"status" form:"status"`           // 执行状态 0 为成功 1 为失败 2为未知
+	Stdout        string           `gorm:"column:stdout; type:longtext" json:"stdout"`           // 标准输出
+	Stderr        string           `gorm:"column:stderr; type:longtext" json:"stderr"`           // 标准错误输出
+	ExecutedAt    models2.JSONTime `gorm:"column:executed_at; type:timestamp" json:"executedAt"` // 执行时间
+	Creator       string           `gorm:"column:creator; type:varchar(45)" json:"creator"`      // 执行发起人
+	models.ControlBy
+	models.ModelTime
+}
+
+func (*ExecutionHistoryTask) TableName() string {
+	return "exec_machine_history"
 }
