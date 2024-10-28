@@ -88,7 +88,6 @@ func (e ServerMonitor) ServerInfo(c *gin.Context) {
 	memDic["used"] = memory.Used / MB
 	memDic["total"] = memory.Total / MB
 
-	fmt.Println("mem", int(memory.Total/memory.Used*100))
 	memDic["percent"] = pkg.Round(memory.UsedPercent, 2)
 
 	swapDic := make(map[string]interface{}, 0)
@@ -166,9 +165,7 @@ func TrackNetworkSpeed() {
 		diff := now - lastUpdateNetStats
 		if diff > 0 {
 			netInSpeed = (innerNetInTransfer - netInTransfer) / diff
-			fmt.Println("netInSpeed", netInSpeed)
 			netOutSpeed = (innerNetOutTransfer - netOutTransfer) / diff
-			fmt.Println("netOutSpeed", netOutSpeed)
 		}
 		netInTransfer = innerNetInTransfer
 		netOutTransfer = innerNetOutTransfer

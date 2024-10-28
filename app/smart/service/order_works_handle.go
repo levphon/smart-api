@@ -94,15 +94,29 @@ func (e *OrderWorksService) Handle(c *dto.OrderWorksHandleReq, handle int) error
 
 	// 根据当前节点查找目标节点
 	switch c.ActionType {
-	// 1 为同意 0为拒绝
+	// 1 为同意, 0为拒绝, 2 为重开, 3为关闭
+	case "0":
+		targetNodeId = findPreviousNode(edges, cutNodeId)
 	case "1":
 		targetNodeId, err = e.findNextNode(edges, cutNodeId, nodes, model)
 		if err != nil {
 			e.Log.Errorf("Error: %v", err)
 			return err
 		}
-	case "0":
-		targetNodeId = findPreviousNode(edges, cutNodeId)
+	case "2":
+		// 获取nodes clazz为start的id
+		targetNodeId, err = findInitialNode(nodes)
+		model.Status = "under-way"
+		if err != nil {
+			e.Log.Errorf("Error finding initial node: %v", err)
+			return err
+		}
+	case "3":
+		targetNodeId, err = findEndNode(nodes)
+		if err != nil {
+			e.Log.Errorf("End node not found in flow structure: %v", err)
+			return err
+		}
 	default:
 		e.Log.Errorf("Invalid action type '%v'", c.ActionType)
 		return fmt.Errorf("invalid action type '%v'", c.ActionType)
@@ -111,7 +125,6 @@ func (e *OrderWorksService) Handle(c *dto.OrderWorksHandleReq, handle int) error
 	if targetNodeId == "" {
 		targetNodeId = cutNodeId
 	}
-
 	// 获取目标节点的名称和处理人
 	targetNodeInfo := findNodeInfoById(flowData.StrucTure, targetNodeId)
 
@@ -121,7 +134,6 @@ func (e *OrderWorksService) Handle(c *dto.OrderWorksHandleReq, handle int) error
 	}
 
 	// 处理节点类型
-
 	switch targetNodeInfo.Clazz {
 	case "end":
 		// 如果是结束节点
@@ -558,6 +570,42 @@ func recordExecutionHistory(tx *gorm.DB, task models.OrderTask, machine models.E
 		return fmt.Errorf("failed to record execution history: %v", err)
 	}
 	return nil
+}
+
+// findInitialNode 查找节点中 clazz 为 "start" 的节点 ID
+func findInitialNode(nodes []interface{}) (string, error) {
+	for _, node := range nodes {
+		nodeMap, ok := node.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		if clazz, ok := nodeMap["clazz"].(string); ok && clazz == "start" {
+			nodeId, ok := nodeMap["id"].(string)
+			if ok {
+				return nodeId, nil
+			}
+			return "", fmt.Errorf("start node found but id is missing")
+		}
+	}
+	return "", fmt.Errorf("could not find a node with clazz 'start'")
+}
+
+// findEndNode 查找节点中 clazz 为 "end" 的节点 ID
+func findEndNode(nodes []interface{}) (string, error) {
+	for _, node := range nodes {
+		nodeMap, ok := node.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		if clazz, ok := nodeMap["clazz"].(string); ok && clazz == "end" {
+			nodeId, ok := nodeMap["id"].(string)
+			if ok {
+				return nodeId, nil
+			}
+			return "", fmt.Errorf("end node found but id is missing")
+		}
+	}
+	return "", fmt.Errorf("could not find a node with clazz 'end'")
 }
 
 // setupSSHConfig sets up the SSH configuration based on the machine's authentication type.

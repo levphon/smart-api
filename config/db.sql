@@ -695,7 +695,7 @@ VALUES
     (34,0,'进行中','under-way','order_works_status','',NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
     (35,0,'已结束','termination','order_works_status',NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
     (36,0,'手动结束','manual-termination','order_works_status',NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-    (37,0,'未提交','reopen','order_works_status',NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+    (37,0,'重开','reopen','order_works_status',NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
     (38,0,'驳回','reject','order_works_status',NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
     (39,0,'一般','normal','order_works_priority_type',NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
     (40,0,'紧急','urgent','order_works_priority_type',NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
