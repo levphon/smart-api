@@ -255,6 +255,9 @@ docker run -itd  \
   registry.cn-beijing.aliyuncs.com/sunwenbo/smart-ui:latest  
 ```
 
+####  View the post-deployment status
+![img.png](static%2Fimage%2Fimg.png)
+
 ### Deploy with Kubernetes
 The method to initialize data is as mentioned above ☝️
 

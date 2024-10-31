@@ -489,11 +489,9 @@ func (e OrderWorksService) executeTaskOnMachine(taskName interface{}, machineNam
 
 	// 创建 Connection 实例
 	conn := &utils.MachineConn{}
-
 	// 记录任务开始时间
 	startTime := time.Now()
 	taskLog.Log(fmt.Sprintf("Task start time: %s", startTime.Format(time.RFC3339)))
-
 	// 执行任务
 	res, err := conn.ExecuteCommandWithParams(client, orderData.Title, hisTaskUUId, existingTask.Content, string(formDataJSON))
 	endTime := time.Now() // 移到这里，以便始终记录结束时间

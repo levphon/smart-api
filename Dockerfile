@@ -24,6 +24,12 @@ CMD ["/home/service/smart-api","server","-c", "./config/settings.yml", "-a", "tr
 # 启动后端服务
 # docker run -it --rm   -p 8000:8000   -v /data/config/:/home/service/config/   --name smart-api   registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest
 
+#docker run -d \
+#  --name mysql8 \
+#  -e MYSQL_ROOT_PASSWORD=sunwenbo \
+#  -v /data/mysql:/var/lib/mysql \
+#  -p 3306:3306 \
+#  registry.cn-beijing.aliyuncs.com/sunwenbo-base/mysql:8
 
 
 # 如果本地是arm架构，但是想将打好的镜像使用在x86的linux服务器，使用下面命令构建镜像即可兼容本地和linux x86个arm环境
@@ -41,3 +47,9 @@ CMD ["/home/service/smart-api","server","-c", "./config/settings.yml", "-a", "tr
 # docker buildx build --platform linux/amd64 -t sunwenbo/smart-api:latest --load .
 # 如果想要将镜像推送到 Docker Hub，可以加上 --push 参数：
 # docker buildx build --platform linux/amd64,linux/arm64 -t sunwenbo/smart-api:latest --push .
+
+# 3. mac m1 本地
+
+#  docker build -t registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api-arm:latest .
+# cd ~/docker/
+# docker run -itd  -p 8000:8000 -v ./config/:/home/service/config/ --name smart-api registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api-arm:latest

@@ -11,7 +11,7 @@ import (
 
 type StrucTure map[string]interface{}
 
-type NoticeSlice []int
+type NoticeSlice []interface{}
 
 type FlowManage struct {
 	ID          int         `gorm:"primaryKey;autoIncrement" json:"id"`

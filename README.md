@@ -292,7 +292,8 @@ env GOOS=linux GOARCH=amd64 go build main.go
      --name smart-ui \
      registry.cn-beijing.aliyuncs.com/sunwenbo/smart-ui:latest  
    ```
-
+####  查看部署后状态
+![img.png](static%2Fimage%2Fimg.png)
 ### 使用kubernetes部署
 初始化数据方法如上☝️
 
