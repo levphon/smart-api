@@ -90,7 +90,6 @@ func run() error {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	initRouter()
-
 	// AppRouters 是一个切片类型，用于存储应用（app）
 	for _, f := range AppRouters {
 		f()
@@ -142,7 +141,7 @@ func run() error {
 			}
 		}
 	}()
-	fmt.Println(pkg.Red(string(global.LogoContent)))
+	fmt.Println(pkg.Red(global.SmartLogo()))
 	tip()
 	fmt.Println(pkg.Green("Server run at:"))
 	fmt.Printf("-  Local:   %s://localhost:%d/ \r\n", "http", config.ApplicationConfig.Port)

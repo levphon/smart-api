@@ -53,3 +53,7 @@ CMD ["/home/service/smart-api","server","-c", "./config/settings.yml", "-a", "tr
 #  docker build -t registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api-arm:latest .
 # cd ~/docker/
 # docker run -itd  -p 8000:8000 -v ./config/:/home/service/config/ --name smart-api registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api-arm:latest
+
+
+#4. ubuntu服务器
+# docker run -itd  -p 8000:8000 -v /data/smart/config/:/home/service/config/ --name smart-api registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest

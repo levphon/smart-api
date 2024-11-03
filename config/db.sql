@@ -177,7 +177,7 @@ LOCK TABLES `order_task` WRITE;
 INSERT INTO `order_task` (`id`, `name`, `taskType`, `interpreter`, `content`, `creator`, `description`, `create_by`, `update_by`, `created_at`, `updated_at`, `deleted_at`, `regenerator`)
 VALUES
     (1,'111','1','/usr/bin/python3','#!/usr/bin/env python3\n\n# 在这里编写 Python 脚本\nprint(\"task 孙文波测试\")\n# workOrderForm=$1 # 接受工单工单数据\n\n# 推荐使用 jq 命令来获取 Json 结构对应的键值数据。具体使用方法，还请自行百度。\n# 此外，还需注意 jq 命令，若没有还需在任务工作节点安装此命令。\n\n# ------------- 在下面编写您的业务逻辑代码 -------------','admin','111',1,1,'2024-08-19 19:20:39.940','2024-08-19 19:20:39.940',NULL,'admin'),
-    (2,'LDAP 账号注册','0','/bin/bash','#!/bin/bash\n\n# 接收工单数据\nworkOrderForm=$1\necho $workOrderForm\n\necho \"sunwenbo 测试\"\n\n# 使用 curl 调用接口\ncurl --location \'http://ldap-user-manage.bigmodel.cn/api/ldap/addUsers\' \\\n--header \'Content-Type: application/json\' \\\n--data \"$workOrderForm\"\n\n# 输出请求结果\necho \"请求已发送，工单数据：$workOrderForm\"\n','sunwenbo','',2,2,'2024-09-10 17:34:50.094','2024-09-10 17:34:50.094',NULL,'sunwenbo');
+    (2,'LDAP 账号注册','0','/bin/bash','#!/bin/bash\n\n# 接收工单数据\nworkOrderForm=$1\necho $workOrderForm\n\necho \"sunwenbo 测试\"\n\n# 使用 curl 调用接口\ncurl --location \'http://ldap-user-manage.xxx/api/ldap/addUsers\' \\\n--header \'Content-Type: application/json\' \\\n--data \"$workOrderForm\"\n\n# 输出请求结果\necho \"请求已发送，工单数据：$workOrderForm\"\n','sunwenbo','',2,2,'2024-09-10 17:34:50.094','2024-09-10 17:34:50.094',NULL,'sunwenbo');
 
 /*!40000 ALTER TABLE `order_task` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1278,11 +1278,6 @@ VALUES
     (2,'sunwenbo','$2a$10$ZBzBhm1Z6Rn0I.ZkECdoAeBjO/lzigy1XT3ObBt/DS6ZfRuLtfxtq','孙文波','13311246030',1,'','','0','123@qq.com',8,8,'','2',1,0,'2024-07-17 20:05:43.749','2024-08-15 19:36:25.064',NULL,'SYSTEM'),
     (3,'zhangsan','$2a$10$bttFFWqTZMyyoBzHLDE.A.hHJ5q5oqcukh16CUXyQvFTPg0bRhK8m','张三','13312312312',1,'','','0','123@qq.com',1,5,'','2',1,0,'2024-07-30 20:35:19.622','2024-08-15 19:37:01.935',NULL,'SYSTEM'),
     (4,'lisi','$2a$10$ZN4TSBEBvxXuVIHx3sAeceu/M1T7T4t1/1dgA9clOhgAsjyjIumHy','李四','13311246030',2,'','','1','123@qq.com',7,4,'测试用户','2',1,1,'2024-08-08 21:14:03.237','2024-08-15 19:37:10.409',NULL,'SYSTEM'),
-    (6,'liusong','$2a$10$A88qT54QViAAE3QdfJAkAeqE9mkMd/89v.yEcBxjyPWsVg779GAcu','刘松','13311246030',2,'','http://example.com/avatar.jpg','Male','john.doe@example.com',1,4,'This is a remark','2',0,0,'2024-08-09 22:19:07.025','2024-08-15 19:38:13.833','2024-10-14 14:46:52.687','LDAP'),
-    (13,'cuizhengzhi','$2a$10$QfsTq7Tdn273n5HHi2SkiuZD93G/iyvcqSw0GQj2emKhteBEjAaNW','崔郑志','13311246030',2,'','','0','123@qq.com',1,10,'','2',0,0,'2024-08-11 18:17:48.882','2024-08-15 19:39:14.854','2024-10-14 14:46:55.392','LDAP'),
-    (14,'caopengcheng','$2a$10$Iyzi4jjmGZO6brJc1Zszj.evdtvpjS0UQvNLMKZHbbG9NjUvpzDUS','曹鹏程','18513581719',2,'','','0','111@qq.com',1,1,'','2',0,0,'2024-08-11 20:27:01.519','2024-10-11 19:22:27.114','2024-10-14 14:47:02.512','LDAP'),
-    (15,'wujianguo','$2a$10$ZzkM1f9uGukhBryVok1GpeSRiKlWc7/WPiJ7PieUHwct5WY.gYwNK','','',2,'','','','',0,0,'','2',0,0,'2024-08-14 19:43:16.991','2024-08-14 19:43:16.991','2024-10-14 14:46:43.585','LDAP'),
-    (16,'haowangai','$2a$10$qZOl9WY/fBaONhNCZj.QFe601Z6Nu81MIF7llcFcRmPhUZvs1EmSe','郝万盖','15114877870',2,'','','0','111@qq.com',1,4,'','2',0,0,'2024-08-16 19:11:02.100','2024-08-16 19:11:37.553','2024-10-14 14:47:04.186','LDAP');
 
 /*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
 UNLOCK TABLES;
