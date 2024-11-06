@@ -5,7 +5,6 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 
 <img align="right" width="320" src="https://github.com/sunwenbo/golang/raw/master/logo.png">
 
-[![Build Status](https://github.com/sunwenbo/smart/workflows/build/badge.svg)](https://github.com/sunwenbo/smart-api)
 [![Static Badge](https://img.shields.io/badge/release-v1.0.0-blue)](https://github.com/sunwenbo/smart-api/releases)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/sunwenbo/smart-api)
 
@@ -140,7 +139,7 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
    cp config/settings.full.yml config/settings.yml
    ```
    ⚠️：修改 `config/settings.yml` 中的数据库连接信息确保数据库配置正确，在执行初始化数据库前要先手动创建数据库。
-   
+
    1. 配置文件中修改数据库信息
    2. 注意: settings.database 下对应的配置数据
    3. 确认log路径
