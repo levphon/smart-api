@@ -12,6 +12,14 @@ The Smart-API Work Order System is a backend management system developed in Go, 
 
 Based on Gin + Vue + Element UI (or Arco Design/Ant Design), the Smart-API system is a front-end and back-end separated work order management system. Initialization is simple, with just minor database connection configuration needed. The system supports multiple command operations, including database migration commands for simplified initialization.
 
+## SMART Naming Principles
+- **S**: Specific - Clear and well-defined goals, not ambiguous or vague.
+- **M**: Measurable - Quantifiable metrics to evaluate progress.
+- **A**: Achievable - Realistic and feasible to accomplish.
+- **R**: Relevant - Aligned with work priorities and able to drive outcomes.
+- **T**: Time-bound - Defined timeframe to ensure completion within deadlines.
+
+
 [Frontend Project](https://github.com/sunwenbo/smart-ui)
 
 [Backend Project](https://github.com/sunwenbo/smart-api)

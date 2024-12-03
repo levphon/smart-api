@@ -5,6 +5,7 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 
 <img align="right" width="320" src="https://github.com/sunwenbo/golang/raw/master/logo.png">
 
+
 [![Static Badge](https://img.shields.io/badge/release-v1.0.0-blue)](https://github.com/sunwenbo/smart-api/releases)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/sunwenbo/smart-api)
 
@@ -16,6 +17,12 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 
 [后端项目](https://github.com/sunwenbo/smart-api)
 
+## smart 命名原则
+- **S**:  具体，目标明确，不能模糊不清
+- **M**:  可度量，量化，评估进展
+- **A**:  可实现，切实可行
+- **R**:  相关性，与工作相关，确保可以推动
+- **T**:  时限性，确保时间内完成
 
 ## 🎬 在线体验
 

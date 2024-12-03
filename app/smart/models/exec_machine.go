@@ -36,3 +36,4 @@ func (e *ExecMachine) Generate() models.ActiveRecord {
 func (e *ExecMachine) GetId() interface{} {
 	return e.ID
 }
+
