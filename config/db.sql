@@ -1277,7 +1277,7 @@ VALUES
     (1,'admin','$2a$10$/Glr4g9Svr6O0kvjsRJCXu3f0W8/dsP3XZyVNi1019ratWpSPMyw.','admin','13311246030',1,'','','0','swb956721830@163.com',1,2,'','2',1,1,'2021-05-13 19:56:37.914','2024-08-16 17:29:33.360',NULL,'SYSTEM'),
     (2,'sunwenbo','$2a$10$ZBzBhm1Z6Rn0I.ZkECdoAeBjO/lzigy1XT3ObBt/DS6ZfRuLtfxtq','孙文波','13311246030',1,'','','0','123@qq.com',8,8,'','2',1,0,'2024-07-17 20:05:43.749','2024-08-15 19:36:25.064',NULL,'SYSTEM'),
     (3,'zhangsan','$2a$10$bttFFWqTZMyyoBzHLDE.A.hHJ5q5oqcukh16CUXyQvFTPg0bRhK8m','张三','13312312312',1,'','','0','123@qq.com',1,5,'','2',1,0,'2024-07-30 20:35:19.622','2024-08-15 19:37:01.935',NULL,'SYSTEM'),
-    (4,'lisi','$2a$10$ZN4TSBEBvxXuVIHx3sAeceu/M1T7T4t1/1dgA9clOhgAsjyjIumHy','李四','13311246030',2,'','','1','123@qq.com',7,4,'测试用户','2',1,1,'2024-08-08 21:14:03.237','2024-08-15 19:37:10.409',NULL,'SYSTEM'),
+    (4,'lisi','$2a$10$ZN4TSBEBvxXuVIHx3sAeceu/M1T7T4t1/1dgA9clOhgAsjyjIumHy','李四','13311246030',2,'','','1','123@qq.com',7,4,'测试用户','2',1,1,'2024-08-08 21:14:03.237','2024-08-15 19:37:10.409',NULL,'SYSTEM');
 
 /*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -106,7 +106,7 @@ You need to have [Go](https://go.dev/dl/), [Gin](https://pkg.go.dev/github.com/g
 - Go 1.18 or later
 - Node.js v14.16.0 or later
 - npm version 6.14.11 or later
-- MySQL or another compatible database
+- MySQL 8.0 or another compatible database
 - Docker, Kubernetes (optional)
 
 ### Backend Installation

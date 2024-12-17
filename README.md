@@ -122,7 +122,7 @@ Smart-API 工单系统是基于 Go 语言开发的后台管理系统，前后端
 - Go 1.18 及以上版本
 - Node.js v14.16.0 及以上版本
 - npm版本: 6.14.11
-- MySQL 或其他兼容数据库
+- MySQL 8.0 或其他兼容数据库
 - Docker 、Kubernetes(可选)
 
 
