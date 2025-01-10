@@ -39,7 +39,7 @@ type OperationHistory struct {
 	service.Service
 }
 
-// 分页获取OrderWorksry 所有的数据
+// GetOrderWorksPage 分页获取OrderWorksry 所有的数据
 func (e *OrderWorksService) GetOrderWorksPage(pageNum, limit int, objects *[]models.OrderWorks, total *int64) error {
 
 	// 计算偏移量
@@ -53,7 +53,7 @@ func (e *OrderWorksService) GetOrderWorksPage(pageNum, limit int, objects *[]mod
 	}
 
 	// 查询并分页获取订单项数据
-	db := e.Orm.Limit(limit).Offset(offset).Find(objects)
+	db := e.Orm.Order("created_at DESC").Limit(limit).Offset(offset).Find(objects)
 
 	if err := db.Error; err != nil {
 		e.Log.Errorf("分页查询工单失败: %s", err)
