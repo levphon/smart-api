@@ -267,12 +267,14 @@ env GOOS=linux GOARCH=amd64 go build main.go
 ### 使用docker启动
 非本地部署时要先初始化数据库的数据，可以使用本地编译后的二进制文件执行如下命令
 
+
+
+#### 后端
 ⚠️⚠️⚠️要修改settings.yml 文件中的数据库信息，同样需要手动创建smart-api库
    ```bash 
    ./smart-api migrate -c config/settings.yml 
    ```
 
-#### 后端
 本地如果是arm架构，但是想构建为x86架构的镜像，mac为例
    ```bash
    # 构建镜像
@@ -287,6 +289,16 @@ env GOOS=linux GOARCH=amd64 go build main.go
      registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest   
   ```
 #### 前端
+⚠️⚠️⚠️要修改.env.production文件中配置信息
+   ```bash 
+   ENV = 'production'
+   
+   # base api
+   VUE_APP_BASE_API = 'http://${你的IP}:8000'
+   
+   VUE_APP_WEBSOCKET_HOST=ws://${你的IP}:8000
+   ```
+
    ```bash
    # 构建镜像
    docker buildx build --platform linux/amd64 -t registry.cn-beijing.aliyuncs.com/sunwenbo/smart-ui:latest . --load
