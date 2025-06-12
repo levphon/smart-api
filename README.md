@@ -309,13 +309,13 @@ env GOOS=linux GOARCH=amd64 go build main.go
 
 #### 后端
    ```bash
-   cd smart-api/scripts/
+   cd smart-api/scripts/k8s
    bash install.sh
    ```
 
 #### 前端
    ```bash
-   cd smart-ui/scripts/
+   cd smart-ui/scripts/k8s
    执行部署前要修改yaml中的配置，例如ingress
    bash install.sh
    ```
