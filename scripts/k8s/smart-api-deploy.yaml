@@ -1,49 +1,137 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sre
+  name: smart-api
+  labels:
+    app: smart-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smart-api
+  template:
+    metadata:
+      labels:
+        app: smart-api
+    spec:
+      containers:
+        - name: smart-api
+          image: registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: serverport
+              protocol: TCP
+          env:
+            - name: K8S_SERVICE
+              value: smart-api
+            - name: K8S_NAMESPACE
+              value: ops
+            - name: K8S_CLUSTER
+              value: openplatform
+            - name: NODE_HOST_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 36
+          readinessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 12
+          resources:
+            limits:
+              cpu: "2"
+              memory: 4Gi
+            requests:
+              cpu: "2"
+              memory: 4Gi
+          volumeMounts:
+            - name: smart-config
+              mountPath: /home/service/config/
+              readOnly: true
+            - name: timezone
+              mountPath: /etc/localtime
+              readOnly: true
+      imagePullSecrets:
+        - name: xxx-registry   # 注意修改
+      restartPolicy: Always
+      securityContext:
+        sysctls:
+          - name: net.ipv4.ip_local_port_range
+            value: "1024 65535"
+      volumes:
+        - name: smart-config
+          secret:
+            secretName: smart-settings  # 修改为使用 Secret
+        - name: timezone
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+            type: ""
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: sre
   name: smart-api
   labels:
     app: smart-api
     service: smart-api
 spec:
   ports:
-  - port: 8000
-    name: http
-    protocol: TCP
+    - port: 8000
+      name: serverport
+      protocol: TCP
   selector:
     app: smart-api
+
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: smart-api-v1
-  labels:
-    app: smart-api
-    version: v1
+  name: smart-api-ingress
+  namespace: sre
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: smart-api
-      version: v1
-  template:
-    metadata:
-      labels:
-        app: smart-api
-        version: v1
-    spec:
-      containers:
-      - name: smart-api
-        image: registry.cn-beijing.aliyuncs.com/sunwenbo/smart-api:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8000
-        volumeMounts:
-        - name: smart-api-config
-          mountPath: /home/service/config/
-          readOnly: true
-      volumes:
-      - name: smart-api-config
-        configMap:
-          name: settings
+  ingressClassName: ingress-sunwenbo-int-nginx1
+  rules:
+    - host: smart-api.sunwenbo.cn
+      http:
+        paths:
+          - backend:
+              service:
+                name: smart-api
+                port:
+                  number: 8000
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - smart-api.sunwenbo.cn
+      secretName: sunwenbo-tls

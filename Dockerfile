@@ -1,4 +1,4 @@
-FROM golang:1.21 AS builder
+FROM registry.cn-beijing.aliyuncs.com/sunwenbo-base/golang:1.22 AS builder
 
 WORKDIR  /home/service/
 
@@ -6,7 +6,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 go build -o smart-api main.go
 
-FROM alpine:3.18.4
+FROM registry.cn-beijing.aliyuncs.com/sunwenbo-base/alpine:3.18.4
 
 WORKDIR /home/service/
 
