@@ -24,4 +24,4 @@ cmd/migrate/migration/version-local/*
 !cmd/migrate/migration/version-local/doc.go
 
 # go sum
-go.sum
+#go.sum
